@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "halt-condition.schema.json",
+  "title": "Halt Condition Schema",
+  "description": "Schema for halt conditions in the SocioTechnical Constitution runtime. A halt condition defines when the system must stop and require human or governance intervention.",
+  "type": "object",
+  "required": ["id", "trigger", "resolution", "status"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^HALT_[A-Z_]+$",
+      "description": "Unique halt condition identifier. Convention: HALT_ followed by all-caps snake_case."
+    },
+    "trigger": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable description of what causes this halt condition to activate."
+    },
+    "trigger_expression": {
+      "type": "string",
+      "description": "Optional machine-evaluable expression or rule ID that maps to this halt. Used by the Policy Engine."
+    },
+    "resolution": {
+      "type": "string",
+      "minLength": 5,
+      "description": "Prescribed resolution path: what must happen before the halt is cleared."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["inactive", "active", "resolved", "overridden"],
+      "description": "Current state of this halt condition instance."
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["warn", "block", "critical"],
+      "description": "Effect level. warn = flag only; block = prevent action; critical = page Council."
+    },
+    "article_ref": {
+      "type": "string",
+      "description": "Reference to the Article in SOCIOTECHNICAL_CONSTITUTION.md that this halt enforces. E.g. Article VIII, Invariant 3."
+    },
+    "component": {
+      "type": "string",
+      "description": "Which runtime component owns this halt condition evaluation."
+    },
+    "activated_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When this halt condition was last activated. Null if never activated."
+    },
+    "resolved_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "When this halt condition was last resolved. Null if currently active or never triggered."
+    },
+    "resolved_by": {
+      "type": ["string", "null"],
+      "description": "User or role who cleared the halt condition."
+    },
+    "override_id": {
+      "type": ["string", "null"],
+      "description": "If status is overridden, the ID of the break-glass override record."
+    },
+    "evidence_ref": {
+      "type": ["string", "null"],
+      "description": "Path to the evidence log entry capturing this halt event."
+    },
+    "auto_resolve_on": {
+      "type": ["string", "null"],
+      "description": "Condition string that, if true, allows automatic resolution without manual action."
+    }
+  },
+  "additionalProperties": false
+}

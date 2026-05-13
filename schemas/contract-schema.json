@@ -1,0 +1,223 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "contract-schema.json",
+  "title": "C-RSP Build Contract Schema",
+  "description": "Schema for Constitutionally-Regulated Single Pass build contracts. Version 4.0.",
+  "version": "4.0",
+  "type": "object",
+  "required": [
+    "contract_id",
+    "version",
+    "schema_version",
+    "status",
+    "adoption_tier",
+    "title",
+    "topology",
+    "scope",
+    "primary_objective",
+    "not_claimed",
+    "baseline_state",
+    "risk_classification",
+    "components",
+    "build_sequence",
+    "acceptance_criteria",
+    "halt_conditions",
+    "vnt_statement"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "pattern": "^CRSP-[A-Z0-9-]+$",
+      "description": "Unique contract identifier. Format: CRSP-{PROJECT}-{SEQUENCE}."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of this contract instance."
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": ["4.0"],
+      "description": "Contract schema version. Must be 4.0 for this schema."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Active", "Frozen", "Superseded", "Archived"],
+      "description": "Lifecycle state of the contract."
+    },
+    "adoption_tier": {
+      "type": "string",
+      "enum": ["Tier-1-MVG", "Tier-2-Operational", "Tier-3-Extended"],
+      "description": "Current adoption tier. Tier-1-MVG = Minimum Viable Governance."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Human-readable contract title."
+    },
+    "topology": {
+      "type": "string",
+      "enum": ["Root", "Satellite", "Federated"],
+      "description": "Contract topology mode."
+    },
+    "zero_shot": {
+      "type": "boolean",
+      "description": "Whether this contract was synthesized in a single zero-shot pass."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 20,
+      "description": "What is in scope for this contract."
+    },
+    "primary_objective": {
+      "type": "string",
+      "description": "The main goal this contract governs."
+    },
+    "not_claimed": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Explicit list of what this contract does NOT claim."
+    },
+    "baseline_state": {
+      "type": "object",
+      "required": ["existing_assets", "constraints", "known_gaps"],
+      "properties": {
+        "existing_assets": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "known_gaps": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "risk_classification": {
+      "type": "object",
+      "required": ["risk_class", "side_effect_class", "external_action_scope", "stop_override_required"],
+      "properties": {
+        "risk_class": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High", "Critical"]
+        },
+        "side_effect_class": {
+          "type": "string",
+          "enum": ["None", "Internal", "External", "Irreversible"]
+        },
+        "external_action_scope": {
+          "type": "string"
+        },
+        "stop_override_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "List of components governed by this contract."
+    },
+    "build_sequence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "component", "gate"],
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "component": { "type": "string" },
+          "gate": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "approved", "blocked"]
+          }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/acceptance_criterion" },
+      "minItems": 1
+    },
+    "halt_conditions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/halt_condition" }
+    },
+    "overrides": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/override_record" },
+      "default": []
+    },
+    "vnt_statement": {
+      "$ref": "vnt-statement.schema.json"
+    },
+    "evidence_paths": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "definitions": {
+    "acceptance_criterion": {
+      "type": "object",
+      "required": ["id", "component", "description", "status"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^AC-[A-Z]+-[0-9]+$"
+        },
+        "component": { "type": "string" },
+        "description": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["unverified", "verified", "blocked", "waived"]
+        },
+        "vnt": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "vnt-statement.schema.json" }
+          ]
+        },
+        "assignee": { "type": "string" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "halt_condition": {
+      "$ref": "halt-condition.schema.json"
+    },
+    "override_record": {
+      "type": "object",
+      "required": ["id", "requested_by", "role", "halt_conditions_bypassed", "reason", "scope", "expires_at", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "requested_by": { "type": "string" },
+        "role": { "type": "string" },
+        "approved_by": { "type": "string" },
+        "halt_conditions_bypassed": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "reason": { "type": "string", "minLength": 20 },
+        "scope": { "type": "string" },
+        "requested_at": { "type": "string", "format": "date-time" },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "active", "expired", "revoked"]
+        }
+      }
+    }
+  }
+}

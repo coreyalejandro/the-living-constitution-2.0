@@ -1,0 +1,69 @@
+# SocioTechnical Constitution Runtime — Configuration
+# Contract ID: CRSP-STC-RUNTIME-001
+# Edit this file to configure runtime behavior.
+# All paths are relative to the project root.
+
+runtime:
+  contract_id: CRSP-STC-RUNTIME-001
+  version: "1.0.0"
+  environment: development   # development | staging | production
+
+paths:
+  constitution: constitution/SOCIOTECHNICAL_CONSTITUTION.md
+  active_contract: contracts/active/BUILD_CONTRACT.json
+  archive_dir: contracts/archive/
+  schemas_dir: schemas/
+  evidence_dir: evidence/CRSP-STC-RUNTIME-001/
+  evidence_lifecycle: evidence/CRSP-STC-RUNTIME-001/lifecycle.jsonl
+  evidence_halts: evidence/CRSP-STC-RUNTIME-001/halt-log.jsonl
+  evidence_vnt: evidence/CRSP-STC-RUNTIME-001/vnt-audit.jsonl
+
+policy_engine:
+  dry_run: false              # true = evaluate but never block
+  warn_only: false            # true = downgrade all BLOCK to WARN
+  max_rule_eval_ms: 200       # halt if rule evaluation exceeds this
+  rules_dir: constitution/    # where invariant rules are loaded from
+
+evidence_observatory:
+  max_file_size_mb: 100       # rotate log file when this size is reached
+  integrity_hashing: true     # compute SHA-256 per entry
+  alert_on_disk_full: true
+
+contract_window:
+  live_reload: true           # watch contract file for changes
+  render_timeout_ms: 100      # strip must render within this budget
+
+role_authorizer:
+  strict_ai_limits: true      # AI_Assistant role can never merge or deploy
+  dual_approval_threshold: high_risk   # services requiring dual break-glass approval
+
+break_glass:
+  max_duration_hours: 24      # maximum override duration
+  require_dual_approval_for:
+    - production
+    - gdpr_data
+    - financial_systems
+
+api:
+  port: 3001
+  host: "127.0.0.1"
+  cors_origins:
+    - "http://localhost:3000"
+
+notifications:
+  enabled: false              # set true and configure targets to enable
+  council_email: ""           # email for Constitutional Council alerts
+  slack_webhook: ""           # Slack webhook URL for break-glass alerts
+
+llm_gateway:
+  enabled: false              # set true to activate LLM policy filtering
+  provider: ""                # e.g. openai, anthropic, gemini
+  append_vnt_to_flagged: true
+
+git_hooks:
+  pre_receive_enabled: true
+  pre_receive_path: src/adaptors/git-hooks/pre-receive.js
+
+ci:
+  github_actions_enabled: false
+  plugin_path: src/adaptors/ci-plugin/github-actions.yml

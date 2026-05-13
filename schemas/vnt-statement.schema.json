@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "vnt-statement.schema.json",
+  "title": "V&T Statement Schema",
+  "description": "Schema for Verification and Truth statements used in C-RSP contracts and acceptance criteria.",
+  "type": "object",
+  "required": ["what", "true", "unverified"],
+  "properties": {
+    "what": {
+      "type": "string",
+      "minLength": 10,
+      "description": "What was evaluated or produced. Describes the artifact or action under review."
+    },
+    "principles_active": {
+      "type": "string",
+      "description": "Which constitutional principles were active during evaluation."
+    },
+    "true": {
+      "type": "string",
+      "minLength": 5,
+      "description": "What is true — verified, present, confirmed facts. Existence checks that passed."
+    },
+    "assumed": {
+      "type": "string",
+      "description": "What was assumed but not verified. Assumptions that underpin the work."
+    },
+    "uncertain": {
+      "type": "string",
+      "description": "What is uncertain — known unknowns or areas where confidence is partial."
+    },
+    "unverified": {
+      "type": "string",
+      "minLength": 5,
+      "description": "What remains unverified. These are open claims that require future evidence."
+    },
+    "not_claimed": {
+      "type": "string",
+      "description": "Explicit statements of what is NOT being claimed. Guards against over-reading."
+    },
+    "functional_status": {
+      "type": "string",
+      "description": "Current functional state of the artifact or system. EXISTS, PARTIAL, BROKEN, NOT_BUILT."
+    },
+    "governance_state": {
+      "type": "string",
+      "enum": [
+        "Draft — pending human approval gates.",
+        "Active — all gates signed.",
+        "Frozen — released, no changes.",
+        "Superseded — replaced by newer version."
+      ],
+      "description": "Governance lifecycle state of the item bearing this V&T statement."
+    },
+    "evidence_ref": {
+      "type": "string",
+      "description": "Path or ID of the evidence log entry that supports the true and verified claims."
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this V&T statement was written."
+    },
+    "evaluator": {
+      "type": "string",
+      "description": "Who or what produced this V&T statement (human role or AI tool ID)."
+    }
+  },
+  "additionalProperties": false
+}

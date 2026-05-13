@@ -1,0 +1,161 @@
+{
+  "$schema": "./routes.registry.schema.json",
+  "registry_id": "TLC-2.0-ROUTES",
+  "version": "1.0.0",
+  "schema_date": "2026-05-13",
+  "description": "Surface routing map for TLC 2.0. Maps module IDs to their intended deployment routes and access visibility.",
+  "route_constraints": [
+    "governance_core surfaces must pass npm run verify before any promotion",
+    "private_lab surfaces are not linked from public_portfolio without CRSP contract approval",
+    "deprecated and quarantined entries are never promoted to a live route",
+    "exhibit routes require a separate CRSP contract before deployment"
+  ],
+  "routes": [
+    {
+      "route_id": "ROUTE-GOVERNANCE-CORE",
+      "label": "Governance Core Runtime",
+      "module_id": "CRSP-STC-RUNTIME-001",
+      "surface": "governance_core",
+      "visibility": "internal",
+      "truth_status": "working",
+      "path_pattern": "/",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "Primary runtime repo. CLI-only. No web route. Internal use only."
+    },
+    {
+      "route_id": "ROUTE-PORTFOLIO-V2",
+      "label": "Portfolio v2 — Public Surface",
+      "module_id": "PORTFOLIO-V2",
+      "surface": "public_portfolio",
+      "visibility": "public",
+      "truth_status": "unverified",
+      "path_pattern": "/",
+      "deployment_target": "vercel",
+      "live_url": null,
+      "notes": "Primary public portfolio. Needs inspection before live URL assigned."
+    },
+    {
+      "route_id": "ROUTE-AGENTIC-PORTFOLIO",
+      "label": "Agentic Portfolio — Public Surface",
+      "module_id": "COREYS-AGENTIC-PORTFOLIO",
+      "surface": "public_portfolio",
+      "visibility": "public",
+      "truth_status": "unverified",
+      "path_pattern": "/agentic",
+      "deployment_target": "vercel",
+      "live_url": null,
+      "notes": "Agentic portfolio variant. Relationship to PORTFOLIO-V2 unverified."
+    },
+    {
+      "route_id": "ROUTE-LAB-AGENT-SENTINEL",
+      "label": "Agent Sentinel — Lab Route",
+      "module_id": "AGENT-SENTINEL",
+      "surface": "private_lab",
+      "visibility": "internal",
+      "truth_status": "unverified",
+      "path_pattern": "/lab/agent-sentinel",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "Not public. Hyperagent prototype. Must remain internal until CRSP review."
+    },
+    {
+      "route_id": "ROUTE-LAB-LLM-COUNCIL",
+      "label": "LLM Council — Lab Route",
+      "module_id": "LLM-COUNCIL",
+      "surface": "private_lab",
+      "visibility": "internal",
+      "truth_status": "unverified",
+      "path_pattern": "/lab/llm-council",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "Not public. Multi-agent debate infrastructure. Internal only."
+    },
+    {
+      "route_id": "ROUTE-LAB-META-PROMPT",
+      "label": "Meta Prompt Architect — Lab Route",
+      "module_id": "META-PROMPT-ARCHITECT",
+      "surface": "private_lab",
+      "visibility": "internal",
+      "truth_status": "unverified",
+      "path_pattern": "/lab/meta-prompt-architect",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "Not public. Has dist/ build. May be promotable after inspection."
+    },
+    {
+      "route_id": "ROUTE-DOCS-CONSTITUTION",
+      "label": "SocioTechnical Constitution — Docs Route",
+      "module_id": null,
+      "surface": "documentation",
+      "visibility": "internal",
+      "truth_status": "working",
+      "path_pattern": "/docs/constitution",
+      "deployment_target": "local",
+      "live_url": null,
+      "artifact_id": "ARTIFACT-CONSTITUTION-MD",
+      "notes": "References constitution/SOCIOTECHNICAL_CONSTITUTION.md. No web deployment yet."
+    },
+    {
+      "route_id": "ROUTE-DOCS-INTEGRATION",
+      "label": "TLC 2.0 Integration Docs",
+      "module_id": null,
+      "surface": "documentation",
+      "visibility": "internal",
+      "truth_status": "working",
+      "path_pattern": "/docs/integration",
+      "deployment_target": "local",
+      "live_url": null,
+      "artifact_id": "ARTIFACT-TLC-INTEGRATION-MAP",
+      "notes": "References docs/integration/. No web deployment yet."
+    },
+    {
+      "route_id": "ROUTE-EXHIBIT-CONTRACT-WINDOW",
+      "label": "Contract Window — Public Exhibit (Planned)",
+      "module_id": "CONTRACT-WINDOW-EXHIBIT",
+      "surface": "exhibit",
+      "visibility": "public",
+      "truth_status": "planned",
+      "path_pattern": "/exhibit/contract-window",
+      "deployment_target": "vercel",
+      "live_url": null,
+      "notes": "Planned. Interactive Contract Window demo. Requires CRSP contract before build."
+    },
+    {
+      "route_id": "ROUTE-LAB-MISALIGNMENT",
+      "label": "Misalignment Evidence Lab — Lab Route",
+      "module_id": "MISALIGNMENT-EVIDENCE-LAB",
+      "surface": "private_lab",
+      "visibility": "internal",
+      "truth_status": "unverified",
+      "path_pattern": "/lab/misalignment-evidence",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "Not public. Research lab. Not yet inspected."
+    },
+    {
+      "route_id": "ROUTE-DOCS-PROACTIVE",
+      "label": "Proactive AI Constitution Toolkit — Docs",
+      "module_id": "PROACTIVE-AI-CONSTITUTION-TOOLKIT",
+      "surface": "documentation",
+      "visibility": "internal",
+      "truth_status": "unverified",
+      "path_pattern": "/docs/proactive-toolkit",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "Document-heavy structured research toolkit. Not yet inspected."
+    },
+    {
+      "route_id": "ROUTE-DOCS-ZERO-SHOT-OS",
+      "label": "Zero Shot Build OS Docs",
+      "module_id": "ZERO-SHOT-BUILD-OS-DOCS",
+      "surface": "documentation",
+      "visibility": "internal",
+      "truth_status": "unverified",
+      "path_pattern": "/docs/zero-shot-os",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "REASONS + UPOS-7-VS methodology documentation."
+    }
+  ]
+}

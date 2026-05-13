@@ -1,0 +1,130 @@
+{
+  "$schema": "../schemas/contract-schema.json",
+  "contract_id": "CRSP-STC-RUNTIME-001",
+  "version": "1.0.0",
+  "schema_version": "4.0",
+  "status": "Draft",
+  "adoption_tier": "Tier-1-MVG",
+  "title": "SocioTechnical Constitution Runtime — Complete Component Specification",
+  "topology": "Satellite",
+  "zero_shot": true,
+  "created_at": "2025-01-01T00:00:00Z",
+  "updated_at": "2025-01-01T00:00:00Z",
+  "scope": "Full specification of the runtime enforcement layer and all supporting components for the SocioTechnical Constitution, including: Contract Window, Policy Engine, Evidence Observatory, Constitutional Council Dashboard, Amendment Process UI, Break-Glass Override, Role-Based Access, Integration Adaptors, and four diagrams.",
+  "primary_objective": "Provide an implementable, zero-translation blueprint for the entire runtime.",
+  "not_claimed": [
+    "Actual running code",
+    "Production-hardened infrastructure",
+    "Integration with specific enterprise tools beyond abstract adaptors"
+  ],
+  "baseline_state": {
+    "existing_assets": [
+      "SOCIOTECHNICAL_CONSTITUTION.md (Preamble + Articles I-IX)",
+      "PR #60",
+      "PROACTIVE PRD and research plans",
+      "Contract Window specification"
+    ],
+    "constraints": [
+      "All components must obey the Constitution's principles, invariant set, and progressive enforcement model"
+    ],
+    "known_gaps": [
+      "No runtime code — all specifications are declarative"
+    ]
+  },
+  "risk_classification": {
+    "risk_class": "Medium",
+    "side_effect_class": "Internal",
+    "external_action_scope": "Blocks merges, deployments, or AI actions only after progressive enforcement",
+    "stop_override_required": true
+  },
+  "components": [
+    "Contract Manager",
+    "Policy Engine",
+    "Evidence Observatory",
+    "Contract Window",
+    "Role Authorizer",
+    "Break-Glass Override",
+    "Constitutional Council Dashboard",
+    "Amendment Process UI",
+    "Integration Adaptors (Git, CI, LLM Gateway)",
+    "CLI (tlc-cli)"
+  ],
+  "build_sequence": [
+    { "step": 1, "component": "File System Layout & Project Skeleton", "gate": "Approve folder structure" },
+    { "step": 2, "component": "Core Data Models & Schemas", "gate": "Schemas validated" },
+    { "step": 3, "component": "Contract Manager (Read/Write)", "gate": "CRUD unit tests pass" },
+    { "step": 4, "component": "Policy Engine & Invariant Enforcer", "gate": "Simulate on sample contract" },
+    { "step": 5, "component": "Evidence Observatory", "gate": "Logs created and queryable" },
+    { "step": 6, "component": "Contract Window (Strip + Kanban)", "gate": "Visual demo matches spec" },
+    { "step": 7, "component": "Role-Based Access & Agent Authority", "gate": "Role matrix tests pass" },
+    { "step": 8, "component": "Break-Glass Override Workflow", "gate": "Override logged and reversible" },
+    { "step": 9, "component": "Constitutional Council Dashboard", "gate": "Dashboard displays mock data" },
+    { "step": 10, "component": "Amendment Process UI", "gate": "Amendment lifecycle test" },
+    { "step": 11, "component": "Integration Adaptors (Git, CI)", "gate": "End-to-end block demo" }
+  ],
+  "acceptance_criteria": [
+    { "id": "AC-CM-01", "component": "Contract Manager", "description": "Loads a valid contract without errors", "status": "unverified", "vnt": null },
+    { "id": "AC-CM-02", "component": "Contract Manager", "description": "Fails loading with clear message if schema violated", "status": "unverified", "vnt": null },
+    { "id": "AC-CM-03", "component": "Contract Manager", "description": "Write updates are atomic (write to temp, rename)", "status": "unverified", "vnt": null },
+    { "id": "AC-CM-04", "component": "Contract Manager", "description": "validate catches missing required fields", "status": "unverified", "vnt": null },
+    { "id": "AC-PE-01", "component": "Policy Engine", "description": "All Article VIII invariants implemented as testable rules", "status": "unverified", "vnt": null },
+    { "id": "AC-PE-02", "component": "Policy Engine", "description": "Halt matrix entries can be triggered by simulated events", "status": "unverified", "vnt": null },
+    { "id": "AC-PE-03", "component": "Policy Engine", "description": "Rule evaluation completes within 200ms for up to 50 rules", "status": "unverified", "vnt": null },
+    { "id": "AC-PE-04", "component": "Policy Engine", "description": "WARN decision does not block but flags in V&T", "status": "unverified", "vnt": null },
+    { "id": "AC-EO-01", "component": "Evidence Observatory", "description": "All gate evaluations are logged immutably", "status": "unverified", "vnt": null },
+    { "id": "AC-EO-02", "component": "Evidence Observatory", "description": "Query returns evidence for specific contract and time range", "status": "unverified", "vnt": null },
+    { "id": "AC-EO-03", "component": "Evidence Observatory", "description": "Logging fails gracefully if disk full, alert is raised", "status": "unverified", "vnt": null },
+    { "id": "AC-EO-04", "component": "Evidence Observatory", "description": "Logs include enough detail to reconstruct the decision for audit", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-01", "component": "Contract Window", "description": "Strip renders within 100ms of contract load", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-02", "component": "Contract Window", "description": "Strip color matches highest-severity halt condition", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-03", "component": "Contract Window", "description": "Kanban cards accurately reflect AC status from contract", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-04", "component": "Contract Window", "description": "Dragging a card updates the underlying contract file", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-05", "component": "Contract Window", "description": "Halt matrix shows all active halts with resolution links", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-06", "component": "Contract Window", "description": "V&T detail shows all four fields per AC", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-07", "component": "Contract Window", "description": "Challenge/Repair buttons only visible to authorized roles", "status": "unverified", "vnt": null },
+    { "id": "AC-CW-08", "component": "Contract Window", "description": "Contract Window live-reloads when contract file changes on disk", "status": "unverified", "vnt": null },
+    { "id": "AC-RB-01", "component": "Role Authorizer", "description": "AI assistant cannot trigger merge or deploy actions even if instructed", "status": "unverified", "vnt": null },
+    { "id": "AC-RB-02", "component": "Role Authorizer", "description": "SRE can execute a deploy during approved window with valid credential", "status": "unverified", "vnt": null },
+    { "id": "AC-RB-03", "component": "Role Authorizer", "description": "Break-glass requires dual approval for high-risk services", "status": "unverified", "vnt": null },
+    { "id": "AC-BG-01", "component": "Break-Glass", "description": "Break-glass cannot be used for roles without authorization", "status": "unverified", "vnt": null },
+    { "id": "AC-BG-02", "component": "Break-Glass", "description": "Override correctly bypasses specified halt conditions", "status": "unverified", "vnt": null },
+    { "id": "AC-BG-03", "component": "Break-Glass", "description": "Override auto-expires and is logged", "status": "unverified", "vnt": null },
+    { "id": "AC-BG-04", "component": "Break-Glass", "description": "All override events appear in Evidence Observatory and Council dashboard", "status": "unverified", "vnt": null },
+    { "id": "AC-CC-01", "component": "Council Dashboard", "description": "Dashboard displays active overrides within 10 seconds of occurrence", "status": "unverified", "vnt": null },
+    { "id": "AC-CC-02", "component": "Council Dashboard", "description": "Amendment voting works and results are recorded in amendment log", "status": "unverified", "vnt": null },
+    { "id": "AC-CC-03", "component": "Council Dashboard", "description": "Only Council members can access", "status": "unverified", "vnt": null },
+    { "id": "AC-AP-01", "component": "Amendment UI", "description": "Amendments can be proposed, diffed, and submitted", "status": "unverified", "vnt": null },
+    { "id": "AC-AP-02", "component": "Amendment UI", "description": "Voting follows the Council's defined quorum", "status": "unverified", "vnt": null },
+    { "id": "AC-AP-03", "component": "Amendment UI", "description": "Approved amendments are reflected in the runtime immediately", "status": "unverified", "vnt": null },
+    { "id": "AC-IA-01", "component": "Integration Adaptors", "description": "Git hook blocks push when policy demands, with clear message", "status": "unverified", "vnt": null },
+    { "id": "AC-IA-02", "component": "Integration Adaptors", "description": "CI plugin fails the build if gates not met", "status": "unverified", "vnt": null },
+    { "id": "AC-IA-03", "component": "Integration Adaptors", "description": "LLM gateway adds V&T metadata to flagged responses", "status": "unverified", "vnt": null },
+    { "id": "AC-SYS-01", "component": "System", "description": "All components communicate via defined APIs/events", "status": "unverified", "vnt": null },
+    { "id": "AC-SYS-02", "component": "System", "description": "The system can run entirely from a local folder without external services", "status": "unverified", "vnt": null },
+    { "id": "AC-SYS-03", "component": "System", "description": "The Constitution's own V&T is tracked within the Evidence Observatory", "status": "unverified", "vnt": null }
+  ],
+  "halt_conditions": [
+    { "id": "HALT_CONTRACT_MISSING", "trigger": "Active build contract not found in contracts/active/", "resolution": "Create one via CLI", "status": "inactive" },
+    { "id": "HALT_SCHEMA_INVALID", "trigger": "Contract fails schema validation", "resolution": "Correct contract format", "status": "inactive" },
+    { "id": "HALT_INVARIANT_FAILED", "trigger": "Any Article VIII invariant broken during operation", "resolution": "Fix the violating artifact; clear halt", "status": "inactive" },
+    { "id": "HALT_PII_DETECTED", "trigger": "PII detected without authorization", "resolution": "Redact or authorize override", "status": "inactive" },
+    { "id": "HALT_UNAUTHORIZED_ACTION", "trigger": "Role attempts action outside allowed scope", "resolution": "Block; log; alert", "status": "inactive" },
+    { "id": "HALT_BREAK_GLASS_ABUSE", "trigger": "Break-glass used without required approvals", "resolution": "Disable override; notify Council", "status": "inactive" },
+    { "id": "HALT_EVIDENCE_LOG_FULL", "trigger": "Disk space for evidence logs exhausted", "resolution": "Free space or rotate", "status": "inactive" }
+  ],
+  "overrides": [],
+  "vnt_statement": {
+    "what": "Complete build contract for the SocioTechnical Constitution runtime, including UI, enforcement, evidence, council, amendment, and integration components, plus four diagrams.",
+    "principles_active": "All six constitutional principles",
+    "true": "All components are specified with data models, acceptance criteria, and halt behavior. Four diagrams are present.",
+    "assumed": "The implementing team has access to the defined schemas and the Sociotechnical Constitution document.",
+    "uncertain": "Exact choice of UI library or language may shift; the spec is abstract enough to accommodate.",
+    "unverified": "Whether the system as specified will achieve the intended governance outcomes without quantitative validation.",
+    "governance_state": "Draft — pending human approval gates."
+  },
+  "evidence_paths": [
+    "evidence/CRSP-STC-RUNTIME-001/lifecycle.jsonl",
+    "evidence/CRSP-STC-RUNTIME-001/halt-log.jsonl",
+    "evidence/CRSP-STC-RUNTIME-001/vnt-audit.jsonl"
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "$schema": "./modules.registry.schema.json",
+  "registry_id": "TLC-2.0-MODULES",
+  "version": "1.0.0",
+  "schema_date": "2026-05-13",
+  "description": "Classified module registry for TLC 2.0. All modules default to unverified unless explicitly inspected.",
+  "surfaces": [
+    "governance_core",
+    "private_lab",
+    "public_portfolio",
+    "documentation",
+    "module_library",
+    "exhibit"
+  ],
+  "truth_statuses": [
+    "working",
+    "partial",
+    "static_prototype",
+    "draft",
+    "planned",
+    "deprecated",
+    "quarantined",
+    "unverified"
+  ],
+  "modules": [
+    {
+      "id": "CRSP-STC-RUNTIME-001",
+      "label": "SocioTechnical Constitution Runtime",
+      "path": "sociotechnical-constitution-runtime/",
+      "surface": "governance_core",
+      "truth_status": "working",
+      "components": [
+        "contract-manager",
+        "policy-engine",
+        "evidence-observatory",
+        "role-authorizer",
+        "tlc-cli",
+        "llm-gateway",
+        "git-hooks",
+        "ci-plugin",
+        "contract-window"
+      ],
+      "contract_id": "CRSP-STC-RUNTIME-001",
+      "verified_date": "2026-05-13",
+      "notes": "Tier-1 MVG. 5 test suites, 9 tests passing. npm run verify confirmed."
+    },
+    {
+      "id": "THE-LIVING-CONSTITUTION",
+      "label": "The Living Constitution",
+      "path": "the-living-constitution/",
+      "surface": "governance_core",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Contains _c-rsp, apps, artifacts dirs. Has AGENTS.md. Not yet inspected this pass."
+    },
+    {
+      "id": "TLC-ARTIFACTS-RESTRUCTURE",
+      "label": "TLC Artifacts Restructure",
+      "path": "tlc-artifacts-restructure/",
+      "surface": "governance_core",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Contains codebook, manifest, methodology dirs. Not yet inspected."
+    },
+    {
+      "id": "TLC-EVIDENCE-OBSERVATORY",
+      "label": "TLC Evidence Observatory",
+      "path": "tlc-evidence-observatory/",
+      "surface": "governance_core",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Contains adjudicated, admissibility, analysis, app dirs. Not yet inspected."
+    },
+    {
+      "id": "AGENT-SENTINEL",
+      "label": "Agent Sentinel Alignment Anomaly Detector",
+      "path": "agent-sentinel-alignment-anomaly-detector/",
+      "surface": "private_lab",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Has App.tsx, docker-compose.yml, dist/. Suggests a running prototype. Inspect before promoting."
+    },
+    {
+      "id": "LLM-COUNCIL",
+      "label": "LLM Council",
+      "path": "llm-council/",
+      "surface": "private_lab",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Has frontend/, backend/, data/, env.example. Multi-agent debate infra candidate."
+    },
+    {
+      "id": "MULTIAGENT-DEBATE",
+      "label": "Multiagent Debate",
+      "path": "multiagent-debate/",
+      "surface": "private_lab",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Not yet inspected."
+    },
+    {
+      "id": "META-PROMPT-ARCHITECT",
+      "label": "Meta Prompt Architect",
+      "path": "meta-prompt-architect/",
+      "surface": "private_lab",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Has dist/, documentation/, META_PROMPT_PRINTOUT.md. Not yet inspected."
+    },
+    {
+      "id": "MISALIGNMENT-EVIDENCE-LAB",
+      "label": "Misalignment Evidence Lab",
+      "path": "misalignment-evidence-lab/",
+      "surface": "private_lab",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Not yet inspected."
+    },
+    {
+      "id": "PROACTIVE-AI-CONSTITUTION-TOOLKIT",
+      "label": "Proactive AI Constitution Toolkit",
+      "path": "PROACTIVE-AI-CONSTITUTION-TOOLKIT/",
+      "surface": "documentation",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Contains structured sections: 01_FOUNDATIONS, 02_PROGRAM_GOVERNANCE, etc. Likely doc-heavy."
+    },
+    {
+      "id": "AI-SAFETY-IDENTITY-STRATEGY",
+      "label": "AI Safety Identity Strategy",
+      "path": "ai-safety-identity-strategy/",
+      "surface": "private_lab",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Has AGENTS.md. Not yet inspected."
+    },
+    {
+      "id": "ZERO-SHOT-BUILD-OS-DOCS",
+      "label": "Zero Shot Build OS Docs",
+      "path": "zero-shot-build-os-docs/",
+      "surface": "documentation",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Contains REASONS, UPOS-7-VS, principles docs. Governance methodology documentation."
+    },
+    {
+      "id": "PORTFOLIO-V2",
+      "label": "Corey Alejandro Portfolio v2",
+      "path": "coreyalejandro-portfolio-v2/",
+      "surface": "public_portfolio",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Has app/, components/, data/. Next.js app structure."
+    },
+    {
+      "id": "COREYS-AGENTIC-PORTFOLIO",
+      "label": "Corey's Agentic Portfolio",
+      "path": "coreys-agentic-portfolio/",
+      "surface": "public_portfolio",
+      "truth_status": "unverified",
+      "components": [],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Has app/, AGENTS.md, CLAUDE.md. Next.js app structure. Agentic routes present."
+    },
+    {
+      "id": "CONTRACT-WINDOW-EXHIBIT",
+      "label": "Contract Window Public Exhibit",
+      "path": "TBD",
+      "surface": "exhibit",
+      "truth_status": "planned",
+      "components": [
+        "contract-window"
+      ],
+      "contract_id": null,
+      "verified_date": null,
+      "notes": "Planned exhibit. Contract Window interactive demo for public portfolio. Not yet built."
+    }
+  ]
+}

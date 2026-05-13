@@ -1,0 +1,11 @@
+# OpenMemory - IDE/Assistant specific rules
+.windsurf/rules/openmemory.md
+
+# Dependencies
+node_modules/
+
+# macOS
+.DS_Store
+
+# OpenMemory
+openmemory.md

@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "evidence-entry.schema.json",
+  "title": "Evidence Entry Schema",
+  "description": "Schema for a single line in the Evidence Observatory JSONL logs. Every gate evaluation, halt event, override, V&T update, and amendment action produces one entry.",
+  "type": "object",
+  "required": [
+    "entry_id",
+    "timestamp",
+    "event_type",
+    "contract_id",
+    "component",
+    "decision",
+    "user",
+    "role"
+  ],
+  "properties": {
+    "entry_id": {
+      "type": "string",
+      "description": "Unique ID for this evidence entry. Format: {contract_id}-{unix_ms}-{random4}."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the event was recorded. Immutable once written."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "PRE_RECEIVE",
+        "CI_GATE",
+        "DEPLOY_REQUEST",
+        "LLM_ACTION",
+        "HALT_ACTIVATED",
+        "HALT_RESOLVED",
+        "BREAK_GLASS_REQUESTED",
+        "BREAK_GLASS_APPROVED",
+        "BREAK_GLASS_DENIED",
+        "BREAK_GLASS_EXPIRED",
+        "VNT_UPDATED",
+        "AC_STATUS_CHANGED",
+        "AMENDMENT_PROPOSED",
+        "AMENDMENT_APPROVED",
+        "AMENDMENT_REJECTED",
+        "OVERRIDE_ACTIVATED",
+        "OVERRIDE_EXPIRED",
+        "CONTRACT_LOADED",
+        "CONTRACT_SAVED",
+        "SCHEMA_VALIDATION_FAILED",
+        "ROLE_AUTH_DENIED",
+        "ROLE_AUTH_GRANTED",
+        "SYSTEM_ALERT"
+      ],
+      "description": "Enumerated event type. All event types must be in this list."
+    },
+    "contract_id": {
+      "type": "string",
+      "description": "The contract under which this event occurred."
+    },
+    "component": {
+      "type": "string",
+      "description": "Which runtime component produced this entry."
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["ALLOW", "BLOCK", "WARN", "OVERRIDE", "LOG_ONLY"],
+      "description": "The outcome of the gate evaluation. LOG_ONLY for informational events."
+    },
+    "user": {
+      "type": "string",
+      "description": "User or service identity that triggered the event."
+    },
+    "role": {
+      "type": "string",
+      "enum": ["Developer", "SRE", "PM", "QA", "AI_Assistant", "Constitutional_Council", "System", "Unknown"],
+      "description": "Role of the actor at time of event."
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific data. Structure depends on event_type. Free-form but should be minimal and non-sensitive.",
+      "additionalProperties": true
+    },
+    "halt_conditions_triggered": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of halt condition IDs that were activated by this event."
+    },
+    "halt_conditions_cleared": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of halt condition IDs that were resolved by this event."
+    },
+    "override_id": {
+      "type": ["string", "null"],
+      "description": "If this event was processed under a break-glass override, its ID."
+    },
+    "vnt_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to a V&T statement associated with this event."
+    },
+    "evidence_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "File paths or URLs to supporting evidence for this entry."
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable summary of the event. Shown in Contract Window and Council dashboard."
+    },
+    "integrity_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of the JSON entry (excluding this field). Used for tamper detection."
+    }
+  },
+  "additionalProperties": false
+}
