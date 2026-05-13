@@ -101,12 +101,17 @@ None. No web app, no Next.js app, no server. Pure Python library + research docs
 
 ## Recommended truth_status
 
-working
+partial
 
-Rationale: 62 tests pass locally. The governance-kernel Python library
-(contract_window, bicameral_review, invariant_checkers) is implemented and
-test-verified this session. The research program is active but pre-pilot —
-that is the research status, not the library status.
+Rationale: truth_status applies to the WHOLE PROJECT SCOPE, not only the library.
+The complete project includes a research program, live pilot, IRR, CRSP contract
+binding, and STATUS.json — none of which are complete.
+
+Verified working at component level only:
+  component: governance-kernel
+  verification: python -m pytest tests/ — 62 passed in 0.22s (2026-05-13)
+  covers: contract_window.py, bicameral_review.py, invariant_checkers.py,
+          session-recorder
 
 ---
 

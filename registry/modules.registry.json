@@ -219,7 +219,7 @@
       "path": "../../../cognitive-governance-lab/",
       "local_path_absolute": "/Users/coreyalejandro/cognitive-governance-lab",
       "surface": "module_library",
-      "truth_status": "working",
+      "truth_status": "partial",
       "components": [
         "contract-window",
         "bicameral-review",
@@ -235,7 +235,28 @@
       "public_display_status": "draft",
       "research_lane": "cognitive_governance_ai_safety",
       "product_lane": "governance_library",
-      "notes": "Python governance library with 62 tests all passing locally (2026-05-13). Implements Contract Window, Bicameral Review, Invariant Checkers, Insight Atrophy Index. Formal research program: 3 falsifiable hypotheses (H1 Intent Fidelity, H2 Bilateral Repair, H3 Accessibility). Synthetic calibration pass done; live pilot (10 sessions + human IRR) NOT yet complete. COLM 2026 paper draft present. Anthropic Fellows proposals present. No CRSP contract bound. No web app or routes. Located at ~/cognitive-governance-lab — outside scanner path ~/Projects; scanner path must be extended to find it."
+      "verified_scope": {
+        "component": "governance-kernel",
+        "verification": "python -m pytest tests/ — 62 passed in 0.22s (2026-05-13)",
+        "covers": [
+          "contract_window.py",
+          "bicameral_review.py",
+          "invariant_checkers.py",
+          "session-recorder"
+        ]
+      },
+      "unverified_scope": [
+        "research program: live pilot sessions (0 of 10 required) — NOT DONE",
+        "human inter-rater reliability (kappa >= 0.70) — NOT DONE",
+        "session-protocol.md — NOT WRITTEN",
+        "COLM 2026 paper — draft only, not submitted",
+        "Anthropic Fellows proposals — submitted, outcome unknown",
+        "insight_atrophy_index.py — present, no confirmed test coverage",
+        "CRSP contract binding — absent",
+        "STATUS.json — absent (no machine-readable project status)",
+        "Month 1 full gate — synthetic calibration only, not live-pilot-complete"
+      ],
+      "notes": "Module-level truth_status is partial because the complete project scope includes a research program, live pilot, human IRR, CRSP binding, and STATUS.json that are not complete. The governance-kernel library component is verified working: 62 pytest tests pass locally. All other components (research-proposals, paper-draft) are draft or unverified. Located at ~/cognitive-governance-lab — outside scanner path ~/Projects; scanner path must be extended to find it."
     }
   ]
 }
