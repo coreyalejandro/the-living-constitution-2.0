@@ -212,6 +212,30 @@
       "contract_id": null,
       "verified_date": null,
       "notes": "Planned exhibit. Contract Window interactive demo for public portfolio. Not yet built."
+    },
+    {
+      "id": "COGNITIVE-GOVERNANCE-LAB",
+      "label": "Cognitive Governance Lab",
+      "path": "../../../cognitive-governance-lab/",
+      "local_path_absolute": "/Users/coreyalejandro/cognitive-governance-lab",
+      "surface": "module_library",
+      "truth_status": "working",
+      "components": [
+        "contract-window",
+        "bicameral-review",
+        "invariant-checkers",
+        "insight-atrophy-index",
+        "session-recorder",
+        "research-proposals",
+        "paper-draft"
+      ],
+      "contract_id": null,
+      "verified_date": "2026-05-13",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "research_lane": "cognitive_governance_ai_safety",
+      "product_lane": "governance_library",
+      "notes": "Python governance library with 62 tests all passing locally (2026-05-13). Implements Contract Window, Bicameral Review, Invariant Checkers, Insight Atrophy Index. Formal research program: 3 falsifiable hypotheses (H1 Intent Fidelity, H2 Bilateral Repair, H3 Accessibility). Synthetic calibration pass done; live pilot (10 sessions + human IRR) NOT yet complete. COLM 2026 paper draft present. Anthropic Fellows proposals present. No CRSP contract bound. No web app or routes. Located at ~/cognitive-governance-lab — outside scanner path ~/Projects; scanner path must be extended to find it."
     }
   ]
 }

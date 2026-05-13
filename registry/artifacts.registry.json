@@ -212,7 +212,32 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "Core constitutional document for the TLC project. Existence confirmed this session."
+    },
+    {
+      "id": "ARTIFACT-CGL-GOVERNANCE-KERNEL",
+      "label": "Cognitive Governance Lab — governance-kernel Python package",
+      "type": "module_library",
+      "format": "python",
+      "path": "../../../cognitive-governance-lab/governance-kernel/",
+      "surface": "module_library",
+      "truth_status": "working",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Python governance library. Contains contract_window.py, bicameral_review.py, invariant_checkers.py, insight_atrophy_index.py. 62 tests passing locally as of 2026-05-13. Source of Contract Window reference implementation for TLC 2.0."
+    },
+    {
+      "id": "ARTIFACT-CGL-RESEARCH-PLAN-GATE",
+      "label": "Cognitive Governance Lab — Month 1 Gate Decision (Synthetic)",
+      "type": "research_artifact",
+      "format": "md",
+      "path": "../../../cognitive-governance-lab/RESEARCH_PLAN_GO_20260429.md",
+      "surface": "module_library",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Synthetic calibration gate passed (2026-04-29). Full Month 1 gate NOT met: live pilot (10 sessions), human IRR (kappa >= 0.70), and session-protocol.md all pending."
     }
-
   ]
 }
