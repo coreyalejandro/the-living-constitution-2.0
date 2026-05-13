@@ -70,14 +70,48 @@
     },
     {
       "id": "TLC-ARTIFACTS-RESTRUCTURE",
-      "label": "TLC Artifacts Restructure",
+      "label": "TLC Artifacts — Session Evidence Repository",
       "path": "tlc-artifacts-restructure/",
-      "surface": "governance_core",
-      "truth_status": "unverified",
-      "components": [],
+      "surface": "documentation",
+      "truth_status": "draft",
+      "components": [
+        "sessions-primary-evidence",
+        "sessions-supplementary",
+        "sessions-development",
+        "evidence-manifest",
+        "codebook",
+        "methodology",
+        "tlc-golden-prd",
+        "tlc-model-refactor-plan"
+      ],
       "contract_id": null,
-      "verified_date": null,
-      "notes": "Contains codebook, manifest, methodology dirs. Not yet inspected."
+      "verified_date": "2026-05-13",
+      "implementation_status": "draft",
+      "public_display_status": "draft",
+      "research_lane": "ai_safety_governance_evidence",
+      "product_lane": "evidence_archive",
+      "verified_scope": {
+        "component": "repository structure",
+        "verification": "file inspection + git log (2026-05-13)",
+        "covers": [
+          "README.md confirmed",
+          "sessions/primary-evidence/ S01, S02, S03 present on disk",
+          "manifest/evidence-manifest.md exists with claim-to-session mapping",
+          "codebook/ annotation-guide.md and vt-statement-spec.md present",
+          "methodology/session-protocol.md present"
+        ]
+      },
+      "unverified_scope": [
+        "S01 line references in evidence-manifest.md — TBD audit pending",
+        "Obs 2 kimi.com share link — external, not confirmed accessible",
+        "Obs 4 BREAK_GLASS artifact — stored in cognitive-governance-lab, not here",
+        "sessions/supplementary/ and sessions/development/ — contents not read",
+        "tlc-golden-prd/ HTML files — purpose relative to corpus unclear",
+        "No STATUS.json, no verifier, no test suite",
+        "Paper not confirmed submitted — NeurIPS/FAccT target only",
+        "No CRSP contract bound"
+      ],
+      "notes": "Tier 1 empirical evidence corpus for 'Frontin at WorldMart' (NeurIPS/FAccT target). Holds session transcripts S01-S03, evidence manifest, codebook, methodology. Active curation confirmed via git log. Citation audit incomplete. No code, no verifier, no tests. Surface corrected from governance_core to documentation — evidence archive, not a runtime."
     },
     {
       "id": "TLC-EVIDENCE-OBSERVATORY",

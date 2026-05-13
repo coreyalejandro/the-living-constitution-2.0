@@ -238,6 +238,45 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "Synthetic calibration gate passed (2026-04-29). Full Month 1 gate NOT met: live pilot (10 sessions), human IRR (kappa >= 0.70), and session-protocol.md all pending."
+    },
+    {
+      "id": "ARTIFACT-TLC-EVIDENCE-MANIFEST",
+      "label": "TLC Artifacts — Evidence Manifest (claim-to-session mapping)",
+      "type": "research_artifact",
+      "format": "md",
+      "path": "tlc-artifacts-restructure/manifest/evidence-manifest.md",
+      "surface": "documentation",
+      "truth_status": "draft",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Maps paper observations (Obs 1-4) to sessions, line ranges, and quotes. Obs 1 S01 line refs marked TBD. Obs 2 primary archive is external (.docx). Obs 4 cross-references cognitive-governance-lab. Not machine-checkable — human-readable index only."
+    },
+    {
+      "id": "ARTIFACT-TLC-SESSION-S01",
+      "label": "TLC Artifacts — Primary Evidence Session S01 (Claude, 2026-02-20)",
+      "type": "evidence_transcript",
+      "format": "md",
+      "path": "tlc-artifacts-restructure/sessions/primary-evidence/S01_claude-feynman_2026-02-20.md",
+      "surface": "documentation",
+      "truth_status": "draft",
+      "contract_id": null,
+      "append_only": true,
+      "verified_date": "2026-05-13",
+      "notes": "Verbatim session transcript. Supports Obs 1 (multi-model constitutional coherence). Line references in evidence-manifest TBD — full audit pending. File exists on disk confirmed."
+    },
+    {
+      "id": "ARTIFACT-TLC-CODEBOOK",
+      "label": "TLC Artifacts — Codebook (annotation-guide + vt-statement-spec)",
+      "type": "research_artifact",
+      "format": "md",
+      "path": "tlc-artifacts-restructure/codebook/",
+      "surface": "documentation",
+      "truth_status": "draft",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "annotation-guide.md defines observational codes. vt-statement-spec.md formalizes the V&T statement format. Both files confirmed present."
     }
   ]
 }
