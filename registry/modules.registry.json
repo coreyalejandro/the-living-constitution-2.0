@@ -49,11 +49,24 @@
       "label": "The Living Constitution",
       "path": "the-living-constitution/",
       "surface": "governance_core",
-      "truth_status": "unverified",
-      "components": [],
-      "contract_id": null,
-      "verified_date": null,
-      "notes": "Contains _c-rsp, apps, artifacts dirs. Has AGENTS.md. Not yet inspected this pass."
+      "truth_status": "partial",
+      "components": [
+        "guardian-kernel",
+        "tlc-control-plane",
+        "tlc-semgraph",
+        "tlc-evals",
+        "evidence-observatory",
+        "crsp-contracts",
+        "governance-enforcement",
+        "docker-k8s-infra",
+        "cli"
+      ],
+      "contract_id": "CRSP-001",
+      "verified_date": "2026-05-13",
+      "implementation_status": "partial",
+      "research_lane": "ai_safety_governance",
+      "product_lane": "governance_runtime",
+      "notes": "Active governance-as-code research apparatus. STATUS.json tip_state_truth=tip_verified, reviewer_status=approved, governance_contract_version=v1.9.0. Has real git history (multiple commits), Docker/k8s infra, Python guardian service, Next.js control-plane app, tlc-evals evaluation library (F1-F5, I1-I6 invariants). CRSP-001 (Guardian Kernel) is Tier-3-Constitutional. Series B active. tlc-evals CLI verified working with pattern-only grading. Full model grading requires ANTHROPIC_API_KEY. Marked partial because local test suite not confirmed this session — CI verified remotely."
     },
     {
       "id": "TLC-ARTIFACTS-RESTRUCTURE",

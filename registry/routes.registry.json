@@ -110,6 +110,18 @@
       "notes": "References docs/integration/. No web deployment yet."
     },
     {
+      "route_id": "ROUTE-GOVERNANCE-TLC",
+      "label": "The Living Constitution — Governance Core",
+      "module_id": "THE-LIVING-CONSTITUTION",
+      "surface": "governance_core",
+      "visibility": "internal",
+      "truth_status": "partial",
+      "path_pattern": "/governance/the-living-constitution",
+      "deployment_target": "docker",
+      "live_url": null,
+      "notes": "Active repo with Docker/k8s infra. Guardian service runs as container. tlc-control-plane is a Next.js app in apps/tlc-control-plane. No public URL confirmed this session. Marked partial — infra present and CI-verified but not confirmed live in this classification pass."
+    },
+    {
       "route_id": "ROUTE-EXHIBIT-CONTRACT-WINDOW",
       "label": "Contract Window — Public Exhibit (Planned)",
       "module_id": "CONTRACT-WINDOW-EXHIBIT",

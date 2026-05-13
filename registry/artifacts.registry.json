@@ -173,6 +173,46 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "Created this session. Human-readable companion to registry JSON files."
+    },
+    {
+      "id": "ARTIFACT-TLC-STATUS-JSON",
+      "label": "The Living Constitution — STATUS.json",
+      "type": "status_artifact",
+      "format": "json",
+      "path": "../the-living-constitution/STATUS.json",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": "CRSP-001",
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Authoritative status artifact for TLC. tip_state_truth=tip_verified, reviewer_status=approved as of 2026-05-01. Path is relative to this repo root — resolves to the-living-constitution/STATUS.json in the parent Projects dir. Marked partial (not working) because this was read locally this session but not re-verified against CI."
+    },
+    {
+      "id": "ARTIFACT-TLC-CRSP-001-JSON",
+      "label": "The Living Constitution — CRSP-001 Contract (Guardian Kernel)",
+      "type": "contract",
+      "format": "json",
+      "path": "../the-living-constitution/CRSP-001.json",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": "CRSP-001",
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Guardian Kernel CRSP contract. Tier-3-Constitutional, topology=TLC-Core, status=Active. Last verified 2026-04-08."
+    },
+    {
+      "id": "ARTIFACT-TLC-CONSTITUTION-MD",
+      "label": "The Living Constitution — THE_LIVING_CONSTITUTION.md",
+      "type": "governance_document",
+      "format": "md",
+      "path": "../the-living-constitution/THE_LIVING_CONSTITUTION.md",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": "CRSP-001",
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Core constitutional document for the TLC project. Existence confirmed this session."
     }
+
   ]
 }

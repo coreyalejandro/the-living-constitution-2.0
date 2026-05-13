@@ -1,0 +1,177 @@
+
+> sociotechnical-constitution-runtime@1.0.0 scan:projects
+> node scripts/scan-projects.mjs
+
+
+[1mTLC 2.0 — Project Scanner[0m
+Projects dir : /Users/coreyalejandro/Projects
+Registry     : /Users/coreyalejandro/Projects/sociotechnical-constitution-runtime/registry/modules.registry.json
+Scanned      : 2026-05-13T22:43:26.142Z
+
+[1mREGISTERED MODULES (14)[0m
+  PROACTIVE-AI-CONSTITUTION-TOOLKIT          PROACTIVE-AI-CONSTITUTION-TOOLKIT  [33munverified[0m
+  agent-sentinel-alignment-anomaly-detector  AGENT-SENTINEL                     [33munverified[0m
+  ai-safety-identity-strategy                AI-SAFETY-IDENTITY-STRATEGY        [33munverified[0m
+  coreyalejandro-portfolio-v2                PORTFOLIO-V2                       [33munverified[0m
+  coreys-agentic-portfolio                   COREYS-AGENTIC-PORTFOLIO           [33munverified[0m
+  llm-council                                LLM-COUNCIL                        [33munverified[0m
+  meta-prompt-architect                      META-PROMPT-ARCHITECT              [33munverified[0m
+  misalignment-evidence-lab                  MISALIGNMENT-EVIDENCE-LAB          [33munverified[0m
+  multiagent-debate                          MULTIAGENT-DEBATE                  [33munverified[0m
+  sociotechnical-constitution-runtime        CRSP-STC-RUNTIME-001               [32mworking[0m
+  the-living-constitution                    THE-LIVING-CONSTITUTION            [33munverified[0m
+  tlc-artifacts-restructure                  TLC-ARTIFACTS-RESTRUCTURE          [33munverified[0m
+  tlc-evidence-observatory                   TLC-EVIDENCE-OBSERVATORY           [33munverified[0m
+  zero-shot-build-os-docs                    ZERO-SHOT-BUILD-OS-DOCS            [33munverified[0m
+
+[1mUNREGISTERED DIRECTORIES (129)[0m
+  [33mUNREGISTERED[0m  .hermes
+  [33mUNREGISTERED[0m  1_-_Execute_PRD_Plan_Steps
+  [33mUNREGISTERED[0m  28441830
+  [33mUNREGISTERED[0m  A-Place-Of-Your-Own
+  [33mUNREGISTERED[0m  Advanced_Coding_Assistant_App_with_build_assets
+  [33mUNREGISTERED[0m  Aether
+  [33mUNREGISTERED[0m  AlMe
+  [33mUNREGISTERED[0m  AppleScriptUI
+  [33mUNREGISTERED[0m  COL-REASONS-ASF-2026
+  [33mUNREGISTERED[0m  COL-REASONS-ASF-2026-pristine
+  [33mUNREGISTERED[0m  CRSP-AFS-2026_artifact_bundle_CANONICAL_CHILDREN_20260424
+  [33mUNREGISTERED[0m  CoreyAlejandroAIDataEngineerPortfolio6
+  [33mUNREGISTERED[0m  DeepLearning_Deeper_Regression_Smarter_Features
+  [33mUNREGISTERED[0m  HUI
+  [33mUNREGISTERED[0m  ITAYN
+  [33mUNREGISTERED[0m  MADMall
+  [33mUNREGISTERED[0m  MCPWorkflows
+  [33mUNREGISTERED[0m  PROACTIVE_EMERGENCY
+  [33mUNREGISTERED[0m  PROACTIVE_MIGRATION_PACKAGE
+  [33mUNREGISTERED[0m  Perplexica
+  [33mUNREGISTERED[0m  UICare
+  [33mUNREGISTERED[0m  Vision-Agents
+  [33mUNREGISTERED[0m  a-place-of-your-own-senior-apartment-finder
+  [33mUNREGISTERED[0m  agency-agents
+  [33mUNREGISTERED[0m  agent-ui-template
+  [33mUNREGISTERED[0m  agentic-portfolio-app-page
+  [33mUNREGISTERED[0m  ai-launchpad
+  [33mUNREGISTERED[0m  ai-model-repo
+  [33mUNREGISTERED[0m  ai-tech-career-playbook
+  [33mUNREGISTERED[0m  ai_ml_portfolio_timeline
+  [33mUNREGISTERED[0m  aime
+  [33mUNREGISTERED[0m  alorica-bounce-tour
+  [33mUNREGISTERED[0m  amazon-bedrock-agentcore-samples
+  [33mUNREGISTERED[0m  amp-skills
+  [33mUNREGISTERED[0m  anthropic-ai-safety-fellows-application-july-2026-cohort
+  [33mUNREGISTERED[0m  anthropic-ai-safety-fellows-application-prompt
+  [33mUNREGISTERED[0m  asf-stack
+  [33mUNREGISTERED[0m  black-women-and-graves-disease
+  [33mUNREGISTERED[0m  browser-harness
+  [33mUNREGISTERED[0m  build-lattice-guard
+  [33mUNREGISTERED[0m  buildlattice
+  [33mUNREGISTERED[0m  childbirth_scorm
+  [33mUNREGISTERED[0m  clarity-ai
+  [33mUNREGISTERED[0m  claude-agent-tutor-advanced_revision
+  [33mUNREGISTERED[0m  claude-agent-tutorial
+  [33mUNREGISTERED[0m  claude-repo-template-corey-cloud-aws-primary-safety-20260228
+  [33mUNREGISTERED[0m  claude-repo-template-corey-cloud-aws-primary-safety-diary-20260228
+  [33mUNREGISTERED[0m  code-genie
+  [33mUNREGISTERED[0m  code-genie-pro
+  [33mUNREGISTERED[0m  color-purple-parody
+  [33mUNREGISTERED[0m  consent-gateway-auth0
+  [33mUNREGISTERED[0m  consentchain
+  [33mUNREGISTERED[0m  consilium-mcp-research agent
+  [33mUNREGISTERED[0m  corey-alejandro-main-portfolio-site-6
+  [33mUNREGISTERED[0m  corey-anthropic-portfolio-app
+  [33mUNREGISTERED[0m  corey_application_materials
+  [33mUNREGISTERED[0m  coreyalejandro-portfolio
+  [33mUNREGISTERED[0m  coreys-agentic-portfolio-archive
+  [33mUNREGISTERED[0m  coreys-resume-template
+  [33mUNREGISTERED[0m  cs249r_book
+  [33mUNREGISTERED[0m  deepagents
+  [33mUNREGISTERED[0m  dishflow_golden_colab_v1
+  [33mUNREGISTERED[0m  dishflow_neural_network_v1
+  [33mUNREGISTERED[0m  dishflow_snooze_golden_v3
+  [33mUNREGISTERED[0m  docen
+  [33mUNREGISTERED[0m  docen-live
+  [33mUNREGISTERED[0m  docen-live-starter
+  [33mUNREGISTERED[0m  feynman
+  [33mUNREGISTERED[0m  fireplexity
+  [33mUNREGISTERED[0m  forensic-to-prevention-pipeline
+  [33mUNREGISTERED[0m  frostbyte-etl
+  [33mUNREGISTERED[0m  frostbyte_etl_colabbooks_pack_2026-02-07
+  [33mUNREGISTERED[0m  get-shit-done
+  [33mUNREGISTERED[0m  huns-schema
+  [33mUNREGISTERED[0m  im-just-a-build
+  [33mUNREGISTERED[0m  im-just-a-build-2d
+  [33mUNREGISTERED[0m  im-just-a-build-crsp-package
+  [33mUNREGISTERED[0m  individualized-instruction-model
+  [33mUNREGISTERED[0m  innovation-next-enterprise-agentic-data-analysis-and-machine-learning-system
+  [33mUNREGISTERED[0m  instructional-integrity
+  [33mUNREGISTERED[0m  instructional-integrity-framework
+  [33mUNREGISTERED[0m  instructional-integrity-ui
+  [33mUNREGISTERED[0m  intention-contract
+  [33mUNREGISTERED[0m  intentional-ai-report
+  [33mUNREGISTERED[0m  intentional-ai_-the-research-origin-story_v2
+  [33mUNREGISTERED[0m  juniorgpt
+  [33mUNREGISTERED[0m  kimi2-im-just-a-build
+  [33mUNREGISTERED[0m  kimi2-im-just-a-build-take-2
+  [33mUNREGISTERED[0m  kiro-hackathon-mad-mall
+  [33mUNREGISTERED[0m  kiro-hackathon-mad-mall-copy-1
+  [33mUNREGISTERED[0m  m2-deep-research
+  [33mUNREGISTERED[0m  mad-mall-production
+  [33mUNREGISTERED[0m  magic-oracle
+  [33mUNREGISTERED[0m  maps-sdk-for-ios-samples
+  [33mUNREGISTERED[0m  mars-rejects-purple-brain-remix
+  [33mUNREGISTERED[0m  max-agentic-cookbook
+  [33mUNREGISTERED[0m  mem0
+  [33mUNREGISTERED[0m  my_agent
+  [33mUNREGISTERED[0m  nfl-research-proposal
+  [33mUNREGISTERED[0m  operator-desk
+  [33mUNREGISTERED[0m  parallax
+  [33mUNREGISTERED[0m  proactive-demo
+  [33mUNREGISTERED[0m  proactive-gitlab-agent
+  [33mUNREGISTERED[0m  proactive-migration-package
+  [33mUNREGISTERED[0m  proactive-research-program
+  [33mUNREGISTERED[0m  professional-skeptic
+  [33mUNREGISTERED[0m  purple-brain-agentic-army
+  [33mUNREGISTERED[0m  ralph
+  [33mUNREGISTERED[0m  resume-intelligence-briefs
+  [33mUNREGISTERED[0m  roih
+  [33mUNREGISTERED[0m  safety-identity-refactor
+  [33mUNREGISTERED[0m  sentinelos
+  [33mUNREGISTERED[0m  teaser-video
+  [33mUNREGISTERED[0m  teaser-video-remotion
+  [33mUNREGISTERED[0m  the-black-apt-finder
+  [33mUNREGISTERED[0m  the-research-origin-story
+  [33mUNREGISTERED[0m  thought-forge-ai
+  [33mUNREGISTERED[0m  three_landing_pages
+  [33mUNREGISTERED[0m  timeline-brought-to-life
+  [33mUNREGISTERED[0m  timeline-brought-to-life-1
+  [33mUNREGISTERED[0m  uicare-hui
+  [33mUNREGISTERED[0m  uicare-system
+  [33mUNREGISTERED[0m  upos7vs_multiplatform
+  [33mUNREGISTERED[0m  v0-apt-finder
+  [33mUNREGISTERED[0m  v0-corey-alejandro-main-portfolio-site
+  [33mUNREGISTERED[0m  v0-theaptfinderarchitecturepackage
+  [33mUNREGISTERED[0m  websites
+  [33mUNREGISTERED[0m  zero-shot-ai
+  [33mUNREGISTERED[0m  zero-shot-os-with-upos7vs-core
+
+[1mBACKUP / ARCHIVE COPIES (8) — informational[0m
+  [2m28441830 (old)[0m
+  [2m28441830 copy[0m
+  [2ma-place-of-your-own-senior-apartment-finder copy[0m
+  [2manthropic-ai-safety-fellows-application-prompt copy[0m
+  [2mgraves-immersive (1)[0m
+  [2msociotechnical-constitution-runtime-old-20260513-171711[0m
+  [2msociotechnical-constitution-runtime-repaired-tier1[0m
+  [2mtimeline-brought-to-life (1)[0m
+
+[2mSkipped non-project entries: 55[0m
+
+[1mSUMMARY[0m
+  Registry modules   : 15
+  Matched on disk    : 14
+  Unregistered dirs  : 129
+
+[33mACTION NEEDED: 129 project directories not in registry.[0m
+  Add entries to registry/modules.registry.json with truth_status: "unverified".
+
