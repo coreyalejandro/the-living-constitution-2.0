@@ -1,142 +1,143 @@
-# HANDOFF — TLC 2.0 Integration Control Plane
-# Session: 2026-05-13 | Status: COMPLETE
+# Agent Handoff: Sociotechnical Constitution Runtime
+
+**Date:** 2026-05-13
+**Status:** Tier-1 runtime + TLC 2.0 integration control plane committed. Session 2 complete. One priority project classified.
 
 ---
 
-## Files Created
+## What Was Just Completed (Session 2)
 
-docs/integration/TLC_2_0_IDENTITY.md
-  Defines TLC 2.0 scope, surfaces taxonomy, truth status taxonomy, and
-  binding to contract CRSP-STC-RUNTIME-001.
-
-docs/integration/TLC_2_0_INTEGRATION_MAP.md
-  Human-readable map of all classified projects, prototypes, portfolio
-  routes, lab routes, documentation routes, and evidence artifacts.
-  Companion to the three registry JSON files.
-
-registry/modules.registry.json
-  15 modules classified. 1 working (CRSP-STC-RUNTIME-001). 13 unverified.
-  1 planned (CONTRACT-WINDOW-EXHIBIT).
-
-registry/artifacts.registry.json
-  13 artifacts. Includes evidence logs, schemas, contracts, governance docs,
-  and the two new TLC 2.0 identity/map docs.
-
-registry/routes.registry.json
-  12 routes. 4 working (governance core + schema docs). 1 planned
-  (exhibit/contract-window). 7 unverified.
-
-scripts/scan-projects.mjs
-  Walks /Users/coreyalejandro/Projects, cross-references against
-  modules.registry.json, reports registered vs. unregistered dirs.
-
-scripts/verify-registry.mjs
-  Validates all three registry files: JSON parse, required fields,
-  valid surface + truth_status values, no duplicate IDs, route → module
-  cross-reference, working entries have verified_date.
+1. **Git repository initialized** — `git init` inside the project (no `.git` existed). Committed all 41 files as root commit SHA `73f227b`.
+2. **scan:projects run** — output saved to `registry/scan-projects-output.txt`. 14 registered modules matched on disk, 129 unregistered directories found.
+3. **the-living-constitution classified** — highest-priority project inspected and registered:
+   - `truth_status`: `partial` (STATUS.json tip_verified + CI-approved, but local test not run this session)
+   - `surface`: `governance_core`
+   - `implementation_status`: `partial`
+   - `research_lane`: `ai_safety_governance`
+   - `product_lane`: `governance_runtime`
+   - `contract_id`: `CRSP-001`
+   - 3 new artifact entries: STATUS.json, CRSP-001.json, THE_LIVING_CONSTITUTION.md
+   - 1 new route entry: ROUTE-GOVERNANCE-TLC
+4. **All verifications passed** after registry update:
+   - `npm run verify:registry` — 0 errors, 0 warnings (15 modules, 16 artifacts, 13 routes)
+   - `npm run verify` — PASS (validate + 5 suites / 9 tests)
+   - `npm test` — PASS (5 suites / 9 tests)
+5. **Changes committed** — SHA `c766116`: "Classify the-living-constitution: partial, governance_core — add module, 3 artifacts, 1 route"
 
 ---
 
-## Files Modified
+## Current Git State
 
-package.json
-  Added two scripts:
-    "scan:projects": "node scripts/scan-projects.mjs"
-    "verify:registry": "node scripts/verify-registry.mjs"
-
----
-
-## Commands Run
-
-npm run verify
-  → VALID: active contract matches schema.
-  → 5 test suites, 9 tests PASS. Exit 0.
-
-npm test
-  → 5 test suites, 9 tests PASS. Exit 0.
-
-npm run verify:registry
-  → 15 modules, 13 artifacts, 12 routes checked.
-  → 0 errors, 0 warnings. REGISTRY VERIFIED. Exit 0.
+| Item | Value |
+|------|-------|
+| Branch | `main` |
+| Latest commit | `c766116` |
+| Commits total | 2 |
+| Tests | 5 suites / 9 passing |
+| Registry | 15 modules, 16 artifacts, 13 routes |
 
 ---
 
-## Pass/Fail Results
+## Registry Counts
 
-npm run verify       PASS
-npm test             PASS
-npm run verify:registry   PASS (0 errors, 0 warnings)
-
----
-
-## What Remains Unimplemented
-
-1. Classification passes on the 13 unverified modules.
-   No project outside this repo was inspected in this session.
-   agent-sentinel, llm-council, the-living-constitution, tlc-evidence-observatory,
-   tlc-artifacts-restructure, meta-prompt-architect, and others are all
-   truth_status: "unverified".
-
-2. scan-projects output has not been run and reviewed.
-   npm run scan:projects will show which project directories are not yet in
-   the registry. That list is long. It is informational only — not a failure.
-
-3. No route has a live_url assigned.
-   All deployment_target values are "local" or "vercel" (planned).
-   No actual deployment was performed this session.
-
-4. Registry schema files (modules.registry.schema.json, etc.) are referenced
-   in $schema fields but do not physically exist yet.
-   This is safe because verify-registry.mjs does not use $schema — it
-   implements its own structural validation. The $schema fields are
-   documentation-only placeholders.
-
-5. Contract Window exhibit (ROUTE-EXHIBIT-CONTRACT-WINDOW) is planned.
-   No CRSP contract issued for it. Nothing built.
-
-6. No git commit was made this session.
-   All changes are local on disk only.
+| Registry | Count |
+|----------|-------|
+| Modules | 15 (1 working, 1 partial, 13 unverified) |
+| Artifacts | 16 |
+| Routes | 13 (4 working, 1 partial, 1 planned, 7 unverified) |
 
 ---
 
-## One Next Action
+## Priority Queue — Next Projects to Classify
 
-Run:
-  cd /Users/coreyalejandro/Projects/sociotechnical-constitution-runtime
-  npm run scan:projects
+Work through this list one at a time. Do not skip ahead.
 
-Review the UNREGISTERED DIRECTORIES output.
-Pick the highest-priority unregistered project (e.g., the-living-constitution
-or tlc-evidence-observatory) and open a classification pass:
-  - inspect it
-  - determine correct surface and truth_status
-  - add entry to modules.registry.json
-  - re-run npm run verify:registry to confirm 0 errors
+| Priority | Project dir | Status |
+|----------|-------------|--------|
+| 1 | ~~the-living-constitution~~ | DONE — `partial` |
+| 2 | cognitive-governance-lab | Next |
+| 3 | tlc-artifacts-restructure | In registry as unverified |
+| 4 | agent-sentinel-alignment-anomaly-detector | In registry as unverified |
+| 5 | PROACTIVE-AI-CONSTITUTION-TOOLKIT | In registry as unverified |
+| 6 | consentchain | Not in registry yet |
+| 7 | consent-gateway-auth0 | Not in registry yet |
+| 8 | instructional-integrity-ui | Not in registry yet |
+| 9 | MADMall / mad-mall-production | Not in registry yet |
+| 10 | purple-brain-agentic-army / coreyalejandro-portfolio-v2 | Not in registry yet |
 
 ---
 
-V&T:
+## What to Do Next (exact instruction for next agent)
 
-EXISTS (Verified Present)
-  7 new files created and on disk
-  package.json modified with 2 new scripts
-  npm run verify: PASS (unchanged from Tier-1 baseline)
-  npm test: PASS (unchanged from Tier-1 baseline)
-  npm run verify:registry: PASS — 0 errors, 0 warnings
+```
+You are working in /Users/coreyalejandro/Projects/sociotechnical-constitution-runtime.
+The Tier-1 runtime and TLC 2.0 integration control plane are verified and committed (SHA c766116).
+the-living-constitution has been classified as partial / governance_core and committed.
 
-VERIFIED AGAINST
-  verify — exit 0, 5 suites 9 tests
-  test — exit 0, 5 suites 9 tests
-  verify:registry — exit 0, 15 modules + 13 artifacts + 12 routes all valid
+The next project to classify is: cognitive-governance-lab
+Path: /Users/coreyalejandro/Projects/cognitive-governance-lab (check if it exists — it may be at ~/cognitive-governance-lab instead)
 
-NOT CLAIMED
-  No external projects were inspected or classified beyond what was visible
-  from directory listing
-  No deployments were made
-  No git commits were made
-  No external integrations were wired
+For the selected project:
+- inspect README, package.json or pyproject.toml, config, docs, STATUS files only
+- determine surface (governance_core / private_lab / public_portfolio / documentation / module_library / exhibit)
+- determine truth_status (working / partial / static_prototype / draft / planned / deprecated / quarantined / unverified)
+- determine implementation_status
+- determine research_lane
+- determine product_lane
+- add or update one module in registry/modules.registry.json
+- add any directly relevant artifact records to registry/artifacts.registry.json
+- add route records only if real routes are present
+- run npm run verify:registry
+- run npm run verify
+- run npm test
+- git add registry/ && git commit -m "Classify cognitive-governance-lab: <truth_status>, <surface>"
 
-FUNCTIONAL STATUS
-  TLC 2.0 integration control plane is installed and verified.
-  Registry verifier enforces taxonomy. Scanner reports coverage gaps.
-  Tier-1 runtime is untouched. All pre-existing tests still pass.
+End with:
+- project inspected
+- files read
+- registry entries changed
+- commands run
+- pass/fail results
+- what remains unverified
+- one next action
+```
+
+---
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `registry/modules.registry.json` | Module classification registry |
+| `registry/artifacts.registry.json` | Artifact records |
+| `registry/routes.registry.json` | Route records |
+| `registry/scan-projects-output.txt` | Raw scan output from 2026-05-13 |
+| `docs/integration/TLC_2_0_IDENTITY.md` | TLC 2.0 surface + truth taxonomy |
+| `docs/integration/TLC_2_0_INTEGRATION_MAP.md` | Human-readable classification map |
+| `scripts/scan-projects.mjs` | Project scanner |
+| `scripts/verify-registry.mjs` | Registry structural validator |
+
+---
+
+## Preserved Backups (in /Users/coreyalejandro/Projects/)
+
+| Item | Description |
+|------|-------------|
+| `sociotechnical-constitution-runtime-BACKUP-20260513-171611.tar.gz` | Pre-replacement tarball (7.9M) |
+| `sociotechnical-constitution-runtime-old-20260513-171711/` | Old project folder |
+| `sociotechnical-constitution-runtime-repaired-tier1.zip` | Original repair ZIP |
+
+---
+
+## What Remains Unverified
+
+- 13 modules in registry have `truth_status: unverified` — not yet inspected
+- 129 unregistered project directories in scan output — not yet classified
+- TLC the-living-constitution marked `partial` not `working` — local test suite was not run (CI-verified remotely)
+- No `live_url` on any route — no deployments confirmed
+- `cognitive-governance-lab` path not confirmed (may be at `~/cognitive-governance-lab` vs `~/Projects/cognitive-governance-lab`)
+
+---
+
+**Status:** Session 2 complete. Registry committed. Next: classify cognitive-governance-lab.
+**Confidence:** High — all tests pass, registry structurally valid, git clean.
