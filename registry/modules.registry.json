@@ -126,14 +126,47 @@
     },
     {
       "id": "AGENT-SENTINEL",
-      "label": "Agent Sentinel Alignment Anomaly Detector",
+      "label": "Agent Sentinel — Alignment Anomaly Detector",
       "path": "agent-sentinel-alignment-anomaly-detector/",
       "surface": "private_lab",
-      "truth_status": "unverified",
-      "components": [],
+      "truth_status": "partial",
+      "components": [
+        "frontend-spa",
+        "gemini-service",
+        "error-boundary",
+        "analysis-hooks",
+        "validation-utils",
+        "docker-nginx-config"
+      ],
       "contract_id": null,
-      "verified_date": null,
-      "notes": "Has App.tsx, docker-compose.yml, dist/. Suggests a running prototype. Inspect before promoting."
+      "verified_date": "2026-05-13",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "research_lane": "ai_safety_alignment_anomaly_detection",
+      "product_lane": "safety_tool_portfolio_demo",
+      "verified_scope": {
+        "component": "TypeScript compilation",
+        "verification": "npx tsc --noEmit — 0 errors (2026-05-13)",
+        "covers": [
+          "src/config/environment.ts",
+          "src/components/ (ErrorBoundary, Dashboard header, Notifications, HealthCheck)",
+          "src/hooks/ (useAnalysis, useErrorHandler, useNotifications)",
+          "src/services/enhancedGeminiService.ts",
+          "src/utils/ (validation, security, logger, performance, constants)",
+          "src/types/index.ts"
+        ]
+      },
+      "unverified_scope": [
+        "test suite: 2 suites fail — import.meta/Jest config mismatch (not fixed)",
+        "README.md: unresolved git merge conflict at top of file",
+        ".env deleted — Gemini API key required, not present in repo",
+        "dev server not started — no runtime behavior confirmed",
+        "Docker/nginx config not tested",
+        "pnpm-lock.yaml untracked — workspace config partially uncommitted",
+        "No live URL, no deployment confirmed",
+        "No STATUS.json, no CRSP contract bound"
+      ],
+      "notes": "React/TypeScript/Vite SPA for AI agent log analysis and behavioral anomaly detection. Calls Gemini API. TypeScript compiles clean. Test suite broken by import.meta/Jest config mismatch — config gap, not absent implementation. README has unresolved merge conflict (AI Studio template vs Agent Sentinel content). Docker and nginx config present but not tested. API key required to run."
     },
     {
       "id": "LLM-COUNCIL",

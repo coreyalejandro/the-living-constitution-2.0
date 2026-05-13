@@ -277,6 +277,19 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "annotation-guide.md defines observational codes. vt-statement-spec.md formalizes the V&T statement format. Both files confirmed present."
+    },
+    {
+      "id": "ARTIFACT-AGENT-SENTINEL-METADATA",
+      "label": "Agent Sentinel — metadata.json (capability descriptor)",
+      "type": "module_descriptor",
+      "format": "json",
+      "path": "agent-sentinel-alignment-anomaly-detector/metadata.json",
+      "surface": "private_lab",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Describes project as 'professional research tool for analyzing AI agent inference traces to detect constitutional breaches, misalignment, and model drift.' majorCapabilities array is empty. TypeScript compiles clean. Test suite fails on import.meta/Jest config mismatch. README has unresolved merge conflict."
     }
   ]
 }
