@@ -316,6 +316,32 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "GitLab AI Catalog registration file. Present on disk. Not confirmed deployed to a live GitLab instance this session."
+    },
+    {
+      "id": "ARTIFACT-CONSENTCHAIN-PRISMA-SCHEMA",
+      "label": "ConsentChain — prisma/schema.prisma (data model)",
+      "type": "data_model",
+      "format": "prisma",
+      "path": "consentchain/prisma/schema.prisma",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Defines Agent, LedgerEntry, RevocationState, IdempotencyRecord, StepUpChallenge models. SQLite datasource. Migrations have run locally (dev.db exists). No production DB configured."
+    },
+    {
+      "id": "ARTIFACT-CONSENTCHAIN-BUILD-CONTRACT",
+      "label": "ConsentChain — consentchain-build-contract.md (execution journal)",
+      "type": "build_journal",
+      "format": "markdown",
+      "path": "consentchain/consentchain-build-contract.md",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Start-from-zero execution sequence for the ConsentChain MVP. Not a CRSP governance contract. Documents build phases 0 through 15+. HANDOFF.md (2026-03-17) reports phases 14-15 partial complete."
     }
   ]
 }
