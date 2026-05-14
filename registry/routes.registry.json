@@ -168,6 +168,18 @@
       "deployment_target": "local",
       "live_url": null,
       "notes": "REASONS + UPOS-7-VS methodology documentation."
+    },
+    {
+      "route_id": "ROUTE-PROACTIVE-WEB-UI",
+      "label": "PROACTIVE — Web UI (local)",
+      "module_id": "PROACTIVE-28441830",
+      "surface": "governance_core",
+      "visibility": "internal",
+      "truth_status": "partial",
+      "path_pattern": "/",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "web_ui.py present and 87% test-covered. No live URL confirmed. Requires Anthropic + GitLab API keys to run. Route added to satisfy working-module-requires-route registry check. Deploy via python -m proactive.web_ui or equivalent once API keys are configured."
     }
   ]
 }

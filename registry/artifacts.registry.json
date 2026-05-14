@@ -290,6 +290,32 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "Describes project as 'professional research tool for analyzing AI agent inference traces to detect constitutional breaches, misalignment, and model drift.' majorCapabilities array is empty. TypeScript compiles clean. Test suite fails on import.meta/Jest config mismatch. README has unresolved merge conflict."
+    },
+    {
+      "id": "ARTIFACT-PROACTIVE-PYPROJECT",
+      "label": "PROACTIVE — pyproject.toml (package descriptor v4.0.0)",
+      "type": "module_descriptor",
+      "format": "toml",
+      "path": "28441830/pyproject.toml",
+      "surface": "governance_core",
+      "truth_status": "working",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Python package v4.0.0. Deps: anthropic, python-gitlab, click, requests, pydantic. Dev deps: pytest, pytest-cov. 731 tests pass."
+    },
+    {
+      "id": "ARTIFACT-PROACTIVE-GITLAB-AGENT",
+      "label": "PROACTIVE — GitLab Duo agent config (proactive-agent.yml)",
+      "type": "integration_config",
+      "format": "yaml",
+      "path": "28441830/.gitlab/duo/agents/proactive-agent.yml",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "GitLab AI Catalog registration file. Present on disk. Not confirmed deployed to a live GitLab instance this session."
     }
   ]
 }

@@ -214,14 +214,68 @@
     },
     {
       "id": "PROACTIVE-AI-CONSTITUTION-TOOLKIT",
-      "label": "Proactive AI Constitution Toolkit",
+      "label": "Proactive AI Constitution Toolkit (documentation satellite)",
       "path": "PROACTIVE-AI-CONSTITUTION-TOOLKIT/",
       "surface": "documentation",
       "truth_status": "unverified",
       "components": [],
       "contract_id": null,
       "verified_date": null,
-      "notes": "Contains structured sections: 01_FOUNDATIONS, 02_PROGRAM_GOVERNANCE, etc. Likely doc-heavy."
+      "notes": "Documentation satellite for the PROACTIVE framework. Contains structured sections 01_FOUNDATIONS through 09_SAFETY_CASE. Not the canonical Python package — see PROACTIVE-28441830 for the implemented, test-verified module. Not inspected this session beyond top-level listing."
+    },
+    {
+      "id": "PROACTIVE-28441830",
+      "label": "PROACTIVE — Constitutional AI Safety Agent for GitLab Duo",
+      "path": "28441830/",
+      "surface": "governance_core",
+      "truth_status": "working",
+      "components": [
+        "col",
+        "contract-window",
+        "drift-detector",
+        "semantic-drift-detector",
+        "mr-analyzer",
+        "validator",
+        "vt-generator",
+        "severity-scorer",
+        "label-assigner",
+        "report-formatter",
+        "gitlab-client",
+        "llm-client",
+        "web-ui",
+        "cli",
+        "gitlab-duo-agent"
+      ],
+      "contract_id": null,
+      "verified_date": "2026-05-13",
+      "implementation_status": "working",
+      "public_display_status": "draft",
+      "research_lane": "ai_safety_epistemic_reliability",
+      "product_lane": "safety_tool_gitlab_integration",
+      "verified_scope": {
+        "component": "Python package core",
+        "verification": "python -m pytest tests/ — 731 passed in 1.37s (2026-05-13)",
+        "covers": [
+          "contract_window.py (98% coverage)",
+          "report_formatter.py (98% coverage)",
+          "severity_scorer.py (99% coverage)",
+          "vt_generator.py (96% coverage)",
+          "semantic_drift_detector.py (95% coverage)",
+          "mr_analyzer.py (90% coverage)",
+          "col.py (79% coverage)",
+          "drift_detector.py (80% coverage)",
+          "web_ui.py (87% coverage)"
+        ]
+      },
+      "unverified_scope": [
+        "cli.py: 0% coverage — requires live Anthropic + GitLab API keys",
+        "gitlab_client.py: 0% coverage — requires live GitLab API",
+        "GitLab Duo Chat integration: agent registered but deployment not confirmed",
+        "Web UI: no live URL confirmed",
+        "No STATUS.json, no CRSP contract bound",
+        "Satellite repos (proactive-research-program, proactive-migration-package, proactive-demo, proactive-gitlab-agent) not classified"
+      ],
+      "notes": "Canonical PROACTIVE Python package. Version 4.0.0. Constitutional AI safety agent that enforces epistemic reliability (F1-F5) in GitLab MR review. 731 tests pass, 72% overall coverage. Core enforcement modules at 90-99% coverage. GitLab Duo agent config at .gitlab/duo/agents/proactive-agent.yml. README status: production-ready within hackathon scope. No CRSP contract. Relation to cognitive-governance-lab: PROACTIVE is the production implementation; CGL is the research prototype for the same constitutional concepts."
     },
     {
       "id": "AI-SAFETY-IDENTITY-STRATEGY",
