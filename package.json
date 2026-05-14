@@ -24,7 +24,8 @@
     "verify:registry": "node scripts/verify-registry.mjs",
     "generate:module-status": "node scripts/generate-module-status.mjs",
     "generate:portfolio-data": "node scripts/generate-portfolio-data.mjs",
-    "ingest:verify": "npm run verify:registry && npm run generate:module-status && npm run generate:portfolio-data"
+    "ingest:verify": "npm run verify:registry && npm run generate:module-status && npm run generate:portfolio-data",
+    "sync:portfolio": "node scripts/sync-portfolio-data.mjs"
   },
   "keywords": [
     "governance",

@@ -1,0 +1,26 @@
+{
+  "schema": "portfolio-sync-receipt.v1",
+  "synced_at": "2026-05-14T00:30:36.417Z",
+  "source": {
+    "path": "/Users/coreyalejandro/Projects/sociotechnical-constitution-runtime/PORTFOLIO_DATA.json",
+    "repo": "sociotechnical-constitution-runtime",
+    "git_sha": "99d79d1bb5b341fa6eace41b8fe09c662d668da9",
+    "checksum_sha256": "a96330a762d17764d22853c139d4b25eb35f351f55fe0c5f07c704e49d91ca0d",
+    "modules": 11,
+    "groups": 6,
+    "registry_version": "1.0.0",
+    "generated_at": "2026-05-14T00:30:36.242Z"
+  },
+  "target": {
+    "path": "/Users/coreyalejandro/Projects/coreys-agentic-portfolio/data/portfolio-data.json",
+    "repo": "coreys-agentic-portfolio",
+    "git_sha": "94f4ab68ae75ac9596d4cbea365745c3fad772ce",
+    "checksum_sha256": "a96330a762d17764d22853c139d4b25eb35f351f55fe0c5f07c704e49d91ca0d"
+  },
+  "result": {
+    "status": "success",
+    "unchanged": false,
+    "prior_checksum": "27552378c9e85c7e4c477f82b27787a293e1844f235213e4c1c7547e323b231e",
+    "new_checksum": "a96330a762d17764d22853c139d4b25eb35f351f55fe0c5f07c704e49d91ca0d"
+  }
+}
