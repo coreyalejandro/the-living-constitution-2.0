@@ -63,7 +63,7 @@ Every public claim must be traceable from research to evidence to paper/product.
 ## How it connects to TLC 2.0
 
 Projects generated from this template are registered as TLC 2.0 modules in:
-`sociotechnical-constitution-runtime/registry/modules.registry.json`
+`the-living-constitution-2.0/registry/modules.registry.json`
 
 The runtime registry governs what this portfolio is allowed to claim about each project. The truth labels (working / partial / draft / static_prototype / planned / unverified) in STATUS.md must match the registry.
 

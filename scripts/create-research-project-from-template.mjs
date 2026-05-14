@@ -206,7 +206,7 @@ console.log('     validate_repo.py will FAIL until all 6 visual files have conte
 console.log('');
 console.log('  5. Register the project in the runtime registry');
 console.log('     Add an entry to:');
-console.log('       sociotechnical-constitution-runtime/registry/modules.registry.json');
+console.log('       the-living-constitution-2.0/registry/modules.registry.json');
 console.log('     Then run from the runtime root:');
 console.log('       npm run ingest:verify');
 console.log('');

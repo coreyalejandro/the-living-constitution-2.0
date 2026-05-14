@@ -4,7 +4,7 @@
 **Status:** Active
 **Last updated:** 2026-05-13
 **Applies to:** All TLC 2.0 classification sessions in
-`/Users/coreyalejandro/Projects/sociotechnical-constitution-runtime`
+`/Users/coreyalejandro/Projects/the-living-constitution-2.0`
 
 ---
 
@@ -20,7 +20,7 @@ without completing Phase 2 inspection and passing Phase 3 verification.
 ## Phase 0 — Preparation
 
 0.1 Confirm working directory:
-    /Users/coreyalejandro/Projects/sociotechnical-constitution-runtime
+    /Users/coreyalejandro/Projects/the-living-constitution-2.0
 
 0.2 Create a feature branch:
     git checkout -b classify/<module-slug>

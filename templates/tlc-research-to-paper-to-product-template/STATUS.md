@@ -10,7 +10,7 @@
 ## Template status
 
 This file was generated from:
-`sociotechnical-constitution-runtime/templates/tlc-research-to-paper-to-product-template`
+`the-living-constitution-2.0/templates/tlc-research-to-paper-to-product-template`
 
 Replace all `{{PLACEHOLDER}}` values with project-specific content before beginning work.
 

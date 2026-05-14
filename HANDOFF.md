@@ -70,7 +70,7 @@ Work through this list one at a time. Do not skip ahead.
 ## What to Do Next (exact instruction for next agent)
 
 ```
-You are working in /Users/coreyalejandro/Projects/sociotechnical-constitution-runtime.
+You are working in /Users/coreyalejandro/Projects/the-living-constitution-2.0.
 The Tier-1 runtime and TLC 2.0 integration control plane are verified and committed (SHA c766116).
 the-living-constitution has been classified as partial / governance_core and committed.
 

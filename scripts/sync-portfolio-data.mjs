@@ -3,7 +3,7 @@
  * sync-portfolio-data.mjs
  * TLC 2.0 Integration Control Plane — Registry → Portfolio Sync
  *
- * Copies PORTFOLIO_DATA.json from sociotechnical-constitution-runtime
+ * Copies PORTFOLIO_DATA.json from the-living-constitution-2.0
  * into coreys-agentic-portfolio/data/portfolio-data.json.
  *
  * Writes a sync receipt at sync/portfolio-data-sync-receipt.json
@@ -118,7 +118,7 @@ const receipt = {
   synced_at: new Date().toISOString(),
   source: {
     path: SOURCE_PATH,
-    repo: 'sociotechnical-constitution-runtime',
+    repo: 'the-living-constitution-2.0',
     git_sha: runtimeSHA,
     checksum_sha256: sourceChecksum,
     modules: sourceData.modules?.length ?? null,

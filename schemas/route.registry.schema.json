@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://sociotechnical-constitution-runtime/schemas/route.registry.schema.json",
+  "$id": "https://the-living-constitution-2.0/schemas/route.registry.schema.json",
   "title": "Route Registry Entry",
   "description": "Schema for a single route entry in registry/routes.registry.json",
   "type": "object",

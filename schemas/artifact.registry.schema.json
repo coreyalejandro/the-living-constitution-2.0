@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://sociotechnical-constitution-runtime/schemas/artifact.registry.schema.json",
+  "$id": "https://the-living-constitution-2.0/schemas/artifact.registry.schema.json",
   "title": "Artifact Registry Entry",
   "description": "Schema for a single artifact entry in registry/artifacts.registry.json",
   "type": "object",

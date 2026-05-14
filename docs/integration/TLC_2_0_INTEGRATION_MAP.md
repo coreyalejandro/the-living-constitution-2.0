@@ -15,7 +15,7 @@ Do not upgrade a status without running `npm run verify:registry` first.
 
 | ID                         | Path / Repo                              | Status      |
 |----------------------------|------------------------------------------|-------------|
-| CRSP-STC-RUNTIME-001       | sociotechnical-constitution-runtime/     | working     |
+| CRSP-STC-RUNTIME-001       | the-living-constitution-2.0/     | working     |
 | TLC-ARTIFACTS-RESTRUCTURE  | tlc-artifacts-restructure/               | unverified  |
 | TLC-EVIDENCE-OBSERVATORY   | tlc-evidence-observatory/                | unverified  |
 | THE-LIVING-CONSTITUTION    | the-living-constitution/                 | unverified  |

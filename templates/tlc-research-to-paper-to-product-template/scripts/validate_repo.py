@@ -4,7 +4,7 @@ TLC Research-to-Paper-to-Product Template — Repository Structure Validator
 Verifies required files, directories, .gitignore, STATUS.md, and visual layer.
 Exits 0 on PASS. Exits 1 on FAIL.
 
-Generated from: sociotechnical-constitution-runtime/templates/tlc-research-to-paper-to-product-template
+Generated from: the-living-constitution-2.0/templates/tlc-research-to-paper-to-product-template
 """
 
 import os

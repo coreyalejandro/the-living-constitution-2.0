@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://sociotechnical-constitution-runtime/schemas/module.registry.schema.json",
+  "$id": "https://the-living-constitution-2.0/schemas/module.registry.schema.json",
   "title": "Module Registry Entry",
   "description": "Schema for a single module entry in registry/modules.registry.json",
   "type": "object",

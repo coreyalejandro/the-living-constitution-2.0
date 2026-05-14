@@ -99,7 +99,7 @@ Each step includes its own detailed spec below, diagrams where relevant, and acc
 ### 8.1 File System Layout
 
 ```
-sociotechnical-constitution-runtime/
+the-living-constitution-2.0/
 ├── constitution/
 │   ├── SOCIOTECHNICAL_CONSTITUTION.md
 │   └── amendments/

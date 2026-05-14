@@ -236,7 +236,7 @@ On halt: mark STATUS.md as HALTED, record the halt reason and date, open a resol
 
 Primary truth surface: `STATUS.md`
 Secondary truth surface: `evidence/index/evidence_index.csv`
-Registry entry: `sociotechnical-constitution-runtime/registry/modules.registry.json`
+Registry entry: `the-living-constitution-2.0/registry/modules.registry.json`
 Public reviewer surface: `coreyalejandro.com/modules`
 
 ---

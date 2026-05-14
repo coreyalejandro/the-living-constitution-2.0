@@ -26,7 +26,7 @@
     {
       "id": "CRSP-STC-RUNTIME-001",
       "label": "SocioTechnical Constitution Runtime",
-      "path": "sociotechnical-constitution-runtime/",
+      "path": "the-living-constitution-2.0/",
       "surface": "governance_core",
       "truth_status": "working",
       "components": [
@@ -643,7 +643,7 @@
     {
       "id": "TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE",
       "label": "TLC Research-to-Paper-to-Product Repo Template",
-      "path": "sociotechnical-constitution-runtime/templates/tlc-research-to-paper-to-product-template/",
+      "path": "the-living-constitution-2.0/templates/tlc-research-to-paper-to-product-template/",
       "surface": "governance_core",
       "display_group": "templates",
       "truth_status": "partial",

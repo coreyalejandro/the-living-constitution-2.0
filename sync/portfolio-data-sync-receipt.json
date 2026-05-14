@@ -2,8 +2,8 @@
   "schema": "portfolio-sync-receipt.v1",
   "synced_at": "2026-05-14T03:34:03.512Z",
   "source": {
-    "path": "/Users/coreyalejandro/Projects/sociotechnical-constitution-runtime/PORTFOLIO_DATA.json",
-    "repo": "sociotechnical-constitution-runtime",
+    "path": "/Users/coreyalejandro/Projects/the-living-constitution-2.0/PORTFOLIO_DATA.json",
+    "repo": "the-living-constitution-2.0",
     "git_sha": "22579470d7d2b08c9e2c7a624b0a9449d0b78710",
     "checksum_sha256": "fdaee451d062d2045d7396f12bd151ca6bab72ab708d5fdab1fe6cc6855fc90b",
     "modules": 12,

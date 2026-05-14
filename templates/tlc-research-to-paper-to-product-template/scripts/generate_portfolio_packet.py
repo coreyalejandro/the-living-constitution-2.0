@@ -88,7 +88,7 @@ def main():
         "",
         "<!-- Fill in reviewer-facing links before submitting to portfolio gate -->",
         "",
-        "- Registry entry: sociotechnical-constitution-runtime/registry/modules.registry.json",
+        "- Registry entry: the-living-constitution-2.0/registry/modules.registry.json",
         "- Evidence index: evidence/index/evidence_index.csv",
         "- Visual layer: visuals/",
         "- Paper packet: reports/final/paper_packet_*.md",
