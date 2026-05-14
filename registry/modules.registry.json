@@ -540,6 +540,95 @@
         "No STATUS.json, no CRSP contract bound"
       ],
       "notes": "Auth0 AI Agent Hackathon submission. Standalone Next.js 14 + Auth0 SDK v4. 8-stage gateway: intercept → policy → risk → step-up → consent → RFC 8693 token exchange → execute → audit. Distinct from consentchain monorepo (which has Auth0 as placeholder only). Real implementation: policy engine, audit store, rate limiter, component inventory manifest. TypeScript compiles clean. Tests blocked by ERR_REQUIRE_ESM vitest config gap (same class as agent-sentinel). HANDOFF (2026-04-06) confirms tests passed at last checkpoint."
+    },
+    {
+      "id": "HIDRS-INSTRUCTIONAL-DEPENDENCY-STUDY",
+      "label": "HIDRS — Instructional Dependency Study",
+      "path": "hidrs-instructional-dependency-study/",
+      "surface": "module_library",
+      "display_group": "research_systems",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "coming_soon",
+      "short_description": "Local-first N-of-1 research system for measuring instructional dependency opacity, prioritization load, cognitive switching cost, and assessment-alignment risk in online courses.",
+      "live_url": null,
+      "repo_url": null,
+      "crsp_contract": "C_RSP_BUILD_CONTRACT.md",
+      "verified_scope": [
+        "repo scaffold exists and validate_repo.py passes (exit 0, 0 errors)",
+        "C_RSP_BUILD_CONTRACT.md exists (5543 bytes)",
+        "docs/STUDY_PROTOCOL.md exists",
+        "docs/SAFETY_PROTOCOL.md exists",
+        "docs/DATA_DICTIONARY.md exists",
+        "schemas/event_schema.json, session_schema.json, retrospective_recovery_schema.json exist and lint clean",
+        "evidence/index/evidence_index.csv exists with header",
+        ".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*",
+        "STATUS.md contains RETROSPECTIVE and PROSPECTIVE_START markers",
+        "initial commit 9d544c2 — 30 files, 1550 insertions"
+      ],
+      "unverified_scope": [
+        "workbook not verified — not yet placed in workbook/ directory",
+        "no prospective data collected yet (starts at Course 1 Lesson 4)",
+        "no retrospective data entered for Course 1 Lessons 1–3",
+        "no weekly analysis generated",
+        "no final report generated",
+        "no external generalization claimed or verified",
+        "no course content audit beyond repo file scan",
+        "openpyxl workbook sheet names not confirmed"
+      ],
+      "next_required_action": "Copy workbook from Google Drive to workbook/ directory. Run validate_workbook.py. Enter retrospective data for Course 1 Lessons 1–3. Begin Course 1 Lesson 4 prospective logging.",
+      "artifacts": [
+        {
+          "id": "HIDRS-CONTRACT",
+          "label": "HIDRS C-RSP Build Contract",
+          "type": "governance",
+          "path": "hidrs-instructional-dependency-study/C_RSP_BUILD_CONTRACT.md",
+          "format": "markdown"
+        },
+        {
+          "id": "HIDRS-STATUS",
+          "label": "HIDRS Status",
+          "type": "truth_surface",
+          "path": "hidrs-instructional-dependency-study/STATUS.md",
+          "format": "markdown"
+        },
+        {
+          "id": "HIDRS-STUDY-PROTOCOL",
+          "label": "HIDRS Study Protocol",
+          "type": "protocol",
+          "path": "hidrs-instructional-dependency-study/docs/STUDY_PROTOCOL.md",
+          "format": "markdown"
+        },
+        {
+          "id": "HIDRS-SAFETY-PROTOCOL",
+          "label": "HIDRS Safety Protocol",
+          "type": "safety",
+          "path": "hidrs-instructional-dependency-study/docs/SAFETY_PROTOCOL.md",
+          "format": "markdown"
+        },
+        {
+          "id": "HIDRS-DATA-DICTIONARY",
+          "label": "HIDRS Data Dictionary",
+          "type": "schema_reference",
+          "path": "hidrs-instructional-dependency-study/docs/DATA_DICTIONARY.md",
+          "format": "markdown"
+        },
+        {
+          "id": "HIDRS-EVENT-SCHEMA",
+          "label": "HIDRS Event Schema",
+          "type": "schema",
+          "path": "hidrs-instructional-dependency-study/schemas/event_schema.json",
+          "format": "json"
+        },
+        {
+          "id": "HIDRS-EVIDENCE-INDEX",
+          "label": "HIDRS Evidence Index",
+          "type": "evidence_index",
+          "path": "hidrs-instructional-dependency-study/evidence/index/evidence_index.csv",
+          "format": "csv"
+        }
+      ],
+      "notes": "N-of-1 observational study. Researcher is sole participant. Mixed design: retrospective capture for Course 1 Lessons 1–3 (completed before study began), prospective logging from Course 1 Lesson 4 forward. 6 courses, 38 total lessons. validate_repo.py PASS at initial commit. Workbook exists in Google Drive but not yet placed in workbook/ directory — validate_workbook.py returns PARTIAL (expected). No prospective data collected yet. Local-first. No deployment. No generalizability claimed. Governed as TLC 2.0 module_library + documentation + evidence-producing study system."
     }
   ]
 }

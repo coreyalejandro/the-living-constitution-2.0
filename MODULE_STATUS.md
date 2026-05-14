@@ -8,7 +8,7 @@
 
 | Metric | Count |
 |---|---|
-| Total modules classified | 19 |
+| Total modules classified | 20 |
 | Total artifacts indexed  | 30 |
 | Total routes registered  | 18 |
 
@@ -17,7 +17,7 @@
 | Status | Count |
 |---|---|
 | [WORKING] | 2 |
-| [PARTIAL] | 6 |
+| [PARTIAL] | 7 |
 | [DRAFT] | 1 |
 | [UNVERIFIED] | 9 |
 | [PLANNED] | 1 |
@@ -29,7 +29,7 @@
 | Documentation | 3 |
 | Exhibit | 2 |
 | Governance Core | 5 |
-| Module Library | 1 |
+| Module Library | 2 |
 | Private Lab | 6 |
 | Public Portfolio | 2 |
 
@@ -149,6 +149,20 @@
   - No STATUS.json, no CRSP contract bound
 - **Routes:** /api/gateway/token (partial)
 
+### HIDRS — Instructional Dependency Study
+- **ID:** HIDRS-INSTRUCTIONAL-DEPENDENCY-STUDY
+- **Surface:** Module Library
+- **Verified scope:** ["repo scaffold exists and validate_repo.py passes (exit 0, 0 errors)","C_RSP_BUILD_CONTRACT.md exists (5543 bytes)","docs/STUDY_PROTOCOL.md exists","docs/SAFETY_PROTOCOL.md exists","docs/DATA_DICTIONARY.md exists","schemas/event_schema.json, session_schema.json, retrospective_recovery_schema.json exist and lint clean","evidence/index/evidence_index.csv exists with header",".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*","STATUS.md contains RETROSPECTIVE and PROSPECTIVE_START markers","initial commit 9d544c2 — 30 files, 1550 insertions"]
+- **Unverified scope (8 items):**
+  - workbook not verified — not yet placed in workbook/ directory
+  - no prospective data collected yet (starts at Course 1 Lesson 4)
+  - no retrospective data entered for Course 1 Lessons 1–3
+  - no weekly analysis generated
+  - no final report generated
+  - no external generalization claimed or verified
+  - no course content audit beyond repo file scan
+  - openpyxl workbook sheet names not confirmed
+
 ---
 
 ## Draft Modules
@@ -206,6 +220,7 @@ None classified yet.
 | Cognitive Governance Lab | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | ConsentChain — Human Consent Gateway for AI Agents | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | Consent Gateway Auth0 — 8-Stage AI Agent Authorization Pipeline | [PARTIAL] | Resolve unverified_scope items or classify separately |
+| HIDRS — Instructional Dependency Study | [PARTIAL] | Resolve unverified_scope items or classify separately |
 
 ---
 

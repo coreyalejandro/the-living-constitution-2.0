@@ -1,17 +1,17 @@
 {
   "_meta": {
-    "generated_at": "2026-05-14T02:05:20.722Z",
+    "generated_at": "2026-05-14T03:25:35.791Z",
     "generator": "scripts/generate-portfolio-data.mjs",
     "registry_version": "1.0.0",
     "note": "Public-safe fields only. Do not hand-edit. Re-run after registry changes.",
     "complete_claim_rule": "truth_status=partial means component works, not the full project. truth_status=working means the complete declared scope is verified by a passing test suite."
   },
   "stats": {
-    "total_modules_classified": 19,
-    "total_in_portfolio": 11,
+    "total_modules_classified": 20,
+    "total_in_portfolio": 12,
     "by_truth_status": {
       "working": 2,
-      "partial": 6,
+      "partial": 7,
       "draft": 1,
       "unverified": 9,
       "planned": 1
@@ -22,7 +22,7 @@
       "private_lab": 6,
       "public_portfolio": 2,
       "exhibit": 2,
-      "module_library": 1
+      "module_library": 2
     }
   },
   "modules": [
@@ -295,6 +295,23 @@
           "live_url": null
         }
       ]
+    },
+    {
+      "id": "HIDRS-INSTRUCTIONAL-DEPENDENCY-STUDY",
+      "label": "HIDRS — Instructional Dependency Study",
+      "surface": "module_library",
+      "display_group": "module_library",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "coming_soon",
+      "verified_scope_summary": "[\"repo scaffold exists and validate_repo.py passes (exit 0, 0 errors)\",\"C_RSP_BUILD_CONTRACT.md exists (5543 bytes)\",\"docs/STUDY_PROTOCOL.md exists\",\"docs/SAFETY_PROTOCOL.md exists\",\"docs/DATA_DICTIONARY.md exists\",\"schemas/event_schema.json, session_schema.json, retrospective_recovery_schema.json exist and lint clean\",\"evidence/index/evidence_index.csv exists with header\",\".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*\",\"STATUS.md contains RETROSPECTIVE and PROSPECTIVE_START markers\",\"initial commit 9d544c2 — 30 files, 1550 insertions\"]",
+      "unverified_scope_summary": "workbook not verified — not yet placed in workbook/ directory; no prospective data collected yet (starts at Course 1 Lesson 4); no retrospective data entered for Course 1 Lessons 1–3; no weekly analysis generated; no final report generated (+3 more)",
+      "short_description": "Local-first N-of-1 research system for measuring instructional dependency opacity, prioritization load, cognitive switching cost, and assessment-alignment risk in online courses.",
+      "verified_date": null,
+      "research_lane": null,
+      "product_lane": null,
+      "artifacts": [],
+      "routes": []
     }
   ],
   "groups": {
@@ -576,6 +593,23 @@
         "verified_date": "2026-05-13",
         "research_lane": "cognitive_governance_ai_safety",
         "product_lane": "governance_library",
+        "artifacts": [],
+        "routes": []
+      },
+      {
+        "id": "HIDRS-INSTRUCTIONAL-DEPENDENCY-STUDY",
+        "label": "HIDRS — Instructional Dependency Study",
+        "surface": "module_library",
+        "display_group": "module_library",
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "coming_soon",
+        "verified_scope_summary": "[\"repo scaffold exists and validate_repo.py passes (exit 0, 0 errors)\",\"C_RSP_BUILD_CONTRACT.md exists (5543 bytes)\",\"docs/STUDY_PROTOCOL.md exists\",\"docs/SAFETY_PROTOCOL.md exists\",\"docs/DATA_DICTIONARY.md exists\",\"schemas/event_schema.json, session_schema.json, retrospective_recovery_schema.json exist and lint clean\",\"evidence/index/evidence_index.csv exists with header\",\".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*\",\"STATUS.md contains RETROSPECTIVE and PROSPECTIVE_START markers\",\"initial commit 9d544c2 — 30 files, 1550 insertions\"]",
+        "unverified_scope_summary": "workbook not verified — not yet placed in workbook/ directory; no prospective data collected yet (starts at Course 1 Lesson 4); no retrospective data entered for Course 1 Lessons 1–3; no weekly analysis generated; no final report generated (+3 more)",
+        "short_description": "Local-first N-of-1 research system for measuring instructional dependency opacity, prioritization load, cognitive switching cost, and assessment-alignment risk in online courses.",
+        "verified_date": null,
+        "research_lane": null,
+        "product_lane": null,
         "artifacts": [],
         "routes": []
       }
