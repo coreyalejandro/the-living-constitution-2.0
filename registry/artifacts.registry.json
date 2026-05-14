@@ -342,6 +342,32 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "Start-from-zero execution sequence for the ConsentChain MVP. Not a CRSP governance contract. Documents build phases 0 through 15+. HANDOFF.md (2026-03-17) reports phases 14-15 partial complete."
+    },
+    {
+      "id": "ARTIFACT-CONSENT-GATEWAY-COMPONENT-INVENTORY",
+      "label": "Consent Gateway Auth0 — component-inventory.json (tool manifest)",
+      "type": "configuration_manifest",
+      "format": "json",
+      "path": "consent-gateway-auth0/component-inventory.json",
+      "surface": "exhibit",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "JSON manifest declaring connection, risk classification, requiredScopes, and audience per tool. Validated against COMPONENTS.schema.json. HANDOFF confirms schema validation passes. Central to the 8-stage gateway risk classification pipeline."
+    },
+    {
+      "id": "ARTIFACT-CONSENT-GATEWAY-BLOG",
+      "label": "Consent Gateway Auth0 — BLOG.md (hackathon writeup)",
+      "type": "documentation",
+      "format": "markdown",
+      "path": "consent-gateway-auth0/BLOG.md",
+      "surface": "exhibit",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-13",
+      "notes": "Hackathon blog post draft for Auth0 AI Agent Hackathon submission. HANDOFF references truth-corrections made to README and BLOG. Content verified for semantic accuracy by Corey during 2026-04-06 session."
     }
   ]
 }

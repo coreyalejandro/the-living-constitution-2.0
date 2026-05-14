@@ -192,6 +192,18 @@
       "deployment_target": "local",
       "live_url": null,
       "notes": "Next.js API route: validation → idempotency → revocation → policy → step-up → exec → ledger pipeline. TypeScript compiles clean. No test suite. Auth0 not configured. Requires vault-client and google-executor to be configured for full operation."
+    },
+    {
+      "route_id": "ROUTE-CONSENT-GATEWAY-TOKEN",
+      "label": "Consent Gateway Auth0 — RFC 8693 Token Exchange",
+      "module_id": "CONSENT-GATEWAY-AUTH0",
+      "surface": "exhibit",
+      "visibility": "internal",
+      "truth_status": "partial",
+      "path_pattern": "/api/gateway/token",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "POST /api/gateway/token: Zod-validated body (connection + audience + optional scopes), subject token via getAccessToken, RFC 8693 exchange via vault client, returns {ok, meta} — no raw tokens to browser. TypeScript compiles clean. Not tested against live Auth0 tenant this session."
     }
   ]
 }

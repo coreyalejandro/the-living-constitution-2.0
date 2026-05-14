@@ -431,6 +431,58 @@
         "consent-gateway-auth0 (auth0-specific variant) — separate module, not classified"
       ],
       "notes": "Human-consent authorization gateway for AI agents. Pnpm + Turborepo monorepo. Next.js 16 App Router + TypeScript + Prisma SQLite. 9 packages. Key concept: AI agents cannot execute privileged actions without a step-up human consent challenge, every action logged to signed ledger. TypeScript compiles clean. No test suite. Auth0 not configured. vault-client and google-executor not production-ready. dev.db on disk confirms Prisma migrations ran locally."
+    },
+    {
+      "id": "CONSENT-GATEWAY-AUTH0",
+      "label": "Consent Gateway Auth0 — 8-Stage AI Agent Authorization Pipeline",
+      "path": "consent-gateway-auth0/",
+      "surface": "exhibit",
+      "truth_status": "partial",
+      "components": [
+        "app/api/auth/[auth0]",
+        "app/api/gateway/audit",
+        "app/api/gateway/step-up",
+        "app/api/gateway/token",
+        "lib/policy-engine",
+        "lib/gateway",
+        "lib/vault-client.ts",
+        "lib/rate-limit.ts",
+        "contexts/ConsentContext.tsx",
+        "__tests__ (8 test files)"
+      ],
+      "contract_id": null,
+      "verified_date": "2026-05-13",
+      "implementation_status": "partial",
+      "public_display_status": "demo",
+      "research_lane": "ai_safety_human_oversight_consent",
+      "product_lane": "authorization_gateway_exhibit_hackathon",
+      "verified_scope": {
+        "component": "TypeScript compilation + test file presence",
+        "verification": "npm run typecheck (tsc --noEmit) — 0 errors (2026-05-13); 8 test files confirmed in __tests__/; HANDOFF (2026-04-06) states tests passed at last checkpoint",
+        "covers": [
+          "app/api/gateway/token/route.ts — RFC 8693 token exchange (Zod validated)",
+          "lib/vault-client.ts — RFC 8693 token exchange implementation",
+          "lib/policy-engine — operation allowlists + scope checks + risk classification",
+          "lib/rate-limit.ts — in-memory sliding-window rate limiter",
+          "component-inventory.json + COMPONENTS.schema.json — validated manifest",
+          "TypeScript types throughout"
+        ]
+      },
+      "unverified_scope": [
+        "Vitest test suite blocked — ERR_REQUIRE_ESM in vitest config loader (Node 22 / CJS mismatch); 8 test files present but not run this session",
+        "Auth0 credentials — .env.local not inspected; real or placeholder values unknown",
+        "Auth0 Dashboard configuration (token exchange, connections, audiences) not confirmed",
+        "Step-up re-authentication flow not confirmed end-to-end",
+        "RFC 8693 token exchange not tested against live Auth0 tenant",
+        "Demo video pipeline (Playwright + audio generation) not run",
+        "gateway-reference/ alternate implementation reference not inspected",
+        "GitHub Actions CI workflow not confirmed passing",
+        "vault-client.ts throws if AUTH0_TOKEN_VAULT_CLIENT_ID / SECRET absent",
+        "Rate limiter in-memory only — not persistent across restarts",
+        "No live URL confirmed",
+        "No STATUS.json, no CRSP contract bound"
+      ],
+      "notes": "Auth0 AI Agent Hackathon submission. Standalone Next.js 14 + Auth0 SDK v4. 8-stage gateway: intercept → policy → risk → step-up → consent → RFC 8693 token exchange → execute → audit. Distinct from consentchain monorepo (which has Auth0 as placeholder only). Real implementation: policy engine, audit store, rate limiter, component inventory manifest. TypeScript compiles clean. Tests blocked by ERR_REQUIRE_ESM vitest config gap (same class as agent-sentinel). HANDOFF (2026-04-06) confirms tests passed at last checkpoint."
     }
   ]
 }
