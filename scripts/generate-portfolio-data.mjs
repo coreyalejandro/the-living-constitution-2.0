@@ -157,7 +157,7 @@ const portfolioModules = mods
       unverified_scope_summary: (m.unverified_scope && m.unverified_scope.length)
         ? m.unverified_scope.slice(0, 5).join('; ') + (m.unverified_scope.length > 5 ? ` (+${m.unverified_scope.length - 5} more)` : '')
         : null,
-      short_description:        sanitizeNotes(m.notes),
+      short_description:        m.short_description ? m.short_description.slice(0, 280) : sanitizeNotes(m.notes),
       verified_date:            m.verified_date || null,
       research_lane:            m.research_lane || null,
       product_lane:             m.product_lane || null,
