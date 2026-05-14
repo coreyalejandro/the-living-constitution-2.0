@@ -204,6 +204,30 @@
       "deployment_target": "local",
       "live_url": null,
       "notes": "POST /api/gateway/token: Zod-validated body (connection + audience + optional scopes), subject token via getAccessToken, RFC 8693 exchange via vault client, returns {ok, meta} — no raw tokens to browser. TypeScript compiles clean. Not tested against live Auth0 tenant this session."
+    },
+    {
+      "route_id": "ROUTE-PORTFOLIO-HOME",
+      "label": "Portfolio — Public Front Door",
+      "module_id": "COREYS-AGENTIC-PORTFOLIO",
+      "surface": "public_portfolio",
+      "visibility": "public",
+      "truth_status": "partial",
+      "path_pattern": "/",
+      "deployment_target": "vercel",
+      "live_url": null,
+      "notes": "Primary public portfolio home. app/(home)/page.tsx confirmed present. pnpm build passes. No live URL confirmed this session. Must consume data/portfolio-data.json before public_display_status upgrades from draft."
+    },
+    {
+      "route_id": "ROUTE-PORTFOLIO-SENTINEL",
+      "label": "Portfolio — Sentinel Lab Route",
+      "module_id": "COREYS-AGENTIC-PORTFOLIO",
+      "surface": "public_portfolio",
+      "visibility": "public",
+      "truth_status": "partial",
+      "path_pattern": "/sentinel",
+      "deployment_target": "vercel",
+      "live_url": null,
+      "notes": "SentinelOS lab demo route. app/sentinel/ + app/sentinel/incident-simulation/ confirmed present. Build passes. Not verified as a live URL. Incident simulation sub-route present."
     }
   ]
 }

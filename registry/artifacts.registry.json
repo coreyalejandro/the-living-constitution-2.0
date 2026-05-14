@@ -368,6 +368,34 @@
       "append_only": false,
       "verified_date": "2026-05-13",
       "notes": "Hackathon blog post draft for Auth0 AI Agent Hackathon submission. HANDOFF references truth-corrections made to README and BLOG. Content verified for semantic accuracy by Corey during 2026-04-06 session."
+    },
+    {
+      "id": "ARTIFACT-PORTFOLIO-AGENTS-MD",
+      "label": "coreys-agentic-portfolio — AGENTS.md",
+      "type": "governance",
+      "format": "markdown",
+      "path": "coreys-agentic-portfolio/AGENTS.md",
+      "source_path": "coreys-agentic-portfolio/AGENTS.md",
+      "related_module_id": "COREYS-AGENTIC-PORTFOLIO",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "Agent command reference and architecture summary. States explicitly: no test framework configured. Confirms Next.js 14/15 App Router, pnpm dev/build/lint commands, component system, and path aliases."
+    },
+    {
+      "id": "ARTIFACT-PORTFOLIO-NEXT-CONFIG",
+      "label": "coreys-agentic-portfolio — next.config.mjs",
+      "type": "build_config",
+      "format": "mjs",
+      "path": "coreys-agentic-portfolio/next.config.mjs",
+      "source_path": "coreys-agentic-portfolio/next.config.mjs",
+      "related_module_id": "COREYS-AGENTIC-PORTFOLIO",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "Next.js build config. ignoreBuildErrors:true and typescript.ignoreBuildErrors:true — suppresses tsc errors during build. Build passes with 7 suppressed tsc errors. images.unoptimized:true."
     }
   ]
 }

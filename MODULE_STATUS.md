@@ -9,17 +9,17 @@
 | Metric | Count |
 |---|---|
 | Total modules classified | 19 |
-| Total artifacts indexed  | 28 |
-| Total routes registered  | 16 |
+| Total artifacts indexed  | 30 |
+| Total routes registered  | 18 |
 
 ### By Truth Status
 
 | Status | Count |
 |---|---|
 | [WORKING] | 2 |
-| [PARTIAL] | 5 |
+| [PARTIAL] | 6 |
 | [DRAFT] | 1 |
-| [UNVERIFIED] | 10 |
+| [UNVERIFIED] | 9 |
 | [PLANNED] | 1 |
 
 ### By Surface
@@ -84,6 +84,22 @@
   - No live URL, no deployment confirmed
   - No STATUS.json, no CRSP contract bound
 - **Routes:** /lab/agent-sentinel (unverified)
+
+### Corey's Agentic Portfolio
+- **ID:** COREYS-AGENTIC-PORTFOLIO
+- **Surface:** Public Portfolio
+- **Verified scope:** pnpm build + 16 app routes — pnpm build PASSES — all routes prerender/server-render (2026-05-14). 16 app route directories confirmed present.
+- **Unverified scope (9 items):**
+  - no test suite configured (stated in AGENTS.md)
+  - tsc: 7 real errors suppressed by ignoreBuildErrors:true
+  - component inventory: 9 drift warnings, exits 1
+  - ai-safety-identity-strategy.md: referenced in README, not surface-scanned
+  - live deployment URL: none confirmed
+  - CRSP governance contract: absent
+  - data/ directory absent — not consuming PORTFOLIO_DATA.json yet
+  - Hyperagent Folio 001 content (portfolio-files.zip): not classified separately
+  - SentinelOS module list accuracy: not verified against TLC registry
+- **Routes:** /agentic (unverified), / (partial), /sentinel (partial)
 
 ### Cognitive Governance Lab
 - **ID:** COGNITIVE-GOVERNANCE-LAB
@@ -166,7 +182,6 @@ None classified yet.
 - **AI Safety Identity Strategy** (AI-SAFETY-IDENTITY-STRATEGY) — [UNVERIFIED] — Private Lab
 - **Zero Shot Build OS Docs** (ZERO-SHOT-BUILD-OS-DOCS) — [UNVERIFIED] — Documentation
 - **Corey Alejandro Portfolio v2** (PORTFOLIO-V2) — [UNVERIFIED] — Public Portfolio
-- **Corey's Agentic Portfolio** (COREYS-AGENTIC-PORTFOLIO) — [UNVERIFIED] — Public Portfolio
 - **Contract Window Public Exhibit** (CONTRACT-WINDOW-EXHIBIT) — [PLANNED] — Exhibit
 
 ---
@@ -189,7 +204,7 @@ None classified yet.
 | AI Safety Identity Strategy | [UNVERIFIED] | Run ingest SOP — inspect and classify |
 | Zero Shot Build OS Docs | [UNVERIFIED] | Run ingest SOP — inspect and classify |
 | Corey Alejandro Portfolio v2 | [UNVERIFIED] | Run ingest SOP — inspect and classify |
-| Corey's Agentic Portfolio | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Corey's Agentic Portfolio | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | Contract Window Public Exhibit | [PLANNED] | Build or remove from registry |
 | Cognitive Governance Lab | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | ConsentChain — Human Consent Gateway for AI Agents | [PARTIAL] | Resolve unverified_scope items or classify separately |

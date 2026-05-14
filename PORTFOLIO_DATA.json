@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-05-14T00:12:20.698Z",
+    "generated_at": "2026-05-14T00:20:15.434Z",
     "generator": "scripts/generate-portfolio-data.mjs",
     "registry_version": "1.0.0",
     "note": "Public-safe fields only. Do not hand-edit. Re-run after registry changes.",
@@ -11,9 +11,9 @@
     "total_in_portfolio": 11,
     "by_truth_status": {
       "working": 2,
-      "partial": 5,
+      "partial": 6,
       "draft": 1,
-      "unverified": 10,
+      "unverified": 9,
       "planned": 1
     },
     "by_surface": {
@@ -168,21 +168,48 @@
       "label": "Corey's Agentic Portfolio",
       "surface": "public_portfolio",
       "display_group": "public_portfolio",
-      "truth_status": "unverified",
-      "implementation_status": "unverified",
-      "public_display_status": "coming_soon",
-      "verified_scope_summary": null,
-      "unverified_scope_summary": null,
-      "short_description": "Has app/, AGENTS.md, CLAUDE.md. Next.js app structure. Agentic routes present.",
-      "verified_date": null,
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "verified_scope_summary": "pnpm build + 16 app routes: pnpm build PASSES — all routes prerender/server-render (2026-05-14). 16 app route directories confirmed present.",
+      "unverified_scope_summary": "no test suite configured (stated in AGENTS.md); tsc: 7 real errors suppressed by ignoreBuildErrors:true; component inventory: 9 drift warnings, exits 1; ai-safety-identity-strategy.md: referenced in README, not surface-scanned; live deployment URL: none confirmed (+4 more)",
+      "short_description": "Canonical public portfolio. Next.js 15 + React 19. AGENTS.md + CLAUDE.md present. MCP SDK dep. 16 real app routes. pnpm build passes (ignoreBuildErrors:true). No test framework. 7 tsc errors suppressed. Component inventory system has 9 drift warnings. TLC-aligned (latest commit: ",
+      "verified_date": "2026-05-14",
       "research_lane": null,
       "product_lane": null,
-      "artifacts": [],
+      "artifacts": [
+        {
+          "id": "ARTIFACT-PORTFOLIO-AGENTS-MD",
+          "label": "coreys-agentic-portfolio — AGENTS.md",
+          "type": "governance",
+          "format": "markdown",
+          "truth_status": "partial"
+        },
+        {
+          "id": "ARTIFACT-PORTFOLIO-NEXT-CONFIG",
+          "label": "coreys-agentic-portfolio — next.config.mjs",
+          "type": "build_config",
+          "format": "mjs",
+          "truth_status": "partial"
+        }
+      ],
       "routes": [
         {
           "route_id": "ROUTE-AGENTIC-PORTFOLIO",
           "path_pattern": "/agentic",
           "truth_status": "unverified",
+          "live_url": null
+        },
+        {
+          "route_id": "ROUTE-PORTFOLIO-HOME",
+          "path_pattern": "/",
+          "truth_status": "partial",
+          "live_url": null
+        },
+        {
+          "route_id": "ROUTE-PORTFOLIO-SENTINEL",
+          "path_pattern": "/sentinel",
+          "truth_status": "partial",
           "live_url": null
         }
       ]
@@ -444,21 +471,48 @@
         "label": "Corey's Agentic Portfolio",
         "surface": "public_portfolio",
         "display_group": "public_portfolio",
-        "truth_status": "unverified",
-        "implementation_status": "unverified",
-        "public_display_status": "coming_soon",
-        "verified_scope_summary": null,
-        "unverified_scope_summary": null,
-        "short_description": "Has app/, AGENTS.md, CLAUDE.md. Next.js app structure. Agentic routes present.",
-        "verified_date": null,
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "draft",
+        "verified_scope_summary": "pnpm build + 16 app routes: pnpm build PASSES — all routes prerender/server-render (2026-05-14). 16 app route directories confirmed present.",
+        "unverified_scope_summary": "no test suite configured (stated in AGENTS.md); tsc: 7 real errors suppressed by ignoreBuildErrors:true; component inventory: 9 drift warnings, exits 1; ai-safety-identity-strategy.md: referenced in README, not surface-scanned; live deployment URL: none confirmed (+4 more)",
+        "short_description": "Canonical public portfolio. Next.js 15 + React 19. AGENTS.md + CLAUDE.md present. MCP SDK dep. 16 real app routes. pnpm build passes (ignoreBuildErrors:true). No test framework. 7 tsc errors suppressed. Component inventory system has 9 drift warnings. TLC-aligned (latest commit: ",
+        "verified_date": "2026-05-14",
         "research_lane": null,
         "product_lane": null,
-        "artifacts": [],
+        "artifacts": [
+          {
+            "id": "ARTIFACT-PORTFOLIO-AGENTS-MD",
+            "label": "coreys-agentic-portfolio — AGENTS.md",
+            "type": "governance",
+            "format": "markdown",
+            "truth_status": "partial"
+          },
+          {
+            "id": "ARTIFACT-PORTFOLIO-NEXT-CONFIG",
+            "label": "coreys-agentic-portfolio — next.config.mjs",
+            "type": "build_config",
+            "format": "mjs",
+            "truth_status": "partial"
+          }
+        ],
         "routes": [
           {
             "route_id": "ROUTE-AGENTIC-PORTFOLIO",
             "path_pattern": "/agentic",
             "truth_status": "unverified",
+            "live_url": null
+          },
+          {
+            "route_id": "ROUTE-PORTFOLIO-HOME",
+            "path_pattern": "/",
+            "truth_status": "partial",
+            "live_url": null
+          },
+          {
+            "route_id": "ROUTE-PORTFOLIO-SENTINEL",
+            "path_pattern": "/sentinel",
+            "truth_status": "partial",
             "live_url": null
           }
         ]
