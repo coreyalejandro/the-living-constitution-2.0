@@ -639,6 +639,57 @@
         }
       ],
       "notes": "N-of-1 observational study. Researcher is sole participant. Mixed design: retrospective capture for Course 1 Lessons 1–3 (completed before study began), prospective logging from Course 1 Lesson 4 forward. 6 courses, 38 total lessons. validate_repo.py PASS at initial commit. Workbook exists in Google Drive but not yet placed in workbook/ directory — validate_workbook.py returns PARTIAL (expected). No prospective data collected yet. Local-first. No deployment. No generalizability claimed. Governed as TLC 2.0 module_library + documentation + evidence-producing study system."
+    },
+    {
+      "id": "TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE",
+      "label": "TLC Research-to-Paper-to-Product Repo Template",
+      "path": "sociotechnical-constitution-runtime/templates/tlc-research-to-paper-to-product-template/",
+      "surface": "governance_core",
+      "display_group": "templates",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "coming_soon",
+      "short_description": "Reusable TLC 2.0 governed repo template for launching research projects that move from protocol to evidence, paper, product, and portfolio publication.",
+      "live_url": null,
+      "repo_url": null,
+      "crsp_contract": null,
+      "verified_date": "2026-05-14",
+      "verified_scope": [
+        "template directory exists at templates/tlc-research-to-paper-to-product-template/",
+        "required structure exists: README.md, STATUS.md, C_RSP_BUILD_CONTRACT.md, .gitignore",
+        "docs/ tree: 9 files including VISUAL_UNDERSTANDING_LAYER.md and both gate docs",
+        "visuals/ tree: all 6 required files with content (architecture, app-flow, user-journey, pictograph, mock-demo, illustration-brief)",
+        "schemas/: 5 JSON schemas (event, session, artifact, claim, portfolio_packet) — lint clean",
+        "scripts/: validate_repo.py, validate_evidence_index.py, validate_claims.py, generate_weekly_report.py, generate_paper_packet.py, generate_portfolio_packet.py — all lint clean",
+        "templates/: 6 fill-in-the-blank markdown forms",
+        "paper/ tree: README + 8 section files",
+        "product/ tree: README + 4 .gitkeep dirs",
+        "evidence/index/evidence_index.csv with header",
+        ".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*",
+        "creation script: scripts/create-research-project-from-template.mjs (9568 bytes)",
+        "operations doc: docs/operations/RESEARCH_TO_PAPER_TO_PRODUCT_TEMPLATE.md",
+        "Visual Understanding Layer invariant I8 enforced in validate_repo.py"
+      ],
+      "unverified_scope": [
+        "not yet tested across multiple generated projects",
+        "create-research-project-from-template.mjs not run against a real project slug yet",
+        "no CI integration",
+        "no remote template repository",
+        "no package publication",
+        "HIDRS is the only confirmed instance — template/instance alignment not formally audited"
+      ],
+      "components": [
+        "template-scaffold",
+        "visual-understanding-layer",
+        "c-rsp-contract",
+        "schemas",
+        "validators",
+        "generators",
+        "creation-script",
+        "portfolio-gate",
+        "reviewer-gate"
+      ],
+      "notes": "First version of the TLC reusable research repo template. Derived from HIDRS instance pattern. Includes the I8 Visual Understanding Layer invariant as a hard nonnegotiable enforced by validate_repo.py. Six Python scripts, five JSON schemas, six markdown templates, nine docs, and six Mermaid/pictograph visual files. Creation script copies and substitutes placeholders, inits git, runs validator. HIDRS at hidrs-instructional-dependency-study is the reference instance."
     }
   ]
 }

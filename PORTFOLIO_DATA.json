@@ -1,23 +1,23 @@
 {
   "_meta": {
-    "generated_at": "2026-05-14T03:34:03.327Z",
+    "generated_at": "2026-05-14T07:37:45.030Z",
     "generator": "scripts/generate-portfolio-data.mjs",
     "registry_version": "1.0.0",
     "note": "Public-safe fields only. Do not hand-edit. Re-run after registry changes.",
     "complete_claim_rule": "truth_status=partial means component works, not the full project. truth_status=working means the complete declared scope is verified by a passing test suite."
   },
   "stats": {
-    "total_modules_classified": 20,
-    "total_in_portfolio": 12,
+    "total_modules_classified": 21,
+    "total_in_portfolio": 13,
     "by_truth_status": {
       "working": 2,
-      "partial": 7,
+      "partial": 8,
       "draft": 1,
       "unverified": 9,
       "planned": 1
     },
     "by_surface": {
-      "governance_core": 5,
+      "governance_core": 6,
       "documentation": 3,
       "private_lab": 6,
       "public_portfolio": 2,
@@ -312,6 +312,23 @@
       "product_lane": null,
       "artifacts": [],
       "routes": []
+    },
+    {
+      "id": "TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE",
+      "label": "TLC Research-to-Paper-to-Product Repo Template",
+      "surface": "governance_core",
+      "display_group": "governance_core",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "coming_soon",
+      "verified_scope_summary": "[\"template directory exists at templates/tlc-research-to-paper-to-product-template/\",\"required structure exists: README.md, STATUS.md, C_RSP_BUILD_CONTRACT.md, .gitignore\",\"docs/ tree: 9 files including VISUAL_UNDERSTANDING_LAYER.md and both gate docs\",\"visuals/ tree: all 6 required files with content (architecture, app-flow, user-journey, pictograph, mock-demo, illustration-brief)\",\"schemas/: 5 JSON schemas (event, session, artifact, claim, portfolio_packet) — lint clean\",\"scripts/: validate_repo.py, validate_evidence_index.py, validate_claims.py, generate_weekly_report.py, generate_paper_packet.py, generate_portfolio_packet.py — all lint clean\",\"templates/: 6 fill-in-the-blank markdown forms\",\"paper/ tree: README + 8 section files\",\"product/ tree: README + 4 .gitkeep dirs\",\"evidence/index/evidence_index.csv with header\",\".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*\",\"creation script: scripts/create-research-project-from-template.mjs (9568 bytes)\",\"operations doc: docs/operations/RESEARCH_TO_PAPER_TO_PRODUCT_TEMPLATE.md\",\"Visual Understanding Layer invariant I8 enforced in validate_repo.py\"]",
+      "unverified_scope_summary": "not yet tested across multiple generated projects; create-research-project-from-template.mjs not run against a real project slug yet; no CI integration; no remote template repository; no package publication (+1 more)",
+      "short_description": "Reusable TLC 2.0 governed repo template for launching research projects that move from protocol to evidence, paper, product, and portfolio publication.",
+      "verified_date": "2026-05-14",
+      "research_lane": null,
+      "product_lane": null,
+      "artifacts": [],
+      "routes": []
     }
   ],
   "groups": {
@@ -411,6 +428,23 @@
             "live_url": null
           }
         ]
+      },
+      {
+        "id": "TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE",
+        "label": "TLC Research-to-Paper-to-Product Repo Template",
+        "surface": "governance_core",
+        "display_group": "governance_core",
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "coming_soon",
+        "verified_scope_summary": "[\"template directory exists at templates/tlc-research-to-paper-to-product-template/\",\"required structure exists: README.md, STATUS.md, C_RSP_BUILD_CONTRACT.md, .gitignore\",\"docs/ tree: 9 files including VISUAL_UNDERSTANDING_LAYER.md and both gate docs\",\"visuals/ tree: all 6 required files with content (architecture, app-flow, user-journey, pictograph, mock-demo, illustration-brief)\",\"schemas/: 5 JSON schemas (event, session, artifact, claim, portfolio_packet) — lint clean\",\"scripts/: validate_repo.py, validate_evidence_index.py, validate_claims.py, generate_weekly_report.py, generate_paper_packet.py, generate_portfolio_packet.py — all lint clean\",\"templates/: 6 fill-in-the-blank markdown forms\",\"paper/ tree: README + 8 section files\",\"product/ tree: README + 4 .gitkeep dirs\",\"evidence/index/evidence_index.csv with header\",\".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*\",\"creation script: scripts/create-research-project-from-template.mjs (9568 bytes)\",\"operations doc: docs/operations/RESEARCH_TO_PAPER_TO_PRODUCT_TEMPLATE.md\",\"Visual Understanding Layer invariant I8 enforced in validate_repo.py\"]",
+        "unverified_scope_summary": "not yet tested across multiple generated projects; create-research-project-from-template.mjs not run against a real project slug yet; no CI integration; no remote template repository; no package publication (+1 more)",
+        "short_description": "Reusable TLC 2.0 governed repo template for launching research projects that move from protocol to evidence, paper, product, and portfolio publication.",
+        "verified_date": "2026-05-14",
+        "research_lane": null,
+        "product_lane": null,
+        "artifacts": [],
+        "routes": []
       }
     ],
     "documentation": [

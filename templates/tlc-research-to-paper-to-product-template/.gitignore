@@ -1,0 +1,70 @@
+# .gitignore — TLC Research Project Template
+
+# ── Private data (NEVER commit) ──────────────────────────
+data/private/*
+!data/private/.gitkeep
+
+# Evidence sensitive content
+evidence/screenshots/*
+!evidence/screenshots/.gitkeep
+evidence/excerpts/*
+!evidence/excerpts/.gitkeep
+
+# ── Environment and credentials ──────────────────────────
+.env
+.env.local
+.env.*.local
+*.env
+
+# ── Workbook binary (optional — remove if you version it) ─
+# workbook/*.xlsx
+
+# ── OS and editor artifacts ──────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+*.egg-info/
+dist/
+build/
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ── Node ─────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+.turbo/
+
+# ── Jupyter ──────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── Analysis outputs (large files) ───────────────────────
+# Uncomment if outputs are large and should not be committed:
+# analysis/outputs/*.parquet
+# analysis/outputs/*.feather
+
+# ── Forbidden content patterns ───────────────────────────
+# These patterns represent categories of content that must never
+# be committed. If you are unsure, add the file to data/private/ instead.
+# quiz_answers/ — copyrighted LMS assessment content
+# lesson_text_full/ — full lesson transcript text
+# lms_export/ — platform data exports containing course content

@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#2a1e0f', 'primaryTextColor': '#f5ebd7', 'lineColor': '#b99448'}}}%%
+flowchart TD
+    DS["Data Source\n{{DATA_SOURCE}}"]
+    PROTO["Study Protocol\ndocs/STUDY_PROTOCOL.md"]
+    SESSION["Research Session\n(observation + logging)"]
+    CAPTURE["Raw Capture\n(Apple Notes / log)"]
+    TRANSFER["Transfer Operator\n(Hermes)"]
+    WORKBOOK["Workbook\n(canonical data surface)"]
+    INDEX["Evidence Index\nevidence/index/evidence_index.csv"]
+    VALIDATE["Repo Validator\nscripts/validate_repo.py"]
+    ANALYSIS["Analysis\nanalysis/scripts/ + notebooks/"]
+    OUTPUTS["Analysis Outputs\nanalysis/outputs/"]
+    CLAIMS["Claims\nschemas/claim_schema.json"]
+    PAPER["Paper Sections\npaper/"]
+    PRODUCT["Product\nproduct/"]
+    PORTFOLIO["Portfolio Packet\nreports/final/"]
+    REGISTRY["TLC Registry\nmodules.registry.json"]
+    PUBLIC["Public Reviewer Surface\ncoreyalejandro.com/modules"]
+
+    PROTO --> SESSION
+    DS --> SESSION
+    SESSION --> CAPTURE
+    CAPTURE --> TRANSFER
+    TRANSFER --> WORKBOOK
+    WORKBOOK --> INDEX
+    INDEX --> VALIDATE
+    VALIDATE -->|PASS| ANALYSIS
+    VALIDATE -->|FAIL| SESSION
+    ANALYSIS --> OUTPUTS
+    OUTPUTS --> CLAIMS
+    CLAIMS --> PAPER
+    CLAIMS --> PRODUCT
+    PAPER --> PORTFOLIO
+    PRODUCT --> PORTFOLIO
+    PORTFOLIO --> REGISTRY
+    REGISTRY --> PUBLIC

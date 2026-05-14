@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "artifact_schema.json",
+  "title": "Research Artifact",
+  "description": "A produced artifact: analysis output, report, paper section, product component, or exhibit.",
+  "type": "object",
+  "required": ["artifact_id", "artifact_type", "title", "path", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "description": "Unique artifact identifier (e.g. PAPER-ABSTRACT-001)"
+    },
+    "artifact_type": {
+      "type": "string",
+      "enum": [
+        "paper_section",
+        "analysis_output",
+        "product_component",
+        "portfolio_packet",
+        "evidence_index",
+        "schema",
+        "protocol",
+        "report",
+        "visual",
+        "exhibit",
+        "other"
+      ],
+      "description": "Artifact category"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable artifact title"
+    },
+    "path": {
+      "type": "string",
+      "description": "Relative path from repo root"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["planned", "draft", "partial", "complete", "deprecated"],
+      "description": "Current artifact status"
+    },
+    "public_safe": {
+      "type": "boolean",
+      "description": "Whether this artifact may be included in a public repo"
+    },
+    "evidence_sources": {
+      "type": "array",
+      "description": "Evidence IDs that support claims in this artifact",
+      "items": { "type": "string" }
+    },
+    "paper_counterpart": {
+      "type": ["string", "null"],
+      "description": "Paper section this artifact corresponds to, or null"
+    },
+    "product_counterpart": {
+      "type": ["string", "null"],
+      "description": "Product component this artifact corresponds to, or null"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

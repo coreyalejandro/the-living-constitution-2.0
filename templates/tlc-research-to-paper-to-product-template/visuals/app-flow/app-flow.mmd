@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base'}}%%
+flowchart TD
+    START["Start session"]
+    TEMPLATE["Open session_log_template.md"]
+    LOG["Log events during session\n(shorthand codes)"]
+    COMPLETE{"Session\ncomplete?"}
+    INCOMPLETE["Mark INCOMPLETE\nRecord stop reason"]
+    EXPAND["Expand shorthand notes\n(within 2 hours)"]
+    RATE["Rate constructs (1-5)\nor mark MISSING"]
+    TRANSFER["Transfer to workbook\nvia Hermes"]
+    INSPECT["Hermes inspects\nworkbook headers"]
+    WRITE["Hermes writes data\nmarks absent = MISSING"]
+    UPDATE_INDEX["Update evidence_index.csv"]
+    VALIDATE["python3 validate_repo.py"]
+    PASS{"PASS?"}
+    FIX["Fix errors"]
+    COMMIT["git commit"]
+    NEXT["Proceed to next session\nor analysis"]
+
+    START --> TEMPLATE
+    TEMPLATE --> LOG
+    LOG --> COMPLETE
+    COMPLETE -->|No| INCOMPLETE
+    COMPLETE -->|Yes| EXPAND
+    INCOMPLETE --> UPDATE_INDEX
+    EXPAND --> RATE
+    RATE --> TRANSFER
+    TRANSFER --> INSPECT
+    INSPECT --> WRITE
+    WRITE --> UPDATE_INDEX
+    UPDATE_INDEX --> VALIDATE
+    VALIDATE --> PASS
+    PASS -->|Yes| COMMIT
+    PASS -->|No| FIX
+    FIX --> VALIDATE
+    COMMIT --> NEXT

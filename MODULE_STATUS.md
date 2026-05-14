@@ -8,8 +8,8 @@
 
 | Metric | Count |
 |---|---|
-| Total modules classified | 20 |
-| Total artifacts indexed  | 30 |
+| Total modules classified | 21 |
+| Total artifacts indexed  | 36 |
 | Total routes registered  | 18 |
 
 ### By Truth Status
@@ -17,7 +17,7 @@
 | Status | Count |
 |---|---|
 | [WORKING] | 2 |
-| [PARTIAL] | 7 |
+| [PARTIAL] | 8 |
 | [DRAFT] | 1 |
 | [UNVERIFIED] | 9 |
 | [PLANNED] | 1 |
@@ -28,7 +28,7 @@
 |---|---|
 | Documentation | 3 |
 | Exhibit | 2 |
-| Governance Core | 5 |
+| Governance Core | 6 |
 | Module Library | 2 |
 | Private Lab | 6 |
 | Public Portfolio | 2 |
@@ -166,6 +166,18 @@
   - no rendered PNG/SVG export yet
   - no mock demo video yet
 
+### TLC Research-to-Paper-to-Product Repo Template
+- **ID:** TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE
+- **Surface:** Governance Core
+- **Verified scope:** ["template directory exists at templates/tlc-research-to-paper-to-product-template/","required structure exists: README.md, STATUS.md, C_RSP_BUILD_CONTRACT.md, .gitignore","docs/ tree: 9 files including VISUAL_UNDERSTANDING_LAYER.md and both gate docs","visuals/ tree: all 6 required files with content (architecture, app-flow, user-journey, pictograph, mock-demo, illustration-brief)","schemas/: 5 JSON schemas (event, session, artifact, claim, portfolio_packet) — lint clean","scripts/: validate_repo.py, validate_evidence_index.py, validate_claims.py, generate_weekly_report.py, generate_paper_packet.py, generate_portfolio_packet.py — all lint clean","templates/: 6 fill-in-the-blank markdown forms","paper/ tree: README + 8 section files","product/ tree: README + 4 .gitkeep dirs","evidence/index/evidence_index.csv with header",".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*","creation script: scripts/create-research-project-from-template.mjs (9568 bytes)","operations doc: docs/operations/RESEARCH_TO_PAPER_TO_PRODUCT_TEMPLATE.md","Visual Understanding Layer invariant I8 enforced in validate_repo.py"]
+- **Unverified scope (6 items):**
+  - not yet tested across multiple generated projects
+  - create-research-project-from-template.mjs not run against a real project slug yet
+  - no CI integration
+  - no remote template repository
+  - no package publication
+  - HIDRS is the only confirmed instance — template/instance alignment not formally audited
+
 ---
 
 ## Draft Modules
@@ -224,6 +236,7 @@ None classified yet.
 | ConsentChain — Human Consent Gateway for AI Agents | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | Consent Gateway Auth0 — 8-Stage AI Agent Authorization Pipeline | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | HIDRS — Instructional Dependency Study | [PARTIAL] | Resolve unverified_scope items or classify separately |
+| TLC Research-to-Paper-to-Product Repo Template | [PARTIAL] | Resolve unverified_scope items or classify separately |
 
 ---
 

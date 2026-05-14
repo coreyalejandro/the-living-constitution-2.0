@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "event_schema.json",
+  "title": "Research Event",
+  "description": "A discrete observable event logged during a research session.",
+  "type": "object",
+  "required": ["event_id", "session_id", "event_type", "timestamp_offset_seconds"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "description": "Unique event identifier (e.g. E001-01)",
+      "pattern": "^[A-Z][A-Z0-9]+-[0-9]+"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session this event belongs to"
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Event type code from DATA_DICTIONARY.md event taxonomy"
+    },
+    "timestamp_offset_seconds": {
+      "type": ["integer", "string"],
+      "description": "Seconds from session start, or MISSING if not captured"
+    },
+    "description": {
+      "type": "string",
+      "description": "Plain-language description of the event"
+    },
+    "construct_relevance": {
+      "type": "array",
+      "description": "Which constructs this event is evidence for",
+      "items": { "type": "string" }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional researcher notes"
+    }
+  }
+}

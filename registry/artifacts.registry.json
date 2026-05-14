@@ -396,6 +396,84 @@
       "append_only": false,
       "verified_date": "2026-05-14",
       "notes": "Next.js build config. ignoreBuildErrors:true and typescript.ignoreBuildErrors:true — suppresses tsc errors during build. Build passes with 7 suppressed tsc errors. images.unoptimized:true."
+    },
+    {
+      "id": "ARTIFACT-TEMPLATE-README",
+      "label": "TLC Research Template — README.md",
+      "type": "documentation",
+      "format": "markdown",
+      "path": "templates/tlc-research-to-paper-to-product-template/README.md",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "Template README. Explains when to use the template, how it connects to TLC 2.0, public/private boundary, instantiation instructions, and HIDRS as the reference instance."
+    },
+    {
+      "id": "ARTIFACT-TEMPLATE-CRSP-CONTRACT",
+      "label": "TLC Research Template — C_RSP_BUILD_CONTRACT.md",
+      "type": "contract",
+      "format": "markdown",
+      "path": "templates/tlc-research-to-paper-to-product-template/C_RSP_BUILD_CONTRACT.md",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "Template C-RSP contract. Includes all 8 invariants including I8 Visual Understanding Layer (nonnegotiable). Has acceptance criteria for all 5 phases and halt conditions."
+    },
+    {
+      "id": "ARTIFACT-TEMPLATE-VISUAL-LAYER",
+      "label": "TLC Research Template — VISUAL_UNDERSTANDING_LAYER.md",
+      "type": "documentation",
+      "format": "markdown",
+      "path": "templates/tlc-research-to-paper-to-product-template/docs/VISUAL_UNDERSTANDING_LAYER.md",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "Visual layer specification. Defines all 6 required visual files, their purpose, what each must include, and rendering instructions. States the I8 invariant explicitly."
+    },
+    {
+      "id": "ARTIFACT-TEMPLATE-PORTFOLIO-GATE",
+      "label": "TLC Research Template — PORTFOLIO_PUBLICATION_GATE.md",
+      "type": "governance",
+      "format": "markdown",
+      "path": "templates/tlc-research-to-paper-to-product-template/docs/PORTFOLIO_PUBLICATION_GATE.md",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "7-gate publication checklist. Gate 2 is the visual layer gate. All 7 must pass before a project can be promoted to the portfolio."
+    },
+    {
+      "id": "ARTIFACT-TEMPLATE-REVIEWER-GATE",
+      "label": "TLC Research Template — GITHUB_REVIEWER_SUMMARY_GATE.md",
+      "type": "governance",
+      "format": "markdown",
+      "path": "templates/tlc-research-to-paper-to-product-template/docs/GITHUB_REVIEWER_SUMMARY_GATE.md",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "README overclaim prevention gate. Requires truth status, verified scope, unverified scope, reviewer path, non-claims, public/private boundary, and V&T block."
+    },
+    {
+      "id": "ARTIFACT-TEMPLATE-CREATION-SCRIPT",
+      "label": "TLC Research Template — create-research-project-from-template.mjs",
+      "type": "script",
+      "format": "mjs",
+      "path": "scripts/create-research-project-from-template.mjs",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "contract_id": null,
+      "append_only": false,
+      "verified_date": "2026-05-14",
+      "notes": "Node.js ESM script. Copies template, substitutes placeholders, inits git, runs validate_repo.py, prints next steps. Not yet run against a real project slug — marked partial until first successful instantiation."
     }
   ]
 }

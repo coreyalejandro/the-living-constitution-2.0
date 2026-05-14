@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "portfolio_packet_schema.json",
+  "title": "Portfolio Packet",
+  "description": "The structured portfolio packet submitted to the PORTFOLIO_PUBLICATION_GATE before a project is promoted to the public portfolio.",
+  "type": "object",
+  "required": [
+    "project_slug",
+    "public_display_status",
+    "truth_status",
+    "verified_scope",
+    "unverified_scope",
+    "not_claimed",
+    "visual_layer_status",
+    "evidence_count",
+    "paper_braid",
+    "product_braid",
+    "reviewer_paths",
+    "gate_checklist_passed"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "project_slug": { "type": "string" },
+    "public_display_status": {
+      "type": "string",
+      "enum": ["working", "partial", "draft", "static_prototype", "planned", "coming_soon", "unverified"]
+    },
+    "truth_status": {
+      "type": "string",
+      "enum": ["working", "partial", "static_prototype", "draft", "planned", "deprecated", "quarantined", "unverified"]
+    },
+    "short_description": {
+      "type": "string",
+      "description": "One-sentence public description"
+    },
+    "verified_scope": {
+      "type": "array",
+      "description": "List of items confirmed working with evidence",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "unverified_scope": {
+      "type": "array",
+      "description": "List of items not yet confirmed",
+      "items": { "type": "string" }
+    },
+    "not_claimed": {
+      "type": "array",
+      "description": "Explicit list of non-claims",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "visual_layer_status": {
+      "type": "string",
+      "enum": ["complete", "partial", "placeholder", "missing"],
+      "description": "Status of visual understanding layer"
+    },
+    "evidence_count": {
+      "type": "integer",
+      "description": "Number of entries in evidence_index.csv"
+    },
+    "paper_braid": {
+      "type": "object",
+      "description": "Relationship between research and paper",
+      "properties": {
+        "paper_status": { "type": "string" },
+        "venue": { "type": ["string", "null"] },
+        "abstract_path": { "type": ["string", "null"] }
+      }
+    },
+    "product_braid": {
+      "type": "object",
+      "description": "Relationship between research and product",
+      "properties": {
+        "product_status": { "type": "string" },
+        "product_target": { "type": ["string", "null"] },
+        "live_url": { "type": ["string", "null"] }
+      }
+    },
+    "reviewer_paths": {
+      "type": "array",
+      "description": "URLs or paths where a reviewer can inspect evidence",
+      "items": { "type": "string" }
+    },
+    "gate_checklist_passed": {
+      "type": "boolean",
+      "description": "Whether docs/PORTFOLIO_PUBLICATION_GATE.md was fully checked"
+    },
+    "generated_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    }
+  }
+}
