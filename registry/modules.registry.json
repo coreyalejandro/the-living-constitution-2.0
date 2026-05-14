@@ -42,6 +42,11 @@
       ],
       "contract_id": "CRSP-STC-RUNTIME-001",
       "verified_date": "2026-05-13",
+      "verified_scope": {
+        "component": "full runtime (5 suites)",
+        "verification": "node --experimental-vm-modules jest → 9/9 tests pass; npm run validate → schema VALID",
+        "covers": ["contract-manager", "policy-engine", "evidence-observatory", "role-authorizer", "tlc-cli"]
+      },
       "notes": "Tier-1 MVG. 5 test suites, 9 tests passing. npm run verify confirmed."
     },
     {
@@ -66,6 +71,21 @@
       "implementation_status": "partial",
       "research_lane": "ai_safety_governance",
       "product_lane": "governance_runtime",
+      "verified_scope": {
+        "component": "STATUS.json + CRSP-001 contract",
+        "verification": "Files read directly: STATUS.json tip_state_truth=tip_verified, reviewer_status=approved; CRSP-001.json Guardian Kernel Tier-3-Constitutional Active",
+        "covers": ["crsp-contracts", "governance-enforcement"]
+      },
+      "unverified_scope": [
+        "local test suite (not run this session)",
+        "Docker/k8s infra not started",
+        "Next.js control-plane app not built",
+        "tlc-evals full model grading (requires ANTHROPIC_API_KEY)",
+        "tlc-semgraph not inspected",
+        "Python guardian service runtime not verified",
+        "CI pipeline status unknown",
+        "branch protection enforcement not confirmed live"
+      ],
       "notes": "Active governance-as-code research apparatus. STATUS.json tip_state_truth=tip_verified, reviewer_status=approved, governance_contract_version=v1.9.0. Has real git history (multiple commits), Docker/k8s infra, Python guardian service, Next.js control-plane app, tlc-evals evaluation library (F1-F5, I1-I6 invariants). CRSP-001 (Guardian Kernel) is Tier-3-Constitutional. Series B active. tlc-evals CLI verified working with pattern-only grading. Full model grading requires ANTHROPIC_API_KEY. Marked partial because local test suite not confirmed this session — CI verified remotely."
     },
     {
@@ -305,6 +325,7 @@
       "path": "coreyalejandro-portfolio-v2/",
       "surface": "public_portfolio",
       "truth_status": "unverified",
+      "public_display_status": "coming_soon",
       "components": [],
       "contract_id": null,
       "verified_date": null,
@@ -316,6 +337,7 @@
       "path": "coreys-agentic-portfolio/",
       "surface": "public_portfolio",
       "truth_status": "unverified",
+      "public_display_status": "coming_soon",
       "components": [],
       "contract_id": null,
       "verified_date": null,
@@ -327,9 +349,7 @@
       "path": "TBD",
       "surface": "exhibit",
       "truth_status": "planned",
-      "components": [
-        "contract-window"
-      ],
+      "public_display_status": "coming_soon",
       "contract_id": null,
       "verified_date": null,
       "notes": "Planned exhibit. Contract Window interactive demo for public portfolio. Not yet built."

@@ -1,0 +1,200 @@
+# MODULE_STATUS.md
+**Generated:** 2026-05-14
+**Registry version:** 1.0.0
+
+---
+
+## Summary
+
+| Metric | Count |
+|---|---|
+| Total modules classified | 19 |
+| Total artifacts indexed  | 28 |
+| Total routes registered  | 16 |
+
+### By Truth Status
+
+| Status | Count |
+|---|---|
+| [WORKING] | 2 |
+| [PARTIAL] | 5 |
+| [DRAFT] | 1 |
+| [UNVERIFIED] | 10 |
+| [PLANNED] | 1 |
+
+### By Surface
+
+| Surface | Count |
+|---|---|
+| Documentation | 3 |
+| Exhibit | 2 |
+| Governance Core | 5 |
+| Module Library | 1 |
+| Private Lab | 6 |
+| Public Portfolio | 2 |
+
+---
+
+## Working Modules
+
+### SocioTechnical Constitution Runtime
+- **ID:** CRSP-STC-RUNTIME-001
+- **Surface:** Governance Core
+- **Verified scope:** full runtime (5 suites) — node --experimental-vm-modules jest → 9/9 tests pass; npm run validate → schema VALID
+- **Routes:** /
+
+### PROACTIVE — Constitutional AI Safety Agent for GitLab Duo
+- **ID:** PROACTIVE-28441830
+- **Surface:** Governance Core
+- **Verified scope:** Python package core — python -m pytest tests/ — 731 passed in 1.37s (2026-05-13)
+- **Routes:** /
+
+---
+
+## Partial Modules
+
+*Implementation exists. At least one component is verified. Complete scope is broader than what is verified.*
+
+### The Living Constitution
+- **ID:** THE-LIVING-CONSTITUTION
+- **Surface:** Governance Core
+- **Verified scope:** STATUS.json + CRSP-001 contract — Files read directly: STATUS.json tip_state_truth=tip_verified, reviewer_status=approved; CRSP-001.json Guardian Kernel Tier-3-Constitutional Active
+- **Unverified scope (8 items):**
+  - local test suite (not run this session)
+  - Docker/k8s infra not started
+  - Next.js control-plane app not built
+  - tlc-evals full model grading (requires ANTHROPIC_API_KEY)
+  - tlc-semgraph not inspected
+  - Python guardian service runtime not verified
+  - CI pipeline status unknown
+  - branch protection enforcement not confirmed live
+- **Routes:** /governance/the-living-constitution (partial)
+
+### Agent Sentinel — Alignment Anomaly Detector
+- **ID:** AGENT-SENTINEL
+- **Surface:** Private Lab
+- **Verified scope:** TypeScript compilation — npx tsc --noEmit — 0 errors (2026-05-13)
+- **Unverified scope (8 items):**
+  - test suite: 2 suites fail — import.meta/Jest config mismatch (not fixed)
+  - README.md: unresolved git merge conflict at top of file
+  - .env deleted — Gemini API key required, not present in repo
+  - dev server not started — no runtime behavior confirmed
+  - Docker/nginx config not tested
+  - pnpm-lock.yaml untracked — workspace config partially uncommitted
+  - No live URL, no deployment confirmed
+  - No STATUS.json, no CRSP contract bound
+- **Routes:** /lab/agent-sentinel (unverified)
+
+### Cognitive Governance Lab
+- **ID:** COGNITIVE-GOVERNANCE-LAB
+- **Surface:** Module Library
+- **Verified scope:** governance-kernel — python -m pytest tests/ — 62 passed in 0.22s (2026-05-13)
+- **Unverified scope (9 items):**
+  - research program: live pilot sessions (0 of 10 required) — NOT DONE
+  - human inter-rater reliability (kappa >= 0.70) — NOT DONE
+  - session-protocol.md — NOT WRITTEN
+  - COLM 2026 paper — draft only, not submitted
+  - Anthropic Fellows proposals — submitted, outcome unknown
+  - insight_atrophy_index.py — present, no confirmed test coverage
+  - CRSP contract binding — absent
+  - STATUS.json — absent (no machine-readable project status)
+  - Month 1 full gate — synthetic calibration only, not live-pilot-complete
+
+### ConsentChain — Human Consent Gateway for AI Agents
+- **ID:** CONSENTCHAIN
+- **Surface:** Governance Core
+- **Verified scope:** apps/web TypeScript compilation — cd apps/web && pnpm exec tsc --noEmit — 0 errors (2026-05-13)
+- **Unverified scope (10 items):**
+  - No test suite — turbo test timed out, no vitest/jest in package.json
+  - Auth0 credentials not configured — .env.local has placeholder keys
+  - vault-client throws until external vault service configured
+  - google-executor is mock implementation only
+  - HANDOFF.md status: In Progress (2026-03-17) — phases 14-15 partial
+  - packages/agent-sdk: built once (dist/ exists) but not tsc-verified this session
+  - No live URL, no deployment confirmed
+  - No STATUS.json, no CRSP contract bound
+  - Git history anomalous — shared git root with portfolio/parent repo
+  - consent-gateway-auth0 (auth0-specific variant) — separate module, not classified
+- **Routes:** /api/agent/action (partial)
+
+### Consent Gateway Auth0 — 8-Stage AI Agent Authorization Pipeline
+- **ID:** CONSENT-GATEWAY-AUTH0
+- **Surface:** Exhibit
+- **Verified scope:** TypeScript compilation + test file presence — npm run typecheck (tsc --noEmit) — 0 errors (2026-05-13); 8 test files confirmed in __tests__/; HANDOFF (2026-04-06) states tests passed at last checkpoint
+- **Unverified scope (12 items):**
+  - Vitest test suite blocked — ERR_REQUIRE_ESM in vitest config loader (Node 22 / CJS mismatch); 8 test files present but not run this session
+  - Auth0 credentials — .env.local not inspected; real or placeholder values unknown
+  - Auth0 Dashboard configuration (token exchange, connections, audiences) not confirmed
+  - Step-up re-authentication flow not confirmed end-to-end
+  - RFC 8693 token exchange not tested against live Auth0 tenant
+  - Demo video pipeline (Playwright + audio generation) not run
+  - gateway-reference/ alternate implementation reference not inspected
+  - GitHub Actions CI workflow not confirmed passing
+  - vault-client.ts throws if AUTH0_TOKEN_VAULT_CLIENT_ID / SECRET absent
+  - Rate limiter in-memory only — not persistent across restarts
+  - No live URL confirmed
+  - No STATUS.json, no CRSP contract bound
+- **Routes:** /api/gateway/token (partial)
+
+---
+
+## Draft Modules
+
+*Structured content exists — documentation, evidence archives, proposals. No runnable code.*
+
+- **TLC Artifacts — Session Evidence Repository** (TLC-ARTIFACTS-RESTRUCTURE) — Documentation
+  Tier 1 empirical evidence corpus for 'Frontin at WorldMart' (NeurIPS/FAccT target). Holds session transcripts S01-S03, e
+
+---
+
+## Static Prototypes
+
+*Built once, not maintained. Functional as a snapshot, not a living codebase.*
+
+None classified yet.
+
+---
+
+## Unverified / Planned Modules
+
+- **TLC Evidence Observatory** (TLC-EVIDENCE-OBSERVATORY) — [UNVERIFIED] — Governance Core
+- **LLM Council** (LLM-COUNCIL) — [UNVERIFIED] — Private Lab
+- **Multiagent Debate** (MULTIAGENT-DEBATE) — [UNVERIFIED] — Private Lab
+- **Meta Prompt Architect** (META-PROMPT-ARCHITECT) — [UNVERIFIED] — Private Lab
+- **Misalignment Evidence Lab** (MISALIGNMENT-EVIDENCE-LAB) — [UNVERIFIED] — Private Lab
+- **Proactive AI Constitution Toolkit (documentation satellite)** (PROACTIVE-AI-CONSTITUTION-TOOLKIT) — [UNVERIFIED] — Documentation
+- **AI Safety Identity Strategy** (AI-SAFETY-IDENTITY-STRATEGY) — [UNVERIFIED] — Private Lab
+- **Zero Shot Build OS Docs** (ZERO-SHOT-BUILD-OS-DOCS) — [UNVERIFIED] — Documentation
+- **Corey Alejandro Portfolio v2** (PORTFOLIO-V2) — [UNVERIFIED] — Public Portfolio
+- **Corey's Agentic Portfolio** (COREYS-AGENTIC-PORTFOLIO) — [UNVERIFIED] — Public Portfolio
+- **Contract Window Public Exhibit** (CONTRACT-WINDOW-EXHIBIT) — [PLANNED] — Exhibit
+
+---
+
+## Next Required Actions by Module
+
+| Module | Status | Next Action |
+|---|---|---|
+| SocioTechnical Constitution Runtime | [WORKING] | Maintain — run tests on each change |
+| The Living Constitution | [PARTIAL] | Resolve unverified_scope items or classify separately |
+| TLC Artifacts — Session Evidence Repository | [DRAFT] | Inspect and classify when implementation begins |
+| TLC Evidence Observatory | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Agent Sentinel — Alignment Anomaly Detector | [PARTIAL] | Resolve unverified_scope items or classify separately |
+| LLM Council | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Multiagent Debate | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Meta Prompt Architect | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Misalignment Evidence Lab | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Proactive AI Constitution Toolkit (documentation satellite) | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| PROACTIVE — Constitutional AI Safety Agent for GitLab Duo | [WORKING] | Maintain — run tests on each change |
+| AI Safety Identity Strategy | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Zero Shot Build OS Docs | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Corey Alejandro Portfolio v2 | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Corey's Agentic Portfolio | [UNVERIFIED] | Run ingest SOP — inspect and classify |
+| Contract Window Public Exhibit | [PLANNED] | Build or remove from registry |
+| Cognitive Governance Lab | [PARTIAL] | Resolve unverified_scope items or classify separately |
+| ConsentChain — Human Consent Gateway for AI Agents | [PARTIAL] | Resolve unverified_scope items or classify separately |
+| Consent Gateway Auth0 — 8-Stage AI Agent Authorization Pipeline | [PARTIAL] | Resolve unverified_scope items or classify separately |
+
+---
+
+*Generated by scripts/generate-module-status.mjs — do not hand-edit. Re-run after any registry change.*

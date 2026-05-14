@@ -290,6 +290,65 @@ if (unroutedWorking === 0) {
   pass('All working modules have at least one route');
 }
 
+// --- 7a. Complete-claim verification enforcement ---
+section('7. Complete-claim verification rules');
+
+const VALID_PUBLIC_DISPLAY = new Set(['working', 'demo', 'draft', 'coming_soon', 'hidden']);
+const PUBLIC_SURFACES = new Set(['public_portfolio', 'exhibit']);
+let claimErrors = 0;
+
+for (const mod of modules.modules) {
+  const prefix = `Module [${mod.id || '(no id)'}]`;
+
+  // partial modules MUST have unverified_scope
+  if (mod.truth_status === 'partial') {
+    if (!mod.unverified_scope || !Array.isArray(mod.unverified_scope) || mod.unverified_scope.length === 0) {
+      fail(`${prefix} truth_status=partial but missing or empty "unverified_scope"`);
+      claimErrors++;
+    }
+    if (!mod.verified_scope) {
+      fail(`${prefix} truth_status=partial but missing "verified_scope"`);
+      claimErrors++;
+    }
+  }
+
+  // working modules MUST have verified_scope
+  if (mod.truth_status === 'working' && !mod.verified_scope) {
+    fail(`${prefix} truth_status=working but missing "verified_scope"`);
+    claimErrors++;
+  }
+
+  // public_portfolio and exhibit modules MUST have public_display_status
+  if (PUBLIC_SURFACES.has(mod.surface)) {
+    if (!mod.public_display_status) {
+      fail(`${prefix} surface="${mod.surface}" but missing "public_display_status"`);
+      claimErrors++;
+    } else if (!VALID_PUBLIC_DISPLAY.has(mod.public_display_status)) {
+      fail(`${prefix} invalid public_display_status: "${mod.public_display_status}"`);
+      claimErrors++;
+    }
+    // partial modules must not claim working in public display
+    if (mod.truth_status === 'partial' && mod.public_display_status === 'working') {
+      fail(`${prefix} truth_status=partial but public_display_status=working — overclaim`);
+      claimErrors++;
+    }
+  }
+}
+
+for (const route of routes.routes) {
+  const prefix = `Route [${route.route_id || '(no id)'}]`;
+
+  // Routes with live_url=null must not be truth_status=working
+  if (route.live_url === null && route.truth_status === 'working') {
+    fail(`${prefix} live_url=null but truth_status=working — route is not live`);
+    claimErrors++;
+  }
+}
+
+if (claimErrors === 0) {
+  pass('All complete-claim verification rules passed');
+}
+
 // --- 8. Summary ---
 section('SUMMARY');
 console.log(`  Total errors   : ${totalErrors === 0 ? GREEN : RED}${totalErrors}${RESET}`);

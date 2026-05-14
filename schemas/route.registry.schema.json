@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://sociotechnical-constitution-runtime/schemas/route.registry.schema.json",
+  "title": "Route Registry Entry",
+  "description": "Schema for a single route entry in registry/routes.registry.json",
+  "type": "object",
+  "required": [
+    "route_id",
+    "label",
+    "module_id",
+    "surface",
+    "visibility",
+    "truth_status",
+    "path_pattern",
+    "deployment_target"
+  ],
+  "properties": {
+    "route_id": {
+      "type": "string",
+      "description": "Unique route identifier in ROUTE-SCREAMING-KEBAB-CASE",
+      "pattern": "^ROUTE-[A-Z0-9\\-]+$"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable display name"
+    },
+    "module_id": {
+      "type": "string",
+      "description": "ID of the module this route belongs to"
+    },
+    "surface": {
+      "type": "string",
+      "enum": [
+        "governance_core",
+        "private_lab",
+        "public_portfolio",
+        "documentation",
+        "module_library",
+        "exhibit"
+      ]
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["public", "internal", "private"]
+    },
+    "truth_status": {
+      "type": "string",
+      "enum": [
+        "working",
+        "partial",
+        "static_prototype",
+        "draft",
+        "planned",
+        "deprecated",
+        "quarantined",
+        "unverified"
+      ],
+      "description": "A route with live_url=null must not be truth_status=working"
+    },
+    "path_pattern": {
+      "type": "string",
+      "description": "URL path pattern (e.g., /api/gateway/token)"
+    },
+    "deployment_target": {
+      "type": "string",
+      "enum": ["local", "vercel", "docker", "kubernetes", "railway", "fly", "netlify", "other"]
+    },
+    "live_url": {
+      "type": ["string", "null"],
+      "description": "Actual live URL if deployed, null otherwise. A null live_url means the route is not live."
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "if": {
+    "properties": { "live_url": { "type": "null" } }
+  },
+  "then": {
+    "properties": {
+      "truth_status": {
+        "not": { "enum": ["working"] },
+        "description": "Routes with live_url=null may not be truth_status=working"
+      }
+    }
+  }
+}

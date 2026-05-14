@@ -21,7 +21,10 @@
     "dev": "node --watch src/cli/tlc-cli.js status",
     "verify": "npm run validate && npm test -- --runInBand",
     "scan:projects": "node scripts/scan-projects.mjs",
-    "verify:registry": "node scripts/verify-registry.mjs"
+    "verify:registry": "node scripts/verify-registry.mjs",
+    "generate:module-status": "node scripts/generate-module-status.mjs",
+    "generate:portfolio-data": "node scripts/generate-portfolio-data.mjs",
+    "ingest:verify": "npm run verify:registry && npm run generate:module-status && npm run generate:portfolio-data"
   },
   "keywords": [
     "governance",

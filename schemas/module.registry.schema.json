@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://sociotechnical-constitution-runtime/schemas/module.registry.schema.json",
+  "title": "Module Registry Entry",
+  "description": "Schema for a single module entry in registry/modules.registry.json",
+  "type": "object",
+  "required": [
+    "id",
+    "label",
+    "path",
+    "surface",
+    "truth_status",
+    "verified_date"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique module identifier in SCREAMING-KEBAB-CASE",
+      "pattern": "^[A-Z0-9][A-Z0-9\\-]+[A-Z0-9]$"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable display name"
+    },
+    "path": {
+      "type": "string",
+      "description": "Relative path from ~/Projects/ root, ending with /"
+    },
+    "surface": {
+      "type": "string",
+      "enum": [
+        "governance_core",
+        "private_lab",
+        "public_portfolio",
+        "documentation",
+        "module_library",
+        "exhibit"
+      ],
+      "description": "The TLC 2.0 surface this module belongs to"
+    },
+    "truth_status": {
+      "type": "string",
+      "enum": [
+        "working",
+        "partial",
+        "static_prototype",
+        "draft",
+        "planned",
+        "deprecated",
+        "quarantined",
+        "unverified"
+      ],
+      "description": "Epistemic status of the complete claim made about this module"
+    },
+    "implementation_status": {
+      "type": "string",
+      "enum": [
+        "working",
+        "partial",
+        "static_prototype",
+        "draft",
+        "planned",
+        "deprecated",
+        "quarantined",
+        "unverified"
+      ],
+      "description": "Degree of build completion (independent of truth_status)"
+    },
+    "public_display_status": {
+      "type": "string",
+      "enum": ["working", "demo", "draft", "coming_soon", "hidden"],
+      "description": "Required for surface=public_portfolio or exhibit. Controls portfolio display."
+    },
+    "components": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of sub-components or packages within this module"
+    },
+    "contract_id": {
+      "type": ["string", "null"],
+      "description": "CRSP contract ID if one exists, null otherwise"
+    },
+    "verified_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "ISO date of last inspection"
+    },
+    "research_lane": {
+      "type": "string",
+      "description": "Research domain label"
+    },
+    "product_lane": {
+      "type": "string",
+      "description": "Product/deployment domain label"
+    },
+    "verified_scope": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["component", "verification"],
+          "properties": {
+            "component": { "type": "string" },
+            "verification": { "type": "string" },
+            "covers": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        { "type": "string" }
+      ],
+      "description": "Required for truth_status=working or partial. Exact component and verification method."
+    },
+    "unverified_scope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Required for truth_status=partial. Every incomplete, untested, or externally-dependent item."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Freeform inspection notes"
+    }
+  },
+  "if": {
+    "properties": { "truth_status": { "enum": ["working", "partial"] } }
+  },
+  "then": {
+    "required": ["verified_scope"]
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "surface": { "enum": ["public_portfolio", "exhibit"] } }
+      },
+      "then": {
+        "required": ["public_display_status"]
+      }
+    }
+  ]
+}

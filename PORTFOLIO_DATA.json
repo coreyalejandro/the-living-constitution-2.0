@@ -1,0 +1,530 @@
+{
+  "_meta": {
+    "generated_at": "2026-05-14T00:12:20.698Z",
+    "generator": "scripts/generate-portfolio-data.mjs",
+    "registry_version": "1.0.0",
+    "note": "Public-safe fields only. Do not hand-edit. Re-run after registry changes.",
+    "complete_claim_rule": "truth_status=partial means component works, not the full project. truth_status=working means the complete declared scope is verified by a passing test suite."
+  },
+  "stats": {
+    "total_modules_classified": 19,
+    "total_in_portfolio": 11,
+    "by_truth_status": {
+      "working": 2,
+      "partial": 5,
+      "draft": 1,
+      "unverified": 10,
+      "planned": 1
+    },
+    "by_surface": {
+      "governance_core": 5,
+      "documentation": 3,
+      "private_lab": 6,
+      "public_portfolio": 2,
+      "exhibit": 2,
+      "module_library": 1
+    }
+  },
+  "modules": [
+    {
+      "id": "CRSP-STC-RUNTIME-001",
+      "label": "SocioTechnical Constitution Runtime",
+      "surface": "governance_core",
+      "display_group": "governance_core",
+      "truth_status": "working",
+      "implementation_status": "working",
+      "public_display_status": "working",
+      "verified_scope_summary": "full runtime (5 suites): node --experimental-vm-modules jest → 9/9 tests pass; npm run validate → schema VALID",
+      "unverified_scope_summary": null,
+      "short_description": "Tier-1 MVG. 5 test suites, 9 tests passing. npm run verify confirmed.",
+      "verified_date": "2026-05-13",
+      "research_lane": null,
+      "product_lane": null,
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-GOVERNANCE-CORE",
+          "path_pattern": "/",
+          "truth_status": "partial",
+          "live_url": null
+        }
+      ]
+    },
+    {
+      "id": "THE-LIVING-CONSTITUTION",
+      "label": "The Living Constitution",
+      "surface": "governance_core",
+      "display_group": "governance_core",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "verified_scope_summary": "STATUS.json + CRSP-001 contract: Files read directly: STATUS.json tip_state_truth=tip_verified, reviewer_status=approved; CRSP-001.json Guardian Kernel Tier-3-Constitutional Active",
+      "unverified_scope_summary": "local test suite (not run this session); Docker/k8s infra not started; Next.js control-plane app not built; tlc-evals full model grading (requires ANTHROPIC_API_KEY); tlc-semgraph not inspected (+3 more)",
+      "short_description": "Active governance-as-code research apparatus. STATUS.json tip_state_truth=tip_verified, reviewer_status=approved, governance_contract_version=v1.9.0. Has real git history (multiple commits), Docker/k8s infra, Python guardian service, Next.js control-plane app, tlc-evals evaluatio",
+      "verified_date": "2026-05-13",
+      "research_lane": "ai_safety_governance",
+      "product_lane": "governance_runtime",
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-GOVERNANCE-TLC",
+          "path_pattern": "/governance/the-living-constitution",
+          "truth_status": "partial",
+          "live_url": null
+        }
+      ]
+    },
+    {
+      "id": "TLC-ARTIFACTS-RESTRUCTURE",
+      "label": "TLC Artifacts — Session Evidence Repository",
+      "surface": "documentation",
+      "display_group": "documentation",
+      "truth_status": "draft",
+      "implementation_status": "draft",
+      "public_display_status": "draft",
+      "verified_scope_summary": "repository structure: file inspection + git log (2026-05-13)",
+      "unverified_scope_summary": "S01 line references in evidence-manifest.md — TBD audit pending; Obs 2 kimi.com share link — external, not confirmed accessible; Obs 4 BREAK_GLASS artifact — stored in cognitive-governance-lab, not here; sessions/supplementary/ and sessions/development/ — contents not read; tlc-golden-prd/ HTML files — purpose relative to corpus unclear (+3 more)",
+      "short_description": "Tier 1 empirical evidence corpus for 'Frontin at WorldMart' (NeurIPS/FAccT target). Holds session transcripts S01-S03, evidence manifest, codebook, methodology. Active curation confirmed via git log. Citation audit incomplete. No code, no verifier, no tests. Surface corrected fro",
+      "verified_date": "2026-05-13",
+      "research_lane": "ai_safety_governance_evidence",
+      "product_lane": "evidence_archive",
+      "artifacts": [],
+      "routes": []
+    },
+    {
+      "id": "AGENT-SENTINEL",
+      "label": "Agent Sentinel — Alignment Anomaly Detector",
+      "surface": "private_lab",
+      "display_group": "private_lab",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "verified_scope_summary": "TypeScript compilation: npx tsc --noEmit — 0 errors (2026-05-13)",
+      "unverified_scope_summary": "test suite: 2 suites fail — import.meta/Jest config mismatch (not fixed); README.md: unresolved git merge conflict at top of file; .env deleted — Gemini API key required, not present in repo; dev server not started — no runtime behavior confirmed; Docker/nginx config not tested (+3 more)",
+      "short_description": "React/TypeScript/Vite SPA for AI agent log analysis and behavioral anomaly detection. Calls Gemini API. TypeScript compiles clean. Test suite broken by import.meta/Jest config mismatch — config gap, not absent implementation. README has unresolved merge conflict (AI Studio templa",
+      "verified_date": "2026-05-13",
+      "research_lane": "ai_safety_alignment_anomaly_detection",
+      "product_lane": "safety_tool_portfolio_demo",
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-LAB-AGENT-SENTINEL",
+          "path_pattern": "/lab/agent-sentinel",
+          "truth_status": "unverified",
+          "live_url": null
+        }
+      ]
+    },
+    {
+      "id": "PROACTIVE-28441830",
+      "label": "PROACTIVE — Constitutional AI Safety Agent for GitLab Duo",
+      "surface": "governance_core",
+      "display_group": "governance_core",
+      "truth_status": "working",
+      "implementation_status": "working",
+      "public_display_status": "draft",
+      "verified_scope_summary": "Python package core: python -m pytest tests/ — 731 passed in 1.37s (2026-05-13)",
+      "unverified_scope_summary": "cli.py: 0% coverage — requires live Anthropic + GitLab API keys; gitlab_client.py: 0% coverage — requires live GitLab API; GitLab Duo Chat integration: agent registered but deployment not confirmed; Web UI: no live URL confirmed; No STATUS.json, no CRSP contract bound (+1 more)",
+      "short_description": "Canonical PROACTIVE Python package. Version 4.0.0. Constitutional AI safety agent that enforces epistemic reliability (F1-F5) in GitLab MR review. 731 tests pass, 72% overall coverage. Core enforcement modules at 90-99% coverage. GitLab Duo agent config at .gitlab/duo/agents/proa",
+      "verified_date": "2026-05-13",
+      "research_lane": "ai_safety_epistemic_reliability",
+      "product_lane": "safety_tool_gitlab_integration",
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-PROACTIVE-WEB-UI",
+          "path_pattern": "/",
+          "truth_status": "partial",
+          "live_url": null
+        }
+      ]
+    },
+    {
+      "id": "PORTFOLIO-V2",
+      "label": "Corey Alejandro Portfolio v2",
+      "surface": "public_portfolio",
+      "display_group": "public_portfolio",
+      "truth_status": "unverified",
+      "implementation_status": "unverified",
+      "public_display_status": "coming_soon",
+      "verified_scope_summary": null,
+      "unverified_scope_summary": null,
+      "short_description": "Has app/, components/, data/. Next.js app structure.",
+      "verified_date": null,
+      "research_lane": null,
+      "product_lane": null,
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-PORTFOLIO-V2",
+          "path_pattern": "/",
+          "truth_status": "unverified",
+          "live_url": null
+        }
+      ]
+    },
+    {
+      "id": "COREYS-AGENTIC-PORTFOLIO",
+      "label": "Corey's Agentic Portfolio",
+      "surface": "public_portfolio",
+      "display_group": "public_portfolio",
+      "truth_status": "unverified",
+      "implementation_status": "unverified",
+      "public_display_status": "coming_soon",
+      "verified_scope_summary": null,
+      "unverified_scope_summary": null,
+      "short_description": "Has app/, AGENTS.md, CLAUDE.md. Next.js app structure. Agentic routes present.",
+      "verified_date": null,
+      "research_lane": null,
+      "product_lane": null,
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-AGENTIC-PORTFOLIO",
+          "path_pattern": "/agentic",
+          "truth_status": "unverified",
+          "live_url": null
+        }
+      ]
+    },
+    {
+      "id": "CONTRACT-WINDOW-EXHIBIT",
+      "label": "Contract Window Public Exhibit",
+      "surface": "exhibit",
+      "display_group": "exhibit",
+      "truth_status": "planned",
+      "implementation_status": "planned",
+      "public_display_status": "coming_soon",
+      "verified_scope_summary": null,
+      "unverified_scope_summary": null,
+      "short_description": "Planned exhibit. Contract Window interactive demo for public portfolio. Not yet built.",
+      "verified_date": null,
+      "research_lane": null,
+      "product_lane": null,
+      "artifacts": [],
+      "routes": []
+    },
+    {
+      "id": "COGNITIVE-GOVERNANCE-LAB",
+      "label": "Cognitive Governance Lab",
+      "surface": "module_library",
+      "display_group": "module_library",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "verified_scope_summary": "governance-kernel: python -m pytest tests/ — 62 passed in 0.22s (2026-05-13)",
+      "unverified_scope_summary": "research program: live pilot sessions (0 of 10 required) — NOT DONE; human inter-rater reliability (kappa >= 0.70) — NOT DONE; session-protocol.md — NOT WRITTEN; COLM 2026 paper — draft only, not submitted; Anthropic Fellows proposals — submitted, outcome unknown (+4 more)",
+      "short_description": "Module-level truth_status is partial because the complete project scope includes a research program, live pilot, human IRR, CRSP binding, and STATUS.json that are not complete. The governance-kernel library component is verified working: 62 pytest tests pass locally. All other co",
+      "verified_date": "2026-05-13",
+      "research_lane": "cognitive_governance_ai_safety",
+      "product_lane": "governance_library",
+      "artifacts": [],
+      "routes": []
+    },
+    {
+      "id": "CONSENTCHAIN",
+      "label": "ConsentChain — Human Consent Gateway for AI Agents",
+      "surface": "governance_core",
+      "display_group": "governance_core",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "verified_scope_summary": "apps/web TypeScript compilation: cd apps/web && pnpm exec tsc --noEmit — 0 errors (2026-05-13)",
+      "unverified_scope_summary": "No test suite — turbo test timed out, no vitest/jest in package.json; Auth0 credentials not configured — .env.local has placeholder keys; vault-client throws until external vault service configured; google-executor is mock implementation only; HANDOFF.md status: In Progress (2026-03-17) — phases 14-15 partial (+5 more)",
+      "short_description": "Human-consent authorization gateway for AI agents. Pnpm + Turborepo monorepo. Next.js 16 App Router + TypeScript + Prisma SQLite. 9 packages. Key concept: AI agents cannot execute privileged actions without a step-up human consent challenge, every action logged to signed ledger. ",
+      "verified_date": "2026-05-13",
+      "research_lane": "ai_safety_human_oversight_consent",
+      "product_lane": "authorization_gateway_governance_module",
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-CONSENTCHAIN-GATEWAY",
+          "path_pattern": "/api/agent/action",
+          "truth_status": "partial",
+          "live_url": null
+        }
+      ]
+    },
+    {
+      "id": "CONSENT-GATEWAY-AUTH0",
+      "label": "Consent Gateway Auth0 — 8-Stage AI Agent Authorization Pipeline",
+      "surface": "exhibit",
+      "display_group": "exhibit",
+      "truth_status": "partial",
+      "implementation_status": "partial",
+      "public_display_status": "demo",
+      "verified_scope_summary": "TypeScript compilation + test file presence: npm run typecheck (tsc --noEmit) — 0 errors (2026-05-13); 8 test files confirmed in __tests__/; HANDOFF (2026-04-06) states tests passed at last checkpoint",
+      "unverified_scope_summary": "Vitest test suite blocked — ERR_REQUIRE_ESM in vitest config loader (Node 22 / CJS mismatch); 8 test files present but not run this session; Auth0 credentials — .env.local not inspected; real or placeholder values unknown; Auth0 Dashboard configuration (token exchange, connections, audiences) not confirmed; Step-up re-authentication flow not confirmed end-to-end; RFC 8693 token exchange not tested against live Auth0 tenant (+7 more)",
+      "short_description": "Auth0 AI Agent Hackathon submission. Standalone Next.js 14 + Auth0 SDK v4. 8-stage gateway: intercept → policy → risk → step-up → consent → RFC 8693 token exchange → execute → audit. Distinct from consentchain monorepo (which has Auth0 as placeholder only). Real implementation: p",
+      "verified_date": "2026-05-13",
+      "research_lane": "ai_safety_human_oversight_consent",
+      "product_lane": "authorization_gateway_exhibit_hackathon",
+      "artifacts": [],
+      "routes": [
+        {
+          "route_id": "ROUTE-CONSENT-GATEWAY-TOKEN",
+          "path_pattern": "/api/gateway/token",
+          "truth_status": "partial",
+          "live_url": null
+        }
+      ]
+    }
+  ],
+  "groups": {
+    "governance_core": [
+      {
+        "id": "CRSP-STC-RUNTIME-001",
+        "label": "SocioTechnical Constitution Runtime",
+        "surface": "governance_core",
+        "display_group": "governance_core",
+        "truth_status": "working",
+        "implementation_status": "working",
+        "public_display_status": "working",
+        "verified_scope_summary": "full runtime (5 suites): node --experimental-vm-modules jest → 9/9 tests pass; npm run validate → schema VALID",
+        "unverified_scope_summary": null,
+        "short_description": "Tier-1 MVG. 5 test suites, 9 tests passing. npm run verify confirmed.",
+        "verified_date": "2026-05-13",
+        "research_lane": null,
+        "product_lane": null,
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-GOVERNANCE-CORE",
+            "path_pattern": "/",
+            "truth_status": "partial",
+            "live_url": null
+          }
+        ]
+      },
+      {
+        "id": "THE-LIVING-CONSTITUTION",
+        "label": "The Living Constitution",
+        "surface": "governance_core",
+        "display_group": "governance_core",
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "draft",
+        "verified_scope_summary": "STATUS.json + CRSP-001 contract: Files read directly: STATUS.json tip_state_truth=tip_verified, reviewer_status=approved; CRSP-001.json Guardian Kernel Tier-3-Constitutional Active",
+        "unverified_scope_summary": "local test suite (not run this session); Docker/k8s infra not started; Next.js control-plane app not built; tlc-evals full model grading (requires ANTHROPIC_API_KEY); tlc-semgraph not inspected (+3 more)",
+        "short_description": "Active governance-as-code research apparatus. STATUS.json tip_state_truth=tip_verified, reviewer_status=approved, governance_contract_version=v1.9.0. Has real git history (multiple commits), Docker/k8s infra, Python guardian service, Next.js control-plane app, tlc-evals evaluatio",
+        "verified_date": "2026-05-13",
+        "research_lane": "ai_safety_governance",
+        "product_lane": "governance_runtime",
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-GOVERNANCE-TLC",
+            "path_pattern": "/governance/the-living-constitution",
+            "truth_status": "partial",
+            "live_url": null
+          }
+        ]
+      },
+      {
+        "id": "PROACTIVE-28441830",
+        "label": "PROACTIVE — Constitutional AI Safety Agent for GitLab Duo",
+        "surface": "governance_core",
+        "display_group": "governance_core",
+        "truth_status": "working",
+        "implementation_status": "working",
+        "public_display_status": "draft",
+        "verified_scope_summary": "Python package core: python -m pytest tests/ — 731 passed in 1.37s (2026-05-13)",
+        "unverified_scope_summary": "cli.py: 0% coverage — requires live Anthropic + GitLab API keys; gitlab_client.py: 0% coverage — requires live GitLab API; GitLab Duo Chat integration: agent registered but deployment not confirmed; Web UI: no live URL confirmed; No STATUS.json, no CRSP contract bound (+1 more)",
+        "short_description": "Canonical PROACTIVE Python package. Version 4.0.0. Constitutional AI safety agent that enforces epistemic reliability (F1-F5) in GitLab MR review. 731 tests pass, 72% overall coverage. Core enforcement modules at 90-99% coverage. GitLab Duo agent config at .gitlab/duo/agents/proa",
+        "verified_date": "2026-05-13",
+        "research_lane": "ai_safety_epistemic_reliability",
+        "product_lane": "safety_tool_gitlab_integration",
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-PROACTIVE-WEB-UI",
+            "path_pattern": "/",
+            "truth_status": "partial",
+            "live_url": null
+          }
+        ]
+      },
+      {
+        "id": "CONSENTCHAIN",
+        "label": "ConsentChain — Human Consent Gateway for AI Agents",
+        "surface": "governance_core",
+        "display_group": "governance_core",
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "draft",
+        "verified_scope_summary": "apps/web TypeScript compilation: cd apps/web && pnpm exec tsc --noEmit — 0 errors (2026-05-13)",
+        "unverified_scope_summary": "No test suite — turbo test timed out, no vitest/jest in package.json; Auth0 credentials not configured — .env.local has placeholder keys; vault-client throws until external vault service configured; google-executor is mock implementation only; HANDOFF.md status: In Progress (2026-03-17) — phases 14-15 partial (+5 more)",
+        "short_description": "Human-consent authorization gateway for AI agents. Pnpm + Turborepo monorepo. Next.js 16 App Router + TypeScript + Prisma SQLite. 9 packages. Key concept: AI agents cannot execute privileged actions without a step-up human consent challenge, every action logged to signed ledger. ",
+        "verified_date": "2026-05-13",
+        "research_lane": "ai_safety_human_oversight_consent",
+        "product_lane": "authorization_gateway_governance_module",
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-CONSENTCHAIN-GATEWAY",
+            "path_pattern": "/api/agent/action",
+            "truth_status": "partial",
+            "live_url": null
+          }
+        ]
+      }
+    ],
+    "documentation": [
+      {
+        "id": "TLC-ARTIFACTS-RESTRUCTURE",
+        "label": "TLC Artifacts — Session Evidence Repository",
+        "surface": "documentation",
+        "display_group": "documentation",
+        "truth_status": "draft",
+        "implementation_status": "draft",
+        "public_display_status": "draft",
+        "verified_scope_summary": "repository structure: file inspection + git log (2026-05-13)",
+        "unverified_scope_summary": "S01 line references in evidence-manifest.md — TBD audit pending; Obs 2 kimi.com share link — external, not confirmed accessible; Obs 4 BREAK_GLASS artifact — stored in cognitive-governance-lab, not here; sessions/supplementary/ and sessions/development/ — contents not read; tlc-golden-prd/ HTML files — purpose relative to corpus unclear (+3 more)",
+        "short_description": "Tier 1 empirical evidence corpus for 'Frontin at WorldMart' (NeurIPS/FAccT target). Holds session transcripts S01-S03, evidence manifest, codebook, methodology. Active curation confirmed via git log. Citation audit incomplete. No code, no verifier, no tests. Surface corrected fro",
+        "verified_date": "2026-05-13",
+        "research_lane": "ai_safety_governance_evidence",
+        "product_lane": "evidence_archive",
+        "artifacts": [],
+        "routes": []
+      }
+    ],
+    "private_lab": [
+      {
+        "id": "AGENT-SENTINEL",
+        "label": "Agent Sentinel — Alignment Anomaly Detector",
+        "surface": "private_lab",
+        "display_group": "private_lab",
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "draft",
+        "verified_scope_summary": "TypeScript compilation: npx tsc --noEmit — 0 errors (2026-05-13)",
+        "unverified_scope_summary": "test suite: 2 suites fail — import.meta/Jest config mismatch (not fixed); README.md: unresolved git merge conflict at top of file; .env deleted — Gemini API key required, not present in repo; dev server not started — no runtime behavior confirmed; Docker/nginx config not tested (+3 more)",
+        "short_description": "React/TypeScript/Vite SPA for AI agent log analysis and behavioral anomaly detection. Calls Gemini API. TypeScript compiles clean. Test suite broken by import.meta/Jest config mismatch — config gap, not absent implementation. README has unresolved merge conflict (AI Studio templa",
+        "verified_date": "2026-05-13",
+        "research_lane": "ai_safety_alignment_anomaly_detection",
+        "product_lane": "safety_tool_portfolio_demo",
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-LAB-AGENT-SENTINEL",
+            "path_pattern": "/lab/agent-sentinel",
+            "truth_status": "unverified",
+            "live_url": null
+          }
+        ]
+      }
+    ],
+    "public_portfolio": [
+      {
+        "id": "PORTFOLIO-V2",
+        "label": "Corey Alejandro Portfolio v2",
+        "surface": "public_portfolio",
+        "display_group": "public_portfolio",
+        "truth_status": "unverified",
+        "implementation_status": "unverified",
+        "public_display_status": "coming_soon",
+        "verified_scope_summary": null,
+        "unverified_scope_summary": null,
+        "short_description": "Has app/, components/, data/. Next.js app structure.",
+        "verified_date": null,
+        "research_lane": null,
+        "product_lane": null,
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-PORTFOLIO-V2",
+            "path_pattern": "/",
+            "truth_status": "unverified",
+            "live_url": null
+          }
+        ]
+      },
+      {
+        "id": "COREYS-AGENTIC-PORTFOLIO",
+        "label": "Corey's Agentic Portfolio",
+        "surface": "public_portfolio",
+        "display_group": "public_portfolio",
+        "truth_status": "unverified",
+        "implementation_status": "unverified",
+        "public_display_status": "coming_soon",
+        "verified_scope_summary": null,
+        "unverified_scope_summary": null,
+        "short_description": "Has app/, AGENTS.md, CLAUDE.md. Next.js app structure. Agentic routes present.",
+        "verified_date": null,
+        "research_lane": null,
+        "product_lane": null,
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-AGENTIC-PORTFOLIO",
+            "path_pattern": "/agentic",
+            "truth_status": "unverified",
+            "live_url": null
+          }
+        ]
+      }
+    ],
+    "exhibit": [
+      {
+        "id": "CONTRACT-WINDOW-EXHIBIT",
+        "label": "Contract Window Public Exhibit",
+        "surface": "exhibit",
+        "display_group": "exhibit",
+        "truth_status": "planned",
+        "implementation_status": "planned",
+        "public_display_status": "coming_soon",
+        "verified_scope_summary": null,
+        "unverified_scope_summary": null,
+        "short_description": "Planned exhibit. Contract Window interactive demo for public portfolio. Not yet built.",
+        "verified_date": null,
+        "research_lane": null,
+        "product_lane": null,
+        "artifacts": [],
+        "routes": []
+      },
+      {
+        "id": "CONSENT-GATEWAY-AUTH0",
+        "label": "Consent Gateway Auth0 — 8-Stage AI Agent Authorization Pipeline",
+        "surface": "exhibit",
+        "display_group": "exhibit",
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "demo",
+        "verified_scope_summary": "TypeScript compilation + test file presence: npm run typecheck (tsc --noEmit) — 0 errors (2026-05-13); 8 test files confirmed in __tests__/; HANDOFF (2026-04-06) states tests passed at last checkpoint",
+        "unverified_scope_summary": "Vitest test suite blocked — ERR_REQUIRE_ESM in vitest config loader (Node 22 / CJS mismatch); 8 test files present but not run this session; Auth0 credentials — .env.local not inspected; real or placeholder values unknown; Auth0 Dashboard configuration (token exchange, connections, audiences) not confirmed; Step-up re-authentication flow not confirmed end-to-end; RFC 8693 token exchange not tested against live Auth0 tenant (+7 more)",
+        "short_description": "Auth0 AI Agent Hackathon submission. Standalone Next.js 14 + Auth0 SDK v4. 8-stage gateway: intercept → policy → risk → step-up → consent → RFC 8693 token exchange → execute → audit. Distinct from consentchain monorepo (which has Auth0 as placeholder only). Real implementation: p",
+        "verified_date": "2026-05-13",
+        "research_lane": "ai_safety_human_oversight_consent",
+        "product_lane": "authorization_gateway_exhibit_hackathon",
+        "artifacts": [],
+        "routes": [
+          {
+            "route_id": "ROUTE-CONSENT-GATEWAY-TOKEN",
+            "path_pattern": "/api/gateway/token",
+            "truth_status": "partial",
+            "live_url": null
+          }
+        ]
+      }
+    ],
+    "module_library": [
+      {
+        "id": "COGNITIVE-GOVERNANCE-LAB",
+        "label": "Cognitive Governance Lab",
+        "surface": "module_library",
+        "display_group": "module_library",
+        "truth_status": "partial",
+        "implementation_status": "partial",
+        "public_display_status": "draft",
+        "verified_scope_summary": "governance-kernel: python -m pytest tests/ — 62 passed in 0.22s (2026-05-13)",
+        "unverified_scope_summary": "research program: live pilot sessions (0 of 10 required) — NOT DONE; human inter-rater reliability (kappa >= 0.70) — NOT DONE; session-protocol.md — NOT WRITTEN; COLM 2026 paper — draft only, not submitted; Anthropic Fellows proposals — submitted, outcome unknown (+4 more)",
+        "short_description": "Module-level truth_status is partial because the complete project scope includes a research program, live pilot, human IRR, CRSP binding, and STATUS.json that are not complete. The governance-kernel library component is verified working: 62 pytest tests pass locally. All other co",
+        "verified_date": "2026-05-13",
+        "research_lane": "cognitive_governance_ai_safety",
+        "product_lane": "governance_library",
+        "artifacts": [],
+        "routes": []
+      }
+    ]
+  }
+}

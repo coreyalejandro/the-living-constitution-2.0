@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://sociotechnical-constitution-runtime/schemas/artifact.registry.schema.json",
+  "title": "Artifact Registry Entry",
+  "description": "Schema for a single artifact entry in registry/artifacts.registry.json",
+  "type": "object",
+  "required": [
+    "id",
+    "label",
+    "type",
+    "format",
+    "path",
+    "surface",
+    "truth_status",
+    "verified_date"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique artifact identifier in SCREAMING-KEBAB-CASE",
+      "pattern": "^ARTIFACT-[A-Z0-9\\-]+$"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable display name"
+    },
+    "type": {
+      "type": "string",
+      "description": "Artifact category",
+      "enum": [
+        "governance_contract",
+        "status_document",
+        "data_model",
+        "configuration_manifest",
+        "build_journal",
+        "documentation",
+        "evidence_transcript",
+        "evidence_manifest",
+        "codebook",
+        "research_document",
+        "library_package",
+        "research_gate",
+        "registry_file",
+        "gitlab_agent_config"
+      ]
+    },
+    "format": {
+      "type": "string",
+      "description": "File format",
+      "enum": ["json", "markdown", "python", "typescript", "yaml", "prisma", "html", "pdf", "csv"]
+    },
+    "path": {
+      "type": "string",
+      "description": "Relative path from ~/Projects/ root"
+    },
+    "surface": {
+      "type": "string",
+      "enum": [
+        "governance_core",
+        "private_lab",
+        "public_portfolio",
+        "documentation",
+        "module_library",
+        "exhibit"
+      ]
+    },
+    "truth_status": {
+      "type": "string",
+      "enum": [
+        "working",
+        "partial",
+        "static_prototype",
+        "draft",
+        "planned",
+        "deprecated",
+        "quarantined",
+        "unverified"
+      ]
+    },
+    "contract_id": {
+      "type": ["string", "null"]
+    },
+    "append_only": {
+      "type": "boolean",
+      "description": "True if the artifact is an append-only log (e.g., lifecycle.jsonl)"
+    },
+    "verified_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "related_module_id": {
+      "type": "string",
+      "description": "Module ID this artifact belongs to"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

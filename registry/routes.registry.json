@@ -13,15 +13,15 @@
   "routes": [
     {
       "route_id": "ROUTE-GOVERNANCE-CORE",
-      "label": "Governance Core Runtime",
+      "label": "Governance Core — Runtime Repo",
       "module_id": "CRSP-STC-RUNTIME-001",
       "surface": "governance_core",
       "visibility": "internal",
-      "truth_status": "working",
+      "truth_status": "partial",
       "path_pattern": "/",
       "deployment_target": "local",
       "live_url": null,
-      "notes": "Primary runtime repo. CLI-only. No web route. Internal use only."
+      "notes": "Primary runtime repo. CLI-only. No web route. Internal use only. truth_status changed from working to partial: live_url=null, not deployed to a public host."
     },
     {
       "route_id": "ROUTE-PORTFOLIO-V2",
@@ -89,12 +89,12 @@
       "module_id": null,
       "surface": "documentation",
       "visibility": "internal",
-      "truth_status": "working",
+      "truth_status": "partial",
       "path_pattern": "/docs/constitution",
       "deployment_target": "local",
       "live_url": null,
       "artifact_id": "ARTIFACT-CONSTITUTION-MD",
-      "notes": "References constitution/SOCIOTECHNICAL_CONSTITUTION.md. No web deployment yet."
+      "notes": "References constitution/SOCIOTECHNICAL_CONSTITUTION.md. No web deployment yet. truth_status changed from working to partial: file confirmed present, not served via a live URL."
     },
     {
       "route_id": "ROUTE-DOCS-INTEGRATION",
@@ -102,12 +102,12 @@
       "module_id": null,
       "surface": "documentation",
       "visibility": "internal",
-      "truth_status": "working",
+      "truth_status": "partial",
       "path_pattern": "/docs/integration",
       "deployment_target": "local",
       "live_url": null,
       "artifact_id": "ARTIFACT-TLC-INTEGRATION-MAP",
-      "notes": "References docs/integration/. No web deployment yet."
+      "notes": "References docs/integration/. No web deployment yet. truth_status changed from working to partial: files confirmed present, not served via a live URL."
     },
     {
       "route_id": "ROUTE-GOVERNANCE-TLC",
