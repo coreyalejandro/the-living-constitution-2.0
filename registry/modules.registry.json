@@ -378,6 +378,59 @@
         "Month 1 full gate — synthetic calibration only, not live-pilot-complete"
       ],
       "notes": "Module-level truth_status is partial because the complete project scope includes a research program, live pilot, human IRR, CRSP binding, and STATUS.json that are not complete. The governance-kernel library component is verified working: 62 pytest tests pass locally. All other components (research-proposals, paper-draft) are draft or unverified. Located at ~/cognitive-governance-lab — outside scanner path ~/Projects; scanner path must be extended to find it."
+    },
+    {
+      "id": "CONSENTCHAIN",
+      "label": "ConsentChain — Human Consent Gateway for AI Agents",
+      "path": "consentchain/",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "components": [
+        "apps/web",
+        "packages/shared",
+        "packages/ledger",
+        "packages/idempotency",
+        "packages/policy-engine",
+        "packages/step-up",
+        "packages/vault-client",
+        "packages/google-executor",
+        "packages/agent-sdk"
+      ],
+      "contract_id": null,
+      "verified_date": "2026-05-13",
+      "implementation_status": "partial",
+      "public_display_status": "draft",
+      "research_lane": "ai_safety_human_oversight_consent",
+      "product_lane": "authorization_gateway_governance_module",
+      "verified_scope": {
+        "component": "apps/web TypeScript compilation",
+        "verification": "cd apps/web && pnpm exec tsc --noEmit — 0 errors (2026-05-13)",
+        "covers": [
+          "apps/web/src/app/api/agent/action/route.ts (gateway orchestrator)",
+          "apps/web/src/app/api/auth/step-up/route.ts",
+          "apps/web/src/app/api/auth/step-up/verify/route.ts",
+          "apps/web/src/app/api/ledger/route.ts",
+          "apps/web/src/app/api/revoke/route.ts",
+          "apps/web/src/lib/prisma.ts",
+          "packages/shared/src/types.ts + constants.ts",
+          "packages/ledger/src/ (signer.ts, index.ts)",
+          "packages/idempotency/src/ (store.ts, index.ts)",
+          "packages/policy-engine/src/ (rules.ts, index.ts)"
+        ]
+      },
+      "unverified_scope": [
+        "No test suite — turbo test timed out, no vitest/jest in package.json",
+        "Auth0 credentials not configured — .env.local has placeholder keys",
+        "vault-client throws until external vault service configured",
+        "google-executor is mock implementation only",
+        "HANDOFF.md status: In Progress (2026-03-17) — phases 14-15 partial",
+        "packages/agent-sdk: built once (dist/ exists) but not tsc-verified this session",
+        "No live URL, no deployment confirmed",
+        "No STATUS.json, no CRSP contract bound",
+        "Git history anomalous — shared git root with portfolio/parent repo",
+        "consent-gateway-auth0 (auth0-specific variant) — separate module, not classified"
+      ],
+      "notes": "Human-consent authorization gateway for AI agents. Pnpm + Turborepo monorepo. Next.js 16 App Router + TypeScript + Prisma SQLite. 9 packages. Key concept: AI agents cannot execute privileged actions without a step-up human consent challenge, every action logged to signed ledger. TypeScript compiles clean. No test suite. Auth0 not configured. vault-client and google-executor not production-ready. dev.db on disk confirms Prisma migrations ran locally."
     }
   ]
 }

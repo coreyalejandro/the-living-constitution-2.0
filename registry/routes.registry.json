@@ -180,6 +180,18 @@
       "deployment_target": "local",
       "live_url": null,
       "notes": "web_ui.py present and 87% test-covered. No live URL confirmed. Requires Anthropic + GitLab API keys to run. Route added to satisfy working-module-requires-route registry check. Deploy via python -m proactive.web_ui or equivalent once API keys are configured."
+    },
+    {
+      "route_id": "ROUTE-CONSENTCHAIN-GATEWAY",
+      "label": "ConsentChain — Agent Action Gateway",
+      "module_id": "CONSENTCHAIN",
+      "surface": "governance_core",
+      "visibility": "internal",
+      "truth_status": "partial",
+      "path_pattern": "/api/agent/action",
+      "deployment_target": "local",
+      "live_url": null,
+      "notes": "Next.js API route: validation → idempotency → revocation → policy → step-up → exec → ledger pipeline. TypeScript compiles clean. No test suite. Auth0 not configured. Requires vault-client and google-executor to be configured for full operation."
     }
   ]
 }
