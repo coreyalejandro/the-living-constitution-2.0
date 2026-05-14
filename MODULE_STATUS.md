@@ -152,8 +152,8 @@
 ### HIDRS — Instructional Dependency Study
 - **ID:** HIDRS-INSTRUCTIONAL-DEPENDENCY-STUDY
 - **Surface:** Module Library
-- **Verified scope:** ["repo scaffold exists and validate_repo.py passes (exit 0, 0 errors)","C_RSP_BUILD_CONTRACT.md exists (5543 bytes)","docs/STUDY_PROTOCOL.md exists","docs/SAFETY_PROTOCOL.md exists","docs/DATA_DICTIONARY.md exists","schemas/event_schema.json, session_schema.json, retrospective_recovery_schema.json exist and lint clean","evidence/index/evidence_index.csv exists with header",".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*","STATUS.md contains RETROSPECTIVE and PROSPECTIVE_START markers","initial commit 9d544c2 — 30 files, 1550 insertions"]
-- **Unverified scope (8 items):**
+- **Verified scope:** ["repo scaffold exists and validate_repo.py passes (exit 0, 0 errors)","C_RSP_BUILD_CONTRACT.md exists (6650 bytes, visual invariant I8 added)","docs/STUDY_PROTOCOL.md exists","docs/SAFETY_PROTOCOL.md exists","docs/DATA_DICTIONARY.md exists","schemas/event_schema.json, session_schema.json, retrospective_recovery_schema.json exist and lint clean","evidence/index/evidence_index.csv exists with header",".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*","STATUS.md contains RETROSPECTIVE and PROSPECTIVE_START markers","visual understanding layer exists — all 7 visual files present","visuals/architecture/system-architecture.mmd exists","visuals/app-flow/app-flow.mmd exists","visuals/user-journey/user-journey.mmd exists","visuals/pictographs/research-loop-pictograph.md exists","visuals/mock-demo/mock-demo-storyboard.md exists","visuals/illustrations/illustration-brief.md exists","validate_repo.py passes with visual checks enforced (27 files checked, exit 0)"]
+- **Unverified scope (11 items):**
   - workbook not verified — not yet placed in workbook/ directory
   - no prospective data collected yet (starts at Course 1 Lesson 4)
   - no retrospective data entered for Course 1 Lessons 1–3
@@ -162,6 +162,9 @@
   - no external generalization claimed or verified
   - no course content audit beyond repo file scan
   - openpyxl workbook sheet names not confirmed
+  - diagrams are initial Mermaid/text drafts — pending visual polish
+  - no rendered PNG/SVG export yet
+  - no mock demo video yet
 
 ---
 

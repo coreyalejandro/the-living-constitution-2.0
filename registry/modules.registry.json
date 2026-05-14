@@ -556,7 +556,7 @@
       "crsp_contract": "C_RSP_BUILD_CONTRACT.md",
       "verified_scope": [
         "repo scaffold exists and validate_repo.py passes (exit 0, 0 errors)",
-        "C_RSP_BUILD_CONTRACT.md exists (5543 bytes)",
+        "C_RSP_BUILD_CONTRACT.md exists (6650 bytes, visual invariant I8 added)",
         "docs/STUDY_PROTOCOL.md exists",
         "docs/SAFETY_PROTOCOL.md exists",
         "docs/DATA_DICTIONARY.md exists",
@@ -564,7 +564,14 @@
         "evidence/index/evidence_index.csv exists with header",
         ".gitignore excludes data/private/*, evidence/screenshots/*, evidence/excerpts/*",
         "STATUS.md contains RETROSPECTIVE and PROSPECTIVE_START markers",
-        "initial commit 9d544c2 — 30 files, 1550 insertions"
+        "visual understanding layer exists — all 7 visual files present",
+        "visuals/architecture/system-architecture.mmd exists",
+        "visuals/app-flow/app-flow.mmd exists",
+        "visuals/user-journey/user-journey.mmd exists",
+        "visuals/pictographs/research-loop-pictograph.md exists",
+        "visuals/mock-demo/mock-demo-storyboard.md exists",
+        "visuals/illustrations/illustration-brief.md exists",
+        "validate_repo.py passes with visual checks enforced (27 files checked, exit 0)"
       ],
       "unverified_scope": [
         "workbook not verified — not yet placed in workbook/ directory",
@@ -574,7 +581,10 @@
         "no final report generated",
         "no external generalization claimed or verified",
         "no course content audit beyond repo file scan",
-        "openpyxl workbook sheet names not confirmed"
+        "openpyxl workbook sheet names not confirmed",
+        "diagrams are initial Mermaid/text drafts — pending visual polish",
+        "no rendered PNG/SVG export yet",
+        "no mock demo video yet"
       ],
       "next_required_action": "Copy workbook from Google Drive to workbook/ directory. Run validate_workbook.py. Enter retrospective data for Course 1 Lessons 1–3. Begin Course 1 Lesson 4 prospective logging.",
       "artifacts": [

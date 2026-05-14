@@ -1,26 +1,26 @@
 {
   "schema": "portfolio-sync-receipt.v1",
-  "synced_at": "2026-05-14T03:25:20.600Z",
+  "synced_at": "2026-05-14T03:34:03.512Z",
   "source": {
     "path": "/Users/coreyalejandro/Projects/sociotechnical-constitution-runtime/PORTFOLIO_DATA.json",
     "repo": "sociotechnical-constitution-runtime",
-    "git_sha": "285c6d8c85f68b457b21005035ce43a445ed0e39",
-    "checksum_sha256": "d987c0b5336083e49088f925f368f1307f18c6d60d591cd6303c8026a64f1685",
+    "git_sha": "22579470d7d2b08c9e2c7a624b0a9449d0b78710",
+    "checksum_sha256": "fdaee451d062d2045d7396f12bd151ca6bab72ab708d5fdab1fe6cc6855fc90b",
     "modules": 12,
     "groups": 6,
     "registry_version": "1.0.0",
-    "generated_at": "2026-05-14T03:25:20.400Z"
+    "generated_at": "2026-05-14T03:34:03.327Z"
   },
   "target": {
     "path": "/Users/coreyalejandro/Projects/coreyalejandro-portfolio-v2/data/portfolio-data.json",
     "repo": "coreyalejandro-portfolio-v2",
-    "git_sha": "ae5e60816d127c7afcd32348d7c1fe5a5e38ab88",
-    "checksum_sha256": "d987c0b5336083e49088f925f368f1307f18c6d60d591cd6303c8026a64f1685"
+    "git_sha": "1ec0d4742d61a486ede2efbb0910ce974dc7c379",
+    "checksum_sha256": "fdaee451d062d2045d7396f12bd151ca6bab72ab708d5fdab1fe6cc6855fc90b"
   },
   "result": {
     "status": "success",
     "unchanged": false,
-    "prior_checksum": "15a08d3d71e4f04a9f2295d0b6486e1d4edc579b6c99fec2981e33f0736fec9d",
-    "new_checksum": "d987c0b5336083e49088f925f368f1307f18c6d60d591cd6303c8026a64f1685"
+    "prior_checksum": "d987c0b5336083e49088f925f368f1307f18c6d60d591cd6303c8026a64f1685",
+    "new_checksum": "fdaee451d062d2045d7396f12bd151ca6bab72ab708d5fdab1fe6cc6855fc90b"
   }
 }
