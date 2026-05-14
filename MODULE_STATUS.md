@@ -85,18 +85,15 @@
   - No STATUS.json, no CRSP contract bound
 - **Routes:** /lab/agent-sentinel (unverified)
 
-### Corey's Agentic Portfolio
+### Corey's Agentic Portfolio (Staging/Reference)
 - **ID:** COREYS-AGENTIC-PORTFOLIO
 - **Surface:** Public Portfolio
-- **Verified scope:** pnpm build + 16 app routes — pnpm build PASSES — all routes prerender/server-render (2026-05-14). 16 app route directories confirmed present.
-- **Unverified scope (9 items):**
+- **Verified scope:** pnpm build + tsc + 19 app routes — pnpm exec tsc --noEmit — 0 errors (ignoreBuildErrors removed 2026-05-14); pnpm build PASSES — all routes static prerendered. STATUS.json + CRSP-PORTFOLIO-001 contract added. data/portfolio-data.json synced from runtime registry.
+- **Unverified scope (6 items):**
   - no test suite configured (stated in AGENTS.md)
-  - tsc: 7 real errors suppressed by ignoreBuildErrors:true
-  - component inventory: 9 drift warnings, exits 1
+  - component inventory: 9 drift warnings, exits 1 — unresolved
   - ai-safety-identity-strategy.md: referenced in README, not surface-scanned
-  - live deployment URL: none confirmed
-  - CRSP governance contract: absent
-  - data/ directory absent — not consuming PORTFOLIO_DATA.json yet
+  - live deployment URL: none (Vercel domain reassigned to coreyalejandro-portfolio-v2 on 2026-05-14)
   - Hyperagent Folio 001 content (portfolio-files.zip): not classified separately
   - SentinelOS module list accuracy: not verified against TLC registry
 - **Routes:** /agentic (unverified), / (partial), /sentinel (partial)
@@ -204,7 +201,7 @@ None classified yet.
 | AI Safety Identity Strategy | [UNVERIFIED] | Run ingest SOP — inspect and classify |
 | Zero Shot Build OS Docs | [UNVERIFIED] | Run ingest SOP — inspect and classify |
 | Corey Alejandro Portfolio v2 | [UNVERIFIED] | Run ingest SOP — inspect and classify |
-| Corey's Agentic Portfolio | [PARTIAL] | Resolve unverified_scope items or classify separately |
+| Corey's Agentic Portfolio (Staging/Reference) | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | Contract Window Public Exhibit | [PLANNED] | Build or remove from registry |
 | Cognitive Governance Lab | [PARTIAL] | Resolve unverified_scope items or classify separately |
 | ConsentChain — Human Consent Gateway for AI Agents | [PARTIAL] | Resolve unverified_scope items or classify separately |

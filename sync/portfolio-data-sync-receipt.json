@@ -1,26 +1,26 @@
 {
   "schema": "portfolio-sync-receipt.v1",
-  "synced_at": "2026-05-14T00:30:36.417Z",
+  "synced_at": "2026-05-14T00:42:54.839Z",
   "source": {
     "path": "/Users/coreyalejandro/Projects/sociotechnical-constitution-runtime/PORTFOLIO_DATA.json",
     "repo": "sociotechnical-constitution-runtime",
-    "git_sha": "99d79d1bb5b341fa6eace41b8fe09c662d668da9",
-    "checksum_sha256": "a96330a762d17764d22853c139d4b25eb35f351f55fe0c5f07c704e49d91ca0d",
+    "git_sha": "66650feae3871ac22456957f62ed7b03e74b0928",
+    "checksum_sha256": "482d6a044e8026d4959ed83acd587787bb6c071753e5c620c41344072e6128fd",
     "modules": 11,
     "groups": 6,
     "registry_version": "1.0.0",
-    "generated_at": "2026-05-14T00:30:36.242Z"
+    "generated_at": "2026-05-14T00:42:52.483Z"
   },
   "target": {
-    "path": "/Users/coreyalejandro/Projects/coreys-agentic-portfolio/data/portfolio-data.json",
-    "repo": "coreys-agentic-portfolio",
-    "git_sha": "94f4ab68ae75ac9596d4cbea365745c3fad772ce",
-    "checksum_sha256": "a96330a762d17764d22853c139d4b25eb35f351f55fe0c5f07c704e49d91ca0d"
+    "path": "/Users/coreyalejandro/Projects/coreyalejandro-portfolio-v2/data/portfolio-data.json",
+    "repo": "coreyalejandro-portfolio-v2",
+    "git_sha": "85f605cc9cfe87c8af7d4d3c2d7ffb082b728471",
+    "checksum_sha256": "482d6a044e8026d4959ed83acd587787bb6c071753e5c620c41344072e6128fd"
   },
   "result": {
     "status": "success",
     "unchanged": false,
-    "prior_checksum": "27552378c9e85c7e4c477f82b27787a293e1844f235213e4c1c7547e323b231e",
-    "new_checksum": "a96330a762d17764d22853c139d4b25eb35f351f55fe0c5f07c704e49d91ca0d"
+    "prior_checksum": "a96330a762d17764d22853c139d4b25eb35f351f55fe0c5f07c704e49d91ca0d",
+    "new_checksum": "482d6a044e8026d4959ed83acd587787bb6c071753e5c620c41344072e6128fd"
   }
 }

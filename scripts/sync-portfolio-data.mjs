@@ -28,7 +28,7 @@ const RUNTIME_ROOT = path.resolve(__dirname, '..')
 // ── Paths ─────────────────────────────────────────────────────────────────────
 
 const SOURCE_PATH = path.join(RUNTIME_ROOT, 'PORTFOLIO_DATA.json')
-const TARGET_PORTFOLIO_ROOT = path.join(RUNTIME_ROOT, '..', 'coreys-agentic-portfolio')
+const TARGET_PORTFOLIO_ROOT = path.join(RUNTIME_ROOT, '..', 'coreyalejandro-portfolio-v2')
 const TARGET_PATH = path.join(TARGET_PORTFOLIO_ROOT, 'data', 'portfolio-data.json')
 const RECEIPT_DIR = path.join(RUNTIME_ROOT, 'sync')
 const RECEIPT_PATH = path.join(RECEIPT_DIR, 'portfolio-data-sync-receipt.json')
@@ -54,7 +54,7 @@ function info(msg) { console.log(`  INFO  ${msg}`) }
 
 // ── Preflight checks ──────────────────────────────────────────────────────────
 
-console.log('\nSync: PORTFOLIO_DATA.json → coreys-agentic-portfolio/data/portfolio-data.json\n')
+console.log('\nSync: PORTFOLIO_DATA.json → coreyalejandro-portfolio-v2/data/portfolio-data.json\n')
 
 if (!fs.existsSync(SOURCE_PATH)) {
   fail(`Source not found: ${SOURCE_PATH}\n  Run: npm run generate:portfolio-data first`)
@@ -128,7 +128,7 @@ const receipt = {
   },
   target: {
     path: TARGET_PATH,
-    repo: 'coreys-agentic-portfolio',
+    repo: 'coreyalejandro-portfolio-v2',
     git_sha: portfolioSHA,
     checksum_sha256: targetChecksum,
   },

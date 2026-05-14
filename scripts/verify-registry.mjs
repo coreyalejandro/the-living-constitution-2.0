@@ -293,7 +293,7 @@ if (unroutedWorking === 0) {
 // --- 7a. Complete-claim verification enforcement ---
 section('7. Complete-claim verification rules');
 
-const VALID_PUBLIC_DISPLAY = new Set(['working', 'demo', 'draft', 'coming_soon', 'hidden']);
+const VALID_PUBLIC_DISPLAY = new Set(['working', 'demo', 'draft', 'coming_soon', 'hidden', 'staging_reference']);
 const PUBLIC_SURFACES = new Set(['public_portfolio', 'exhibit']);
 let claimErrors = 0;
 
