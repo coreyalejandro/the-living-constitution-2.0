@@ -48,6 +48,8 @@ This document is the authoritative reference for those decisions.
 
 ## Article I — What Is Governed
 
+> Source: `docs/integration/TLC_2_0_IDENTITY.md` §Scope; `docs/integration/TLC_2_0_INTEGRATION_MAP.md` §Routing Constraints
+
 ### I.1 Scope
 
 This constitution governs:
@@ -87,6 +89,8 @@ trail and resolved before the next classification pass.
 ---
 
 ## Article II — Classification and Truth Status
+
+> Source: `docs/operations/CLASSIFICATION_STATUS_RULES.md` §Status Definitions, §Truth Status Decision Tree; `docs/operations/COMPLETE_CLAIM_VERIFICATION_RULE.md` §Rule Statement, §Scope boundaries, §Public claim discipline; `schemas/module.registry.schema.json` §truth_status enum
 
 ### II.1 Purpose
 
@@ -141,6 +145,8 @@ must be corrected before the next publication pass.
 
 ## Article III — Roles and Authority
 
+> Source: `contracts/active/BUILD_CONTRACT.md` §9.5 Role-Based Access & Agent Authority Gates, §Permissions Matrix; `schemas/contract-schema.json` §role definitions
+
 ### III.1 Human Roles
 
 | Role | Authority |
@@ -180,6 +186,8 @@ role.
 ---
 
 ## Article IV — C-RSP Contract Law
+
+> Source: `contracts/active/BUILD_CONTRACT.md` §1 Contract Identity, §7 Lifecycle State Machine, §11 Halt Matrix; `schemas/contract-schema.json` §required fields, §status enum, §adoption_tier enum
 
 ### IV.1 What a C-RSP Contract Is
 
@@ -243,6 +251,8 @@ Halt conditions may not be silently cleared. Every resolution must be logged wit
 
 ## Article V — Verification and Truth (V&T)
 
+> Source: `schemas/vnt-statement.schema.json` §required, §properties; `docs/operations/COMPLETE_CLAIM_VERIFICATION_RULE.md` §What "verified" means in this system; `docs/operations/CLASSIFICATION_STATUS_RULES.md` §implementation_status vs truth_status
+
 ### V.1 The V&T Requirement
 
 Every acceptance criterion in every C-RSP contract must carry a V&T statement before it
@@ -294,6 +304,8 @@ and the correction reason. The prior entry remains in the record.
 
 ## Article VI — The Visual Understanding Layer
 
+> Source: `README.md` §Required Visual Understanding Layer (verbatim list); `docs/operations/RESEARCH_TO_PAPER_TO_PRODUCT_TEMPLATE.md`
+
 ### VI.1 Requirement
 
 Every module classified as `working` or `partial` at the `governance_core` or
@@ -326,6 +338,8 @@ A module missing its visual understanding layer may not be promoted from `partia
 ---
 
 ## Article VII — The Amendment Process
+
+> Source: `contracts/active/BUILD_CONTRACT.md` §9.8 Amendment Process UI, §Amendment Workflow steps 1–6; `schemas/contract-schema.json` §status enum lifecycle states
 
 ### VII.1 Why Amendments Exist
 
@@ -386,6 +400,8 @@ The following may only be changed by unanimous Council vote:
 ---
 
 ## Article VIII — Invariants
+
+> Source: `contracts/active/BUILD_CONTRACT.md` §11 Halt Matrix (trigger/resolution pairs); `contracts/active/BUILD_CONTRACT.md` §8.4 Policy Engine rule definitions (INVARIANT_EXEC_03, HALT_PII_UNVERIFIED); `schemas/module.registry.schema.json` §if/then constraints; `schemas/vnt-statement.schema.json` §required
 
 These are the machine-readable governance rules enforced by the Policy Engine. Each
 invariant has an ID, a description, and an enforcement behavior (BLOCK, WARN, or LOG).
@@ -505,7 +521,7 @@ system. It does not make the governance fictional. It makes it honest about wher
 |---|---|
 | **What** | The constitutional document for The Living Constitution 2.0, covering Articles I–IX: scope, classification rules, role authority, C-RSP contract law, V&T requirements, visual layer requirement, amendment process, invariants, and Constitutional Council. |
 | **Principles Active** | Sociotechnical governance, honest status, evidence primacy, role-bounded authority, visual accessibility, amendment-by-evidence |
-| **True** | All referenced systems exist: schemas (7 files confirmed in schemas/), active C-RSP contract (CRSP-STC-RUNTIME-001, 29,147 chars, confirmed), module registry (21 modules confirmed), ops docs (CLASSIFICATION_STATUS_RULES, COMPLETE_CLAIM_VERIFICATION_RULE confirmed). All article content is internally consistent with those documents. Article VIII invariants are consistent with the halt matrix defined in BUILD_CONTRACT.md §11. Article III role matrix is consistent with BUILD_CONTRACT.md §9.5. Article VII amendment workflow is consistent with BUILD_CONTRACT.md §9.8. |
+| **True** | All referenced source files exist and were read in the drafting session: `schemas/` (7 files confirmed), `contracts/active/BUILD_CONTRACT.md` (29,147 chars confirmed), `registry/modules.registry.json` (21 modules confirmed), `docs/operations/CLASSIFICATION_STATUS_RULES.md` (confirmed), `docs/operations/COMPLETE_CLAIM_VERIFICATION_RULE.md` (confirmed), `docs/integration/TLC_2_0_IDENTITY.md` (confirmed), `docs/integration/TLC_2_0_INTEGRATION_MAP.md` (confirmed), `README.md` (confirmed). Each article carries a `> Source:` citation traceable to a specific section of those files. |
 | **Assumed** | The reader has access to `schemas/`, `registry/`, and `contracts/active/`. The Constitutional Council will be seated as the system matures. |
 | **Uncertain** | Whether the Article VIII invariants as written here are exactly the invariants implemented in the Policy Engine source — that mapping requires a code-to-spec verification pass. |
 | **Unverified** | Policy Engine implementation of Article VIII invariants (src/core/policy-engine.js not inspected). Amendment workflow UI (src/ui/amendment-editor/ not inspected). Council Dashboard (src/ui/council-dashboard/ not inspected). `npm run verify` against this document's schema — not run. |
