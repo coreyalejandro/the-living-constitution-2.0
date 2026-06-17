@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-06-17T21:33:47.535Z",
+  "logs": {
+    "bypass-log.jsonl": {
+      "count": 0,
+      "last_checked": "2026-06-17T21:33:47.535Z"
+    },
+    "purge-log.jsonl": {
+      "count": 1,
+      "last_checked": "2026-06-17T21:33:47.535Z",
+      "last_timestamp": "2026-06-17T21:11:10.064Z"
+    }
+  }
+}

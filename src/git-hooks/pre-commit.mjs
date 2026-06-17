@@ -124,6 +124,28 @@ if (mod.truth_status === 'quarantined') {
   );
 }
 
+// --- I9: Audit log deletion guard ---
+// Staged deletions of audit log files are blocked unconditionally.
+const AUDIT_LOG_NAMES = ['bypass-log.jsonl', 'purge-log.jsonl', 'audit-log.jsonl'];
+const deletedAuditLogs = (() => {
+  try {
+    const deleted = execSync(
+      'git diff --cached --name-only --diff-filter=D',
+      { encoding: 'utf8' }
+    ).trim().split('\n').filter(Boolean);
+    return deleted.filter(f => AUDIT_LOG_NAMES.some(name => f.endsWith(name)));
+  } catch { return []; }
+})();
+
+if (deletedAuditLogs.length > 0) {
+  halt(
+    `I9 VIOLATION — Audit log deletion blocked.`,
+    `Files: ${deletedAuditLogs.join(', ')}\n` +
+    `Audit logs must be retained ≥ 90 days per Article X, Section 10.3.\n` +
+    `Use: tlc-purge --purge-log --before <date> --confirm (enforces 90-day floor).`
+  );
+}
+
 // --- I2: Evidence check on AC completion claims ---
 // Check staged files for evidence markers
 let stagedFiles = [];

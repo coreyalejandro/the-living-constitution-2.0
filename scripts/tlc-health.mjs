@@ -248,6 +248,56 @@ function checkHermesSkills() {
   });
 }
 
+function checkAuditRetention() {
+  check('I9: Audit retention enforcement script present', () => {
+    const p = join(TLC_ROOT, 'scripts', 'tlc-audit-retention.mjs');
+    if (!existsSync(p)) return { status: 'critical', detail: 'Missing tlc-audit-retention.mjs' };
+    return true;
+  });
+
+  check('I9: Audit retention state checkpoint', () => {
+    const stateFile = join(TLC_ROOT, 'evidence', 'audit-retention-state.json');
+    if (!existsSync(stateFile)) {
+      return { status: 'warn', detail: 'No checkpoint yet — run tlc-audit-retention once' };
+    }
+    try {
+      const state = JSON.parse(readFileSync(stateFile, 'utf8'));
+      const age = Date.now() - new Date(state.checked_at).getTime();
+      const ageHours = Math.round(age / (1000 * 60 * 60));
+      if (age > 25 * 60 * 60 * 1000) {
+        return { status: 'warn', detail: `Last checked ${ageHours}h ago — cron may not be running` };
+      }
+      return { status: 'ok', detail: `Last checked ${ageHours}h ago` };
+    } catch {
+      return { status: 'warn', detail: 'Checkpoint file unreadable' };
+    }
+  });
+
+  check('I9: No audit log truncation detected', () => {
+    const stateFile = join(TLC_ROOT, 'evidence', 'audit-retention-state.json');
+    if (!existsSync(stateFile)) return { status: 'warn', detail: 'No checkpoint — run tlc-audit-retention' };
+    try {
+      const state = JSON.parse(readFileSync(stateFile, 'utf8'));
+      const AUDIT_LOG_NAMES = ['bypass-log.jsonl', 'purge-log.jsonl', 'audit-log.jsonl'];
+      for (const name of AUDIT_LOG_NAMES) {
+        const p = join(TLC_ROOT, 'evidence', name);
+        if (!existsSync(p)) continue;
+        const prev = state.logs?.[name]?.count ?? 0;
+        const current = readFileSync(p, 'utf8').trim().split('\n').filter(Boolean).length;
+        if (current < prev) {
+          return {
+            status: 'critical',
+            detail: `${name} truncated: was ${prev} entries, now ${current} — I9 violation`
+          };
+        }
+      }
+      return true;
+    } catch {
+      return { status: 'warn', detail: 'Could not read checkpoint' };
+    }
+  });
+}
+
 function checkConstitution() {
   check('SOCIOTECHNICAL_CONSTITUTION.md present', () => {
     const p = join(TLC_ROOT, 'SOCIOTECHNICAL_CONSTITUTION.md');
@@ -334,6 +384,9 @@ function main() {
     log('');
     if (!quiet && !jsonOut) log(`${BOLD}Hermes Integration${RESET}`);
     checkHermesSkills();
+    log('');
+    if (!quiet && !jsonOut) log(`${BOLD}Audit Retention (I9)${RESET}`);
+    checkAuditRetention();
     log('');
     if (!quiet && !jsonOut) log(`${BOLD}Constitution${RESET}`);
     checkConstitution();

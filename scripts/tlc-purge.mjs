@@ -55,7 +55,26 @@ function warn(msg) { log(`${YELLOW}⚠${RESET} ${msg}`); }
 function info(msg) { log(`\x1b[36m→${RESET} ${msg}`); }
 function fail(msg) { log(`${RED}✗${RESET} ${msg}`); process.exit(1); }
 
-// ── Args ──────────────────────────────────────────────────────────────────────
+// ── I9 Retention Constants ────────────────────────────────────────────────────
+// Constitutional Invariant I9 (Article X, Section 10.3):
+// Audit logs must be retained for a minimum of 90 days.
+// This floor is non-negotiable and cannot be overridden by --confirm.
+const I9_RETENTION_DAYS = 90;
+const I9_RETENTION_MS = I9_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+const AUDIT_LOG_FILES = ['bypass-log.jsonl', 'purge-log.jsonl', 'audit-log.jsonl'];
+
+function isAuditLog(filePath) {
+  return AUDIT_LOG_FILES.some(name => filePath.endsWith(name));
+}
+
+function i9Floor(dateStr) {
+  // Returns true if the date is within the 90-day retention window
+  // (i.e., CANNOT be purged yet)
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return true; // unknown date — protect it
+  return (Date.now() - d.getTime()) < I9_RETENTION_MS;
+}
+
 
 const args = process.argv.slice(2);
 
@@ -153,6 +172,15 @@ function purgeEvidenceFiles(module) {
 
     for (const file of files) {
       const filePath = join(dir, file);
+
+      // I9: Audit log files are protected — never deleted by purge
+      if (isAuditLog(filePath)) {
+        if (!quiet && !jsonOut) {
+          log(`  ${DIM}[protected — I9 audit log]${RESET} ${file}`);
+        }
+        continue;
+      }
+
       // Extract date from filename pattern YYYY-MM-DD or timestamp
       const dateMatch = file.match(/(\d{4}-\d{2}-\d{2})/);
       if (!dateMatch && cutoff) continue; // no date in filename — skip unless listing
@@ -227,10 +255,21 @@ function handlePurgeLog() {
   const kept = lines.filter(l => {
     try {
       const entry = JSON.parse(l);
-      return new Date(entry.timestamp) >= cutoff;
+      const entryDate = new Date(entry.timestamp);
+      // I9: entries within the 90-day retention window are ALWAYS kept
+      if (i9Floor(entry.timestamp)) return true;
+      // Outside retention window — check against user-supplied cutoff
+      return cutoff ? entryDate >= cutoff : false;
     } catch { return true; }
   });
   const removed = lines.length - kept.length;
+  const protected90 = lines.filter(l => {
+    try { return i9Floor(JSON.parse(l).timestamp); } catch { return false; }
+  }).length;
+
+  if (protected90 > 0) {
+    warn(`I9: ${protected90} entry/entries within 90-day retention window — not deleted.`);
+  }
   writeFileSync(BYPASS_LOG, kept.join('\n') + (kept.length ? '\n' : ''));
   ok(`Bypass log: ${removed} entries purged, ${kept.length} retained.`);
 

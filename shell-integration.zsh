@@ -24,6 +24,7 @@ alias tlc-sync-skills="node $TLC_SCRIPTS/tlc-sync-skills.mjs"
 alias tlc-hermes="node $TLC_SCRIPTS/tlc-hermes.mjs"
 alias tlc-purge="node $TLC_SCRIPTS/tlc-purge.mjs"
 alias tlc-health="node $TLC_SCRIPTS/tlc-health.mjs"
+alias tlc-audit-retention="node $TLC_SCRIPTS/tlc-audit-retention.mjs"
 
 # --- Auto-validate on cd into a project ---
 function _tlc_cd_hook() {
