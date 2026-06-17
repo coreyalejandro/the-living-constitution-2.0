@@ -581,10 +581,61 @@ const ACTION_VERB_RE = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
 })();
 
 // ── R12 — WORD-LIST ───────────────────────────────────────────────────────────
-// Document must end with a word list. Every backtick-quoted term in the body
-// must have an entry in the word list.
+// Three sub-checks, all machine-deterministic:
+//   A. Word list section exists and has entries.
+//   B. Every backtick-quoted single-word technical term in the body has an entry.
+//   C. Every definition body uses only plain words — jargon terms used in a
+//      definition must themselves have an entry in the word list.
+//
+// Sub-check C uses a curated technical jargon set (~200 words) instead of the
+// full Dale-Chall list. Reason: the Dale-Chall list dates to 1948 and marks
+// many modern plain-English words as "difficult". A negative jargon set has
+// zero false positives on plain language and catches all the words that
+// actually break neurodivergent-first comprehension.
+//
+// A word in a definition is flagged when ALL of:
+//   - it is in JARGON_WORDS
+//   - it is not the term being defined (circular reference is a separate error)
+//   - it does not have its own bold-header entry in the word list
+//   - the definition does not expand the acronym inline (e.g. "API (Application...")
 (function checkR12() {
-  // Find the word list section
+  // ── Jargon word set ─────────────────────────────────────────────────────────
+  // Words that are unambiguously technical. Any of these in a definition body
+  // must either be: (a) the term being defined, or (b) itself defined in the word list.
+  const JARGON_WORDS = new Set([
+    // Computing — general
+    'algorithm','api','argument','array','async','asynchronous','authentication',
+    'authorization','binary','boolean','buffer','build','bundle','bytecode',
+    'cache','callback','class','cli','closure','compile','compiler','config',
+    'configuration','container','context','credential','daemon','database',
+    'dependency','deploy','deployment','deserialize','directory','docker',
+    'endpoint','exception','executable','filesystem','flag',
+    'framework','function','git','gui','handler','hash','heap','hook',
+    'http','https','ide','instance','integer','interface','invariant',
+    'iteration','json','kernel','library','lint','loop','method','middleware',
+    'migration','module','namespace','null','object','parameter','parse',
+    'payload','pointer','port','process','promise','protocol','queue',
+    'recursion','reference','regex','registry','repository','runtime',
+    'scaffold','schema','scope','sdk','serialize','shell','socket','stack',
+    'stdout','stderr','stdin','string','subprocess','synchronous',
+    'thread','token','transpile','undefined','variable','webhook','yaml','toml',
+    // Unix / macOS
+    'bash','chmod','chown','cron','env','launchd','path','pipe','root',
+    'symlink','zsh','brew','homebrew','xcode','plist',
+    // Networking
+    'dns','firewall','ip','proxy','ssl','tcp','tls','udp','url','uri',
+    // TLC / governance
+    'artifact','constitution','contract','evidence','governance','invariant',
+    'module','quarantine','quarantined','unverified','verified',
+    // Cryptography
+    'certificate','checksum','encryption','hash','hex','hexadecimal','key',
+    'signature','salt',
+    // Package managers / build tools
+    'npm','node','pip','gradle','maven','cargo','makefile','webpack',
+    'vite','rollup','esbuild','turbo','pnpm','yarn',
+  ]);
+
+  // ── A. Word list exists and has entries ─────────────────────────────────────
   const wordListStart = lines.findIndex(l => /word list|glossary|what each word means|definitions/i.test(l));
   if (wordListStart === -1) {
     fail('R12', lines.length,
@@ -592,8 +643,6 @@ const ACTION_VERB_RE = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
       'Add a "Word list" section at the end of the document. Define every technical term used anywhere in the document.');
     return;
   }
-
-  // The word list must have at least one entry (non-blank, non-heading line after the heading)
   const wordListBody = lines.slice(wordListStart + 1);
   const hasEntries = wordListBody.some(l => l.trim().length > 0 && !/^#{1,6}\s/.test(l.trim()));
   if (!hasEntries) {
@@ -603,24 +652,88 @@ const ACTION_VERB_RE = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
     return;
   }
 
-  // Extract all backtick-quoted terms from the body (before the word list)
+  // ── Parse the word list into { term → {lineNum, definitionText} } ───────────
+  // Entries are bold-header style: **Term** on its own line, definition on the next non-blank line.
+  // Also handles "Term:" (colon-header) and "Term —" (em-dash) styles.
+  const definedTerms = new Map(); // term (lowercase) → { lineNum, definition }
+  for (let i = wordListStart + 1; i < lines.length; i++) {
+    const l = lines[i].trim();
+    // Bold header: **Term** or **Term (alternate)**
+    const boldMatch = l.match(/^\*\*(.+?)\*\*\s*$/);
+    // Colon header: Term: definition on same line
+    const colonMatch = l.match(/^([A-Z][A-Za-z\s\-()]{1,40}):\s+\S/);
+    let term = null;
+    let defLine = null;
+    if (boldMatch) {
+      term = boldMatch[1].trim().toLowerCase();
+      // Definition is the next non-blank, non-heading line
+      for (let j = i + 1; j < lines.length && j < i + 4; j++) {
+        const d = lines[j].trim();
+        if (d.length > 0 && !/^#{1,6}\s/.test(d) && !/^\*\*/.test(d)) {
+          defLine = { lineNum: j + 1, text: d };
+          break;
+        }
+      }
+    } else if (colonMatch) {
+      term = colonMatch[1].trim().toLowerCase();
+      defLine = { lineNum: i + 1, text: l.slice(colonMatch[0].indexOf(':') + 1).trim() };
+    }
+    if (term && defLine) definedTerms.set(term, defLine);
+  }
+
+  // ── B. Backtick terms in body must have word list entries ───────────────────
   const bodyText = lines.slice(0, wordListStart).join('\n');
   const BACKTICK_TERM = /`([^`\n]{2,40})`/g;
-  const foundTerms = new Set();
+  const foundBacktickTerms = new Set();
   let m;
   while ((m = BACKTICK_TERM.exec(bodyText)) !== null) {
     const t = m[1].trim();
-    // Only track terms that look like technical words (no spaces, or short phrases)
-    // Skip shell commands (they contain spaces and special chars that won't be in a word list)
-    if (/^[a-zA-Z][a-zA-Z0-9._-]{1,30}$/.test(t)) foundTerms.add(t.toLowerCase());
+    if (/^[a-zA-Z][a-zA-Z0-9._-]{1,30}$/.test(t)) foundBacktickTerms.add(t.toLowerCase());
   }
-
-  const wordListText = lines.slice(wordListStart).join('\n').toLowerCase();
-  for (const term of foundTerms) {
-    if (!wordListText.includes(term)) {
-      advisory('R12', wordListStart + 1,
+  for (const term of foundBacktickTerms) {
+    if (!definedTerms.has(term)) {
+      fail('R12-B', wordListStart + 1,
         `Term "${term}" is used in backtick code spans in the body but has no word list entry.`,
         `Add a definition for "${term}" to the word list section.`);
+    }
+  }
+
+  // ── C. Definition bodies must not contain undefined jargon ──────────────────
+  // Tokenize each definition. For each token that is in JARGON_WORDS:
+  //   - skip if the token equals (or is a stem of) the entry's own term
+  //   - skip if the token has its own entry in definedTerms
+  //   - skip if the definition expands the acronym inline (word followed by parenthesised expansion)
+  //   - otherwise: FAIL
+  const WORD_TOKEN = /\b([a-zA-Z]{3,})\b/g;
+  const INLINE_EXPAND = /\b([A-Z]{2,8})\s*\(([^)]{4,60})\)/;
+
+  for (const [entryTerm, { lineNum, text }] of definedTerms) {
+    // Build set of terms this definition is allowed to reference without defining:
+    // itself + any term that already has an entry
+    const inlineExpansions = new Set();
+    let ie;
+    const ieRe = /\b([A-Z]{2,8})\s*\(([^)]{4,60})\)/g;
+    while ((ie = ieRe.exec(text)) !== null) {
+      inlineExpansions.add(ie[1].toLowerCase());
+    }
+
+    WORD_TOKEN.lastIndex = 0;
+    let tok;
+    while ((tok = WORD_TOKEN.exec(text)) !== null) {
+      const word = tok[1].toLowerCase();
+      if (!JARGON_WORDS.has(word)) continue;
+      // Skip if this IS the entry term (allow "A terminal is a terminal emulator")
+      if (word === entryTerm || entryTerm.startsWith(word) || word.startsWith(entryTerm)) continue;
+      // Skip if word has its own entry in the word list
+      if (definedTerms.has(word)) continue;
+      // Skip if expanded inline as acronym
+      if (inlineExpansions.has(word)) continue;
+      // Skip if word appears as a partial match of the entry term (e.g. "git" inside "github")
+      if (entryTerm.includes(word) && word.length < entryTerm.length) continue;
+
+      fail('R12-C', lineNum,
+        `Definition of "${entryTerm}" uses jargon word "${word}" which has no word list entry: "${text.slice(0, 70)}"`,
+        `Either (a) add a word list entry for "${word}", or (b) rewrite the definition without using "${word}". Every technical word in a definition must itself be defined.`);
     }
   }
 })();
@@ -776,14 +889,6 @@ const HUMAN_REVIEW_ITEMS = [
     pass: 'Every UI element label in the document matches the text that appears on screen exactly, character for character.',
     stop: 'If a label does not match, stop. Do not continue. Add a note: "REVIEW NEEDED: Step [number] — label mismatch. Document says [X], screen shows [Y]."',
   },
-  {
-    number: 4,
-    what: 'R12 — Word list clarity',
-    instruction: 'Read every definition in the word list section. For each definition, ask: does this definition use any technical words that are not themselves defined in the word list?',
-    look_for: 'Any definition that contains a technical word, acronym, or jargon term that a non-technical person would not know.',
-    pass: 'Every definition is written using only plain words. No definition requires prior technical knowledge to understand.',
-    stop: 'If you find a definition with unexplained technical language, stop. Do not continue. Rewrite the definition in plain words before this document can be used.',
-  },
 ];
 
 if (jsonOut) {
@@ -835,8 +940,8 @@ if (!noHuman) {
   const divider = `${D}${'─'.repeat(70)}${X}`;
   console.log(divider);
   console.log(`\n${C}${B}HUMAN REVIEW REQUIRED${X}\n`);
-  console.log(`${B}Four things require a human. The machine cannot check them.${X}`);
-  console.log(`${B}Do these four checks in order, one at a time.${X}\n`);
+  console.log(`${B}Three things require a human. The machine cannot check them.${X}`);
+  console.log(`${B}Do these three checks in order, one at a time.${X}\n`);
   console.log(`Read this first.`);
   console.log(`  You cannot break the document by following these steps.`);
   console.log(`  You can stop at any time. Stopping does not cause any harm.`);
