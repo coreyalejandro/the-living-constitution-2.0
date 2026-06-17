@@ -33,7 +33,9 @@
     "tlc:context": "node scripts/inject-ai-context.mjs",
     "tlc:validate": "python scripts/validate_repo.py",
     "tlc:register": "node scripts/tlc-register.mjs",
-    "tlc:report": "node scripts/tlc-report.mjs"
+    "tlc:report": "node scripts/tlc-report.mjs",
+    "tlc:sync-skills": "node scripts/tlc-sync-skills.mjs",
+    "tlc:hermes": "node scripts/tlc-hermes.mjs"
   },
   "keywords": [
     "governance",

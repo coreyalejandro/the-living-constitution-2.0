@@ -20,7 +20,8 @@ alias tlc-validate="python3 $TLC_SCRIPTS/validate_repo.py"
 alias tlc-report="node $TLC_SCRIPTS/tlc-report.mjs"
 alias tlc-status="cd $TLC_ROOT && npm run status"
 alias tlc-scan="cd $TLC_ROOT && npm run scan:projects"
-alias tlc-copy="cat $TLC_ROOT/.ai-context/active-session.md | pbcopy && echo '[tlc] AI context copied to clipboard'"
+alias tlc-sync-skills="node $TLC_SCRIPTS/tlc-sync-skills.mjs"
+alias tlc-hermes="node $TLC_SCRIPTS/tlc-hermes.mjs"
 
 # --- Auto-validate on cd into a project ---
 function _tlc_cd_hook() {
