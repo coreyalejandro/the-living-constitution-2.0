@@ -25,7 +25,15 @@
     "generate:module-status": "node scripts/generate-module-status.mjs",
     "generate:portfolio-data": "node scripts/generate-portfolio-data.mjs",
     "ingest:verify": "npm run verify:registry && npm run generate:module-status && npm run generate:portfolio-data",
-    "sync:portfolio": "node scripts/sync-portfolio-data.mjs"
+    "sync:portfolio": "node scripts/sync-portfolio-data.mjs",
+    "tlc:work": "node scripts/tlc-work.mjs",
+    "tlc:done": "node scripts/tlc-done.mjs",
+    "tlc:new": "node scripts/tlc-new.mjs",
+    "tlc:dashboard": "node scripts/tlc-dashboard.mjs",
+    "tlc:context": "node scripts/inject-ai-context.mjs",
+    "tlc:validate": "python scripts/validate_repo.py",
+    "tlc:register": "node scripts/tlc-register.mjs",
+    "tlc:report": "node scripts/tlc-report.mjs"
   },
   "keywords": [
     "governance",
