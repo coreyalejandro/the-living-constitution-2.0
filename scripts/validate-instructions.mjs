@@ -3,18 +3,20 @@
  * validate-instructions.mjs
  * TLC 2.0 — Article XVI Default Directions Validator
  *
- * Checks a Markdown instruction file against the sixteen rules (R1–R16)
- * defined in SOCIOTECHNICAL_CONSTITUTION.md Article XVI.
+ * Checks a Markdown instruction file against R1–R16 (SOCIOTECHNICAL_CONSTITUTION.md §XVI).
+ * All rules are binary pass/fail. No judgment required for machine-detectable violations.
+ * Residual human-review items are printed as a numbered checklist that follows Article XVI rules.
  *
  * Exit codes:
- *   0 — all applicable rules pass
- *   1 — one or more rules fail (violations printed to stdout)
+ *   0 — all machine-detectable rules pass (human review section may still appear)
+ *   1 — one or more machine-detectable rules fail
  *   2 — usage error (no file given, file not found)
  *
  * Usage:
  *   node scripts/validate-instructions.mjs <path-to-file.md>
  *   node scripts/validate-instructions.mjs <path> --json
  *   node scripts/validate-instructions.mjs <path> --quiet   (exit code only)
+ *   node scripts/validate-instructions.mjs <path> --no-human (suppress human review section)
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -24,18 +26,20 @@ import { resolve } from 'path';
 const R  = '\x1b[31m';
 const Y  = '\x1b[33m';
 const G  = '\x1b[32m';
+const C  = '\x1b[36m';
 const B  = '\x1b[1m';
 const D  = '\x1b[2m';
 const X  = '\x1b[0m';
 
 // ── Args ──────────────────────────────────────────────────────────────────────
-const args    = process.argv.slice(2);
-const filePath = args.find(a => !a.startsWith('--'));
-const jsonOut  = args.includes('--json');
-const quiet    = args.includes('--quiet');
+const args      = process.argv.slice(2);
+const filePath  = args.find(a => !a.startsWith('--'));
+const jsonOut   = args.includes('--json');
+const quiet     = args.includes('--quiet');
+const noHuman   = args.includes('--no-human');
 
 if (!filePath) {
-  console.error('Usage: validate-instructions.mjs <file.md> [--json] [--quiet]');
+  console.error('Usage: validate-instructions.mjs <file.md> [--json] [--quiet] [--no-human]');
   process.exit(2);
 }
 
@@ -49,13 +53,10 @@ const raw   = readFileSync(absPath, 'utf8');
 const lines = raw.split('\n');
 
 // ── Tag check — only validate <default-directions> files ──────────────────────
-// The tag must appear as a raw string (not inside backticks or a fenced block)
-// to count as a governed instruction document.
+// The tag must appear as a raw string outside backticks or fenced blocks.
 function hasRawTag(text) {
-  // Remove all fenced code blocks
   const noFence = text.replace(/```[\s\S]*?```/g, '');
-  // Remove all inline code spans
-  const noCode = noFence.replace(/`[^`\n]+`/g, '');
+  const noCode  = noFence.replace(/`[^`\n]+`/g, '');
   return noCode.includes('<default-directions>');
 }
 const hasTag = hasRawTag(raw);
@@ -67,33 +68,60 @@ if (!hasTag) {
 // ── Violation collector ───────────────────────────────────────────────────────
 const violations = [];
 function fail(rule, lineNum, message, suggestion) {
-  violations.push({ rule, line: lineNum, message, suggestion: suggestion || null });
+  violations.push({ rule, line: lineNum, message, suggestion: suggestion || null, severity: 'error' });
 }
-function warn(rule, lineNum, message) {
-  violations.push({ rule, line: lineNum, message, severity: 'warn' });
+function advisory(rule, lineNum, message, suggestion) {
+  violations.push({ rule, line: lineNum, message, suggestion: suggestion || null, severity: 'warn' });
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Pre-processing helpers ────────────────────────────────────────────────────
 
-// Returns lines that appear to be the action body of a numbered step.
-// We identify step lines as: a line that starts with a digit, optionally
-// followed by more digits, then a period or a closing paren, then text.
-// e.g.  "1. Open Terminal"  or  "12\nOpen Terminal" (bare-number heading style)
+// Returns the index of the first line that starts a numbered step (either style).
+function firstStepIndex() {
+  for (let i = 0; i < lines.length; i++) {
+    const t = lines[i].trim();
+    if (/^\d+[.)]\s+\S/.test(t) || /^\d+$/.test(t)) return i;
+  }
+  return -1;
+}
+
+// Returns true if a line index is inside a fenced code block.
+function buildFenceMap() {
+  const inFence = new Array(lines.length).fill(false);
+  let fenced = false;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim().startsWith('```')) { fenced = !fenced; inFence[i] = false; continue; }
+    inFence[i] = fenced;
+  }
+  return inFence;
+}
+const FENCE = buildFenceMap();
+
+// Returns true if a line index is inside an HTML comment.
+function buildCommentMap() {
+  const inComment = new Array(lines.length).fill(false);
+  let commented = false;
+  for (let i = 0; i < lines.length; i++) {
+    if (!commented && lines[i].includes('<!--')) commented = true;
+    if (commented) inComment[i] = true;
+    if (commented && lines[i].includes('-->')) { commented = false; }
+  }
+  return inComment;
+}
+const COMMENT = buildCommentMap();
+
+// Returns all step objects: { lineNum (1-based), text (action text), index (0-based) }
 function getStepLines() {
-  // Collect all lines that are the "action" line of a numbered step.
-  // Strategy: find lines matching /^\d+[.)]\s+\S/ as inline steps,
-  // and also heading-style steps (line is just digits, next non-empty line is the action).
   const steps = [];
   for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
     const l = lines[i].trim();
-    // Inline step: "1. Do the thing"
     if (/^\d+[.)]\s+\S/.test(l)) {
       steps.push({ lineNum: i + 1, text: l.replace(/^\d+[.)]\s+/, ''), raw: l, index: i });
     }
-    // Bare-integer heading style (like the example: line is just "1", next non-blank is action)
     if (/^\d+$/.test(l) && i + 1 < lines.length) {
       const next = lines[i + 1]?.trim();
-      if (next && !/^\d/.test(next) && !next.startsWith('#')) {
+      if (next && !/^\d/.test(next) && !next.startsWith('#') && next.length > 0) {
         steps.push({ lineNum: i + 2, text: next, raw: next, index: i + 1 });
       }
     }
@@ -101,67 +129,50 @@ function getStepLines() {
   return steps;
 }
 
-// Returns all integers found as step numbers in the document, in document order.
+// Returns all step numbers in document order.
 function getStepNumbers() {
   const nums = [];
-  for (const l of lines) {
-    const t = l.trim();
+  for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
+    const t = lines[i].trim();
     const m = t.match(/^(\d+)[.)]\s+\S/);
     if (m) nums.push(parseInt(m[1], 10));
-    if (/^\d+$/.test(t)) {
-      const n = parseInt(t, 10);
-      if (n > 0) nums.push(n);
-    }
+    if (/^\d+$/.test(t)) { const n = parseInt(t, 10); if (n > 0) nums.push(n); }
   }
   return nums;
 }
 
-// Words that signal a branch in action text (R3)
-const BRANCH_WORDS = [
-  /\bor\b/i,
-  /\bunless\b/i,
-  /\bdepending on\b/i,
-  /\beither\b/i,
-  /\bselect one of\b/i,
-];
-// "if" is allowed inside "If it looks different" blocks and "If you see" stop-safe blocks,
-// so we only flag "if" when it appears BEFORE a conditional mid-action.
-// Simpler heuristic: flag "if" in a step action line that doesn't start with "If it looks"
-// or "If you see".
-function hasBranchInAction(text) {
-  const lower = text.toLowerCase();
-  // Allow "If it looks different" and "If you see" — these are the sanctioned patterns
-  if (lower.startsWith('if it looks') || lower.startsWith('if you see')) return false;
-  // Check other branch words
-  for (const re of BRANCH_WORDS) {
-    if (re.test(text)) return true;
-  }
-  // Flag "if" mid-action (not at start of a sanctioned block)
-  if (/\bif\b/i.test(text) && !lower.startsWith('if it looks') && !lower.startsWith('if you see')) {
-    return true;
-  }
-  return false;
+// Returns lines slice (joined) around a given index, skipping fenced blocks.
+function ctx(index, before, after) {
+  return lines.slice(Math.max(0, index - before), Math.min(lines.length, index + after + 1)).join('\n');
 }
 
-// Spatial words (R6) — word-boundary match to avoid "understand", "stop", "governed", etc.
-const SPATIAL_REGEX = /\b(above|below|left|right|top|bottom|corner|beside|next to|under|over|across from|toward|away from|upper|lower|middle|center)\b/i;
+// Strips inline code from a string (for pattern matching that should ignore code spans).
+function stripCode(text) {
+  return text.replace(/`[^`\n]+`/g, '');
+}
 
-// Confidence language (Section 16.4.4)
-const CONFIDENCE_WORDS = ['simply', 'just ', 'easy', 'quickly', 'obviously', 'of course'];
+// Action verbs used across R1, R14
+const ACTION_VERBS = [
+  'open','click','press','type','paste','run','go','navigate','select','enter',
+  'download','install','copy','find','delete','remove','save','close','quit',
+  'exit','tap','scroll','drag','launch','choose','pick','confirm','accept',
+  'dismiss','expand','collapse','upload','submit','fill',
+];
+const ACTION_VERB_RE = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
 
 // ── R8 — NUMBERED ─────────────────────────────────────────────────────────────
 // Steps must use consecutive integers from 1. Sub-steps (1a, 1b) are forbidden.
 (function checkR8() {
-  // Sub-step patterns
   for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
     const l = lines[i].trim();
     if (/^\d+[a-z][.)]/i.test(l)) {
       fail('R8', i + 1,
-        `Sub-step numbering detected: "${l.slice(0, 40)}". Steps must use integers only (1, 2, 3…).`,
-        'Split into separate numbered steps.');
+        `Sub-step numbering: "${l.slice(0, 40)}". Steps must use whole integers only (1, 2, 3…).`,
+        'Split into separate numbered steps. Use 1, 2, 3 — never 1a, 1b.');
     }
   }
-  // Gap check
   const nums = getStepNumbers();
   if (nums.length === 0) return;
   const seen = [...new Set(nums)].sort((a, b) => a - b);
@@ -173,256 +184,502 @@ const CONFIDENCE_WORDS = ['simply', 'just ', 'easy', 'quickly', 'obviously', 'of
   for (let i = 1; i < seen.length; i++) {
     if (seen[i] !== seen[i - 1] + 1) {
       fail('R8', 0,
-        `Gap in step numbering: steps jump from ${seen[i - 1]} to ${seen[i]}.`,
-        'Ensure every integer from 1 to the last step number is present.');
+        `Step numbering gap: steps jump from ${seen[i - 1]} to ${seen[i]}.`,
+        'Every integer from 1 to the last step must be present. No skipping.');
+    }
+  }
+})();
+
+// ── R1 — ONE-ACTION ───────────────────────────────────────────────────────────
+// Each step must contain exactly one imperative verb.
+// Machine-detectable patterns:
+//   (a) verb AND verb in same step text
+//   (b) "and then" between two actions
+//   (c) semicolon separating two action clauses
+//   (d) two sentences in one step body (period + capital letter + action verb)
+//   (e) comma-separated action verb list: "Copy, paste, press Return"
+(function checkR1() {
+  const VERB_AND_VERB = new RegExp(
+    `\\b(${ACTION_VERBS.join('|')})\\b.{1,60}\\band\\b.{1,60}\\b(${ACTION_VERBS.join('|')})\\b`, 'i'
+  );
+  const AND_THEN = /\band\s+then\b/i;
+  const SEMICOLON_VERB = new RegExp(
+    `;\\s*(${ACTION_VERBS.join('|')})\\b`, 'i'
+  );
+  // Two-sentence step: ". Capital" within step text where both sentences contain an action verb
+  const TWO_SENTENCE = /[a-z]\.\s+[A-Z]/;
+  // Comma-imperative list: starts with action verb, has comma, ends with action verb
+  const COMMA_VERB_LIST = new RegExp(
+    `^(${ACTION_VERBS.join('|')})\\b.{0,40},\\s*(${ACTION_VERBS.join('|')})\\b`, 'i'
+  );
+
+  for (const step of getStepLines()) {
+    const t = step.text;
+    if (VERB_AND_VERB.test(t)) {
+      fail('R1', step.lineNum,
+        `Two actions joined by "and" in one step: "${t.slice(0, 70)}"`,
+        'Split into two separate numbered steps. Each step must contain exactly one imperative verb.');
+    } else if (AND_THEN.test(t)) {
+      fail('R1', step.lineNum,
+        `"and then" joins two actions in one step: "${t.slice(0, 70)}"`,
+        'Split at "and then". Make each action its own numbered step.');
+    } else if (SEMICOLON_VERB.test(t)) {
+      fail('R1', step.lineNum,
+        `Semicolon joins two actions in one step: "${t.slice(0, 70)}"`,
+        'Replace the semicolon with a step break. Each action needs its own step number.');
+    } else if (TWO_SENTENCE.test(t) && ACTION_VERB_RE.test(t)) {
+      // Both sentences must contain action verbs for this to fire
+      const parts = t.split(/\.\s+(?=[A-Z])/);
+      if (parts.length >= 2 && parts.every(p => ACTION_VERB_RE.test(p))) {
+        fail('R1', step.lineNum,
+          `Two sentences in one step, both containing action verbs: "${t.slice(0, 70)}"`,
+          'Split into two separate numbered steps. One sentence, one action, one step.');
+      }
+    } else if (COMMA_VERB_LIST.test(t)) {
+      fail('R1', step.lineNum,
+        `Comma-chained actions in one step: "${t.slice(0, 70)}"`,
+        'Each action in the comma list must become its own numbered step.');
+    }
+  }
+})();
+
+// ── R2 — SELF-CONTAINED ──────────────────────────────────────────────────────
+// No step may reference information from a prior step without restating it.
+(function checkR2() {
+  const BACK_REFS = [
+    /use the (folder|file|value|name|path|command|output|result|password|text|address|number) from step \d+/i,
+    /you (entered|typed|chose|selected|used|set|created) in step \d+/i,
+    /the (value|text|name|path|folder|file|password|result|output) from (the )?step \d+/i,
+    /as (shown|described|listed|mentioned|stated|noted|seen) (above|in step \d+|earlier|before|previously)/i,
+    /the previous step/i,
+    /the step above/i,
+    /same as step \d+/i,
+    /from earlier/i,
+    /from before/i,
+    /as before/i,
+    /as above/i,
+    /from the last step/i,
+    /in the last step/i,
+    /what you (typed|entered|chose|selected|set|created) (above|before|earlier|previously)/i,
+    /the same (password|username|name|path|value|text|folder|file|command) (you|as)/i,
+    /repeat (what you|the same|the previous)/i,
+    /from (the )?step \d+/i,
+    /\bsee step \d+\b/i,
+    /\bgoto step \d+\b/i,
+    /\brefer(ring)? to step \d+\b/i,
+    /\busing the (result|output|value) from\b/i,
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
+    const l = stripCode(lines[i]);
+    // Exclude forward-direction orientation phrases: "from Step 1 to the end", "steps in order from Step 1"
+    if (/from step \d+ to (the end|step \d+)/i.test(l)) continue;
+    for (const re of BACK_REFS) {
+      if (re.test(l)) {
+        fail('R2', i + 1,
+          `Back-reference to a prior step: "${lines[i].trim().slice(0, 70)}"`,
+          'Restate the value or information directly in this step. Do not reference a prior step by number or name.');
+        break;
+      }
     }
   }
 })();
 
 // ── R3 — NO-BRANCH ────────────────────────────────────────────────────────────
+// No step action may contain conditional or alternative language.
 (function checkR3() {
-  for (const step of getStepLines()) {
-    if (hasBranchInAction(step.text)) {
-      fail('R3', step.lineNum,
-        `Branch language in step action: "${step.text.slice(0, 60)}…"`,
-        'Move conditional text into an isolated "If it looks different" block. Remove branch words from the action line.');
-    }
-  }
-})();
+  const BRANCH_PATTERNS = [
+    { re: /\bunless\b/i,            label: '"unless"' },
+    { re: /\bdepending on\b/i,      label: '"depending on"' },
+    { re: /\beither\b/i,            label: '"either"' },
+    { re: /\bselect one of\b/i,     label: '"select one of"' },
+    { re: /\botherwise\b/i,         label: '"otherwise"' },
+    { re: /\balternatively\b/i,     label: '"alternatively"' },
+    { re: /\bin that case\b/i,      label: '"in that case"' },
+    { re: /\bin either case\b/i,    label: '"in either case"' },
+    { re: /\bif (not|applicable|needed|required|available|you (want|prefer|have|see|chose|selected))\b/i,
+                                    label: '"if [condition]" mid-action' },
+    { re: /\bor you (can|may|could|should)\b/i, label: '"or you can/may"' },
+    { re: /\bwhichever\b/i,         label: '"whichever"' },
+    { re: /\byou (may|might) (also|instead|alternatively)\b/i, label: '"you may also/instead"' },
+  ];
+  // "or" in step action lines — only flag when joining two action-verb phrases
+  const OR_BETWEEN_VERBS = new RegExp(
+    `\\b(${ACTION_VERBS.join('|')})\\b.{0,40}\\bor\\b.{0,40}\\b(${ACTION_VERBS.join('|')})\\b`, 'i'
+  );
 
-// ── R6 — NO-SPATIAL ───────────────────────────────────────────────────────────
-(function checkR6() {
-  for (let i = 0; i < lines.length; i++) {
-    const l = lines[i];
-    // Skip "If it looks different" blocks — may describe spatial layouts of a known-different screen
-    if (/if it looks different|if you see/i.test(l)) continue;
-    // Skip HTML comments
-    if (l.trim().startsWith('<!--')) continue;
-    const match = SPATIAL_REGEX.exec(l);
-    if (match) {
-      // Additional context filter: "stop" → not spatial; "understand" → not spatial
-      // The regex with \b already handles sub-word cases, but double-check
-      // by confirming the matched word stands alone in a location/UI context.
-      // Heuristic: skip if the matched word is followed immediately by a verb that
-      // makes it clearly non-spatial (e.g. "stop at any time", "understand is normal").
-      const after = l.slice(match.index + match[0].length, match.index + match[0].length + 20).toLowerCase();
-      if (match[1].toLowerCase() === 'top' && /\s*(at|is|was|s\s|s$|\s+and)/.test(after)) continue; // "stop at"
-      if (match[1].toLowerCase() === 'under' && /\s*(stand|stood|lying|go|goes|went|s\s)/.test(after)) continue; // "understand"
-      if (match[1].toLowerCase() === 'over' && /\s*(n|ned|ning|s\s|s$|all|come|age|lap)/.test(after)) continue; // "governed", "overall"
-      fail('R6', i + 1,
-        `Spatial language "${match[1]}" found: "${l.trim().slice(0, 70)}"`,
-        'Replace with the exact label or name of the element. Do not use position to identify it.');
+  for (const step of getStepLines()) {
+    // Skip "If it looks different" — that is the sanctioned alternative block
+    if (/^if it looks different|^if you see/i.test(step.text)) continue;
+
+    for (const { re, label } of BRANCH_PATTERNS) {
+      if (re.test(step.text)) {
+        fail('R3', step.lineNum,
+          `Branch language ${label} in step action: "${step.text.slice(0, 60)}"`,
+          'Remove the branch. Move alternative paths into an isolated "If it looks different" block after the step.');
+        break;
+      }
+    }
+    if (OR_BETWEEN_VERBS.test(step.text)) {
+      fail('R3', step.lineNum,
+        `"or" joins two action verbs in one step: "${step.text.slice(0, 60)}"`,
+        'Choose one action. Move the alternative to an "If it looks different" block.');
+    }
+    // "if" in action text that is NOT a sanctioned block header
+    if (/\bif\b/i.test(step.text) && !/^if it looks|^if you see/i.test(step.text.trim())) {
+      fail('R3', step.lineNum,
+        `Conditional "if" in step action text: "${step.text.slice(0, 60)}"`,
+        'Move the conditional into an "If it looks different" block. The action line must be unconditional.');
     }
   }
 })();
 
 // ── R4 — COPY-PASTE ───────────────────────────────────────────────────────────
-// Detect command-like strings outside of fenced code blocks or inline backticks.
+// Every command, URL, filename, and button label that must be typed exactly
+// must be inside a fenced code block or inline backtick span.
 (function checkR4() {
-  let inFence = false;
-  const INLINE_COMMAND = /\b(cd |npm |node |git |open |chmod |cat |python3? |brew |curl |tar )\S/;
+  // Shell tools that must always appear in code blocks when used as commands.
+  // "find" and "ls" and "rm" are only flagged when followed by a path-like argument
+  // (starts with /, ~, or .) to avoid false positives on natural language like "Find the app".
+  // All other tools are flagged whenever they appear as word-boundary matches outside code.
+  const SHELL_TOOLS_ALWAYS = [
+    'cd', 'npm', 'node', 'git', 'chmod', 'cat', 'python3', 'python',
+    'brew', 'curl', 'tar', 'wget', 'sudo', 'mkdir', 'cp', 'mv',
+    'echo', 'export', 'source', 'which', 'grep', 'sed', 'awk',
+    'defaults', 'killall', 'osascript', 'launchctl', 'rsync', 'make', 'ssh',
+    'scp', 'xcode-select', 'softwareupdate', 'pkgutil', 'security', 'ditto',
+    'zip', 'unzip', 'pbcopy', 'pbpaste', 'caffeinate', 'say',
+    'nvm', 'pyenv', 'rbenv', 'asdf', 'volta', 'fnm', 'pnpm', 'yarn',
+    'npx', 'tsx', 'deno', 'bun',
+  ];
+  // These tools are only flagged when followed by a path argument
+  const SHELL_TOOLS_PATH_ONLY = ['find', 'ls', 'rm', 'open'];
+
+  const ALWAYS_RE = new RegExp(`\\b(${SHELL_TOOLS_ALWAYS.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b`);
+  // Path-only: tool word followed by whitespace then /, ~, ., or a flag (-name, --type, etc.)
+  const PATH_ONLY_RE = new RegExp(`\\b(${SHELL_TOOLS_PATH_ONLY.join('|')})\\s+(\/|~\/|\\.\/|\\.\\.\/|-[a-zA-Z])`);
+
   for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
     const l = lines[i];
-    if (l.trim().startsWith('```')) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    // Skip HTML comments
-    if (l.trim().startsWith('<!--')) continue;
-    // Skip lines that already use inline code
     if (l.includes('`')) continue;
-    // Skip lines that are 4-space-indented code
     if (/^ {4,}/.test(l)) continue;
-    if (INLINE_COMMAND.test(l)) {
+    if (ALWAYS_RE.test(l) || PATH_ONLY_RE.test(l)) {
       fail('R4', i + 1,
-        `Command appears as prose text: "${l.trim().slice(0, 60)}"`,
-        'Place the command inside a fenced code block (```…```) or a Copy element.');
+        `Command appears as plain prose text: "${l.trim().slice(0, 60)}"`,
+        'Place every command inside a fenced code block (triple backticks) or an inline backtick span. Never write commands as plain text.');
     }
   }
 })();
 
-// ── R6 already runs. Now R7 — EXACT-LABEL ────────────────────────────────────
-(function checkR7() {
-  const FORBIDDEN_DESCRIPTORS = [
-    /the big button/i,
-    /the green button/i,
-    /the blue button/i,
-    /the red button/i,
-    /the large button/i,
-    /the small button/i,
-    /the main button/i,
-    /the main menu/i,
-    /the default button/i,
-    /the download button/i,
-    /the install button/i,
-    /the primary button/i,
-  ];
+// ── R5 — SUCCESS-FIRST ───────────────────────────────────────────────────────
+// Every step with an action trigger must have a "What you will see" block nearby.
+// This is an ERROR, not advisory.
+(function checkR5() {
+  const ACTION_TRIGGERS = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
+  const HAS_PREVIEW = /what you will see|you will see|you will know|what you (should|must) see|look for these words/i;
+
+  for (const step of getStepLines()) {
+    if (!ACTION_TRIGGERS.test(step.text)) continue;
+    // Check 8 lines after the step for a preview block
+    const context = lines.slice(step.index, Math.min(lines.length, step.index + 9)).join('\n');
+    if (!HAS_PREVIEW.test(context)) {
+      fail('R5', step.lineNum,
+        `Step has an action but no "What you will see" block: "${step.text.slice(0, 60)}"`,
+        'Add a "What you will see:" paragraph directly after this step. State the exact text or appearance the user must match before continuing.');
+    }
+  }
+})();
+
+// ── R6 — NO-SPATIAL ──────────────────────────────────────────────────────────
+// No spatial/directional language outside "If it looks different" blocks.
+(function checkR6() {
+  const SPATIAL_RE = /\b(above|below|left|right|top|bottom|corner|beside|next to|under|over|across from|toward|away from|upper|lower|middle|center)\b/i;
+
   for (let i = 0; i < lines.length; i++) {
-    for (const re of FORBIDDEN_DESCRIPTORS) {
-      if (re.test(lines[i])) {
-        fail('R7', i + 1,
-          `Descriptive button reference: "${lines[i].trim().slice(0, 60)}"`,
-          'Use the exact label as it appears on screen, e.g. "the button labeled Install".');
-        break;
-      }
+    if (FENCE[i] || COMMENT[i]) continue;
+    const l = lines[i];
+    if (/if it looks different|if you see/i.test(l)) continue;
+
+    const m = SPATIAL_RE.exec(l);
+    if (!m) continue;
+
+    // Context filters for known false positives
+    const word  = m[1].toLowerCase();
+    const after = l.slice(m.index + m[0].length, m.index + m[0].length + 25).toLowerCase();
+
+    if (word === 'top'   && /\s*(at|ping|most|s\s|s$|\s+and|ple|ic)/.test(after)) continue; // "stop at", "topics", "topple"
+    if (word === 'under' && /\s*(stand|stood|line|ly\b|go|goes|went|s\s|go|score)/.test(after)) continue; // "understand", "underlying"
+    if (word === 'over'  && /\s*(n\b|ned|ning|all|come|age|lap|view|all|due|ride|see|turn|write|flow|load|head|looked)/.test(after)) continue;
+    if (word === 'lower' && /\s*(case|cased)/.test(after)) continue; // "lowercase"
+    if (word === 'center' && /\s*(ed|ing|s\b|piece)/.test(after)) continue;
+
+    fail('R6', i + 1,
+      `Spatial language "${m[1]}" found: "${l.trim().slice(0, 70)}"`,
+      'Replace with the exact name or label of the element. Never use position to identify a UI element.');
+  }
+})();
+
+// ── R7 — EXACT-LABEL ─────────────────────────────────────────────────────────
+// UI elements must be referenced by their exact visible label, not by appearance.
+(function checkR7() {
+  const UI_ELEMENTS = '(button|link|icon|tab|checkbox|dropdown|menu item|field|box|window|dialog|pane|area|section|panel)';
+
+  // Pattern A: explicit descriptor words before a UI element
+  const COLOR_WORDS    = 'green|red|blue|yellow|orange|purple|gray|grey|white|black|teal|pink|brown';
+  const SIZE_WORDS     = 'large|small|big|tiny|huge|wide|narrow|long|short';
+  const GENERIC_WORDS  = 'main|primary|default|secondary|first|second|third|last|next|same|other|new|old|original';
+  const DESCRIPTOR_RE  = new RegExp(`\\bthe\\s+(${COLOR_WORDS}|${SIZE_WORDS}|${GENERIC_WORDS})\\s+${UI_ELEMENTS}\\b`, 'i');
+
+  // Pattern B: "the [word] button" where [word] is lowercase and not "labeled"/"named"/"that says"
+  // A properly referenced button looks like: "the button labeled X" or "the button named X" or "the X button" where X is Title Case
+  const UNLABELED_BUTTON = /\bthe\s+([a-z]+)\s+(button|link|icon|tab|checkbox)\b/i;
+  const LABEL_EXEMPTIONS = /^(labeled|named|that says|for|to|with|of|at)\b/i;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
+    const l = lines[i];
+    const stripped = stripCode(l);
+
+    if (DESCRIPTOR_RE.test(stripped)) {
+      fail('R7', i + 1,
+        `Descriptive UI reference: "${l.trim().slice(0, 70)}"`,
+        'Use the exact label as it appears on screen. Write "the button labeled Install" not "the blue button".');
+      continue;
+    }
+
+    const m = UNLABELED_BUTTON.exec(stripped);
+    if (m) {
+      const word = m[1].toLowerCase();
+      // Skip if the preceding word is a verb context like "press", "click" followed by "the X button"
+      // and X is Title Case (meaning X is likely the actual label)
+      if (/^[A-Z]/.test(m[1])) continue;           // Title Case word — likely a real label
+      if (LABEL_EXEMPTIONS.test(word)) continue;    // "labeled", "named", etc.
+      if (/^(cancel|ok|yes|no|done|next|back|continue|agree|save|close|quit|exit|help|submit|send|apply)$/i.test(word)) continue; // common button labels that happen to be lowercase words
+      fail('R7', i + 1,
+        `Possible unlabeled UI reference "${m[0]}": "${l.trim().slice(0, 70)}"`,
+        'If this is a button, write "the button labeled [exact label]". The label must match the text on screen exactly.');
+    }
+  }
+})();
+
+// ── R8 already ran ────────────────────────────────────────────────────────────
+
+// ── R9 — WAIT-STATE ──────────────────────────────────────────────────────────
+// Any step starting a long-running process must state max wait time and completion signal.
+(function checkR9() {
+  const LONG_PROCESS = [
+    /npm (install|ci|test|run|build)/i,
+    /yarn (install|build|test)/i,
+    /pip install/i,
+    /brew (install|update|upgrade)/i,
+    /git clone/i,
+    /git pull/i,
+    /curl\s/i,
+    /wget\s/i,
+    /rsync\s/i,
+    /\bmake\b/i,
+    /downloading/i,
+    /installing/i,
+    /building/i,
+    /compiling/i,
+    /\bwait\b.*\bminute/i,
+    /this (can|may|will) take/i,
+    /can take up to/i,
+    /gradle\s/i,
+    /mvn\s/i,
+    /cargo (build|test|run)/i,
+    /go (build|test|run)/i,
+    /docker (build|pull|run)/i,
+  ];
+  const HAS_WAIT_SIGNAL = /you will see|what you will see|look for|blinking cursor|cursor.*comes back|this may take|can take up to|wait until you see|wait for the/i;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
+    if (!LONG_PROCESS.some(p => p.test(lines[i]))) continue;
+    const context = lines.slice(Math.max(0, i - 1), Math.min(lines.length, i + 9)).join('\n');
+    if (!HAS_WAIT_SIGNAL.test(context)) {
+      fail('R9', i + 1,
+        `Long-running command without a wait signal: "${lines[i].trim().slice(0, 60)}"`,
+        'Add a "What you will see:" block stating: (1) the maximum wait time in minutes, (2) the exact text on screen that means this step finished.');
+    }
+  }
+})();
+
+// ── R10 — STOP-SAFE ──────────────────────────────────────────────────────────
+// Every "If it looks different" block must contain an explicit stop condition.
+// This is an ERROR, not advisory.
+(function checkR10() {
+  const HAS_STOP = /stop here|do not continue|do not go further|do not proceed|send me|ask for help|stop and (tell|send|ask|let)|contact|reach out|stop and wait/i;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
+    if (!/if it looks different/i.test(lines[i])) continue;
+
+    // Collect lines belonging to THIS block only.
+    // The block ends at: blank line followed by a step number, another "If it looks different",
+    // a heading, or a horizontal rule (---).
+    const blockLines = [lines[i]];
+    for (let j = i + 1; j < lines.length && j < i + 12; j++) {
+      const t = lines[j].trim();
+      // Stop collecting if we hit the next step, heading, rule, or another alt block
+      if (/^\d+[.)]\s+/.test(t) || /^\d+$/.test(t)) break;
+      if (/^#{1,6}\s/.test(t)) break;
+      if (t === '---' || t === '***' || t === '___') break;
+      if (/if it looks different/i.test(t) && j > i) break;
+      blockLines.push(lines[j]);
+    }
+    const blockText = blockLines.join('\n');
+    if (!HAS_STOP.test(blockText)) {
+      fail('R10', i + 1,
+        `"If it looks different" block has no stop condition: "${lines[i].trim().slice(0, 60)}"`,
+        'Add a stop condition inside this block. Example: "If you are unsure, stop here. Do not continue. Send me the exact words you see on screen."');
     }
   }
 })();
 
 // ── R11 — PREAMBLE ────────────────────────────────────────────────────────────
+// Preamble must appear before Step 1 and contain all four required statements.
 (function checkR11() {
-  // Preamble must appear before any numbered step
-  const firstStepLine = lines.findIndex(l => /^\d+[.)]\s+\S/.test(l.trim()) || /^\d+$/.test(l.trim()));
-
-  const preambleText = firstStepLine === -1
+  const firstStep = firstStepIndex();
+  const preambleText = firstStep === -1
     ? raw
-    : lines.slice(0, firstStepLine).join('\n').toLowerCase();
+    : lines.slice(0, firstStep).join('\n');
 
-  const checks = [
+  const REQUIRED = [
     {
       key: 'safety',
-      patterns: [
-        /cannot break/i, /cannot cause harm/i, /safe to follow/i,
-        /it is safe/i, /cannot harm/i, /will not break/i,
-      ],
-      message: 'Preamble is missing a safety statement (e.g. "You cannot break your computer by following these steps.").',
+      patterns: [/cannot break/i, /it is safe/i, /cannot cause harm/i, /safe to follow/i, /cannot harm/i, /will not break/i, /nothing here (will|can) damage/i],
+      message: 'Preamble is missing a safety statement.',
+      fix: 'Add this sentence before Step 1: "You cannot break your computer by following these steps."',
     },
     {
       key: 'normalization',
-      patterns: [
-        /text.*normal/i, /seeing text.*not a problem/i, /you do not understand.*normal/i,
-        /do not understand.*normal/i, /unfamiliar text.*normal/i, /text you.*normal/i,
-      ],
-      message: 'Preamble is missing a normalization statement (e.g. "Seeing text you do not understand is normal.").',
+      patterns: [/text.*normal/i, /seeing text.*not a problem/i, /do not understand.*normal/i, /unfamiliar text.*normal/i, /messages.*normal/i],
+      message: 'Preamble is missing a text-normalization statement.',
+      fix: 'Add this sentence before Step 1: "A lot of text may appear on screen. Seeing text you do not understand is normal."',
     },
     {
       key: 'stop-safe',
-      patterns: [
-        /stop at any time/i, /stopping.*no harm/i, /you can stop/i,
-        /stopping does not cause/i, /stop.*does not/i,
-      ],
-      message: 'Preamble is missing a stop-is-safe statement (e.g. "You can stop at any time. Stopping does not cause any harm.").',
+      patterns: [/stop at any time/i, /stopping.*no harm/i, /you can stop/i, /stopping does not cause/i, /safe to stop/i],
+      message: 'Preamble is missing a stop-is-safe statement.',
+      fix: 'Add this sentence before Step 1: "You can stop at any time. Stopping does not cause any harm."',
     },
     {
       key: 'break-allowed',
-      patterns: [
-        /take a break/i, /take breaks/i, /breaks.*allowed/i,
-        /the steps will wait/i, /guide will wait/i,
-      ],
-      message: 'Preamble is missing a break-is-allowed statement (e.g. "You can take breaks. The steps will wait for you.").',
+      patterns: [/take a break/i, /take breaks/i, /the steps will wait/i, /guide will wait/i, /breaks.*safe/i, /can pause/i],
+      message: 'Preamble is missing a breaks-are-allowed statement.',
+      fix: 'Add this sentence before Step 1: "You can take breaks. The steps will wait for you."',
     },
   ];
 
-  for (const check of checks) {
-    const found = check.patterns.some(p => p.test(preambleText));
-    if (!found) {
-      fail('R11', 1, check.message,
-        'Add the missing sentence to the preamble block before Step 1.');
+  for (const req of REQUIRED) {
+    if (!req.patterns.some(p => p.test(preambleText))) {
+      fail('R11', 1, req.message, req.fix);
     }
   }
 })();
 
 // ── R12 — WORD-LIST ───────────────────────────────────────────────────────────
+// Document must end with a word list. Every backtick-quoted term in the body
+// must have an entry in the word list.
 (function checkR12() {
-  const hasWordList = /word list|glossary|what each word means|definitions/i.test(raw);
-  if (!hasWordList) {
+  // Find the word list section
+  const wordListStart = lines.findIndex(l => /word list|glossary|what each word means|definitions/i.test(l));
+  if (wordListStart === -1) {
     fail('R12', lines.length,
-      'No word list found. Every <default-directions> document must end with a word list.',
-      'Add a "Word list" section at the end defining every technical term used in the document.');
+      'No word list found.',
+      'Add a "Word list" section at the end of the document. Define every technical term used anywhere in the document.');
+    return;
+  }
+
+  // The word list must have at least one entry (non-blank, non-heading line after the heading)
+  const wordListBody = lines.slice(wordListStart + 1);
+  const hasEntries = wordListBody.some(l => l.trim().length > 0 && !/^#{1,6}\s/.test(l.trim()));
+  if (!hasEntries) {
+    fail('R12', wordListStart + 1,
+      'Word list section exists but has no entries.',
+      'Add at least one term and definition. Example: "Terminal\\nAn app on your Mac where you type commands."');
+    return;
+  }
+
+  // Extract all backtick-quoted terms from the body (before the word list)
+  const bodyText = lines.slice(0, wordListStart).join('\n');
+  const BACKTICK_TERM = /`([^`\n]{2,40})`/g;
+  const foundTerms = new Set();
+  let m;
+  while ((m = BACKTICK_TERM.exec(bodyText)) !== null) {
+    const t = m[1].trim();
+    // Only track terms that look like technical words (no spaces, or short phrases)
+    // Skip shell commands (they contain spaces and special chars that won't be in a word list)
+    if (/^[a-zA-Z][a-zA-Z0-9._-]{1,30}$/.test(t)) foundTerms.add(t.toLowerCase());
+  }
+
+  const wordListText = lines.slice(wordListStart).join('\n').toLowerCase();
+  for (const term of foundTerms) {
+    if (!wordListText.includes(term)) {
+      advisory('R12', wordListStart + 1,
+        `Term "${term}" is used in backtick code spans in the body but has no word list entry.`,
+        `Add a definition for "${term}" to the word list section.`);
+    }
   }
 })();
 
 // ── R13 — PART-MAP ────────────────────────────────────────────────────────────
+// Documents with more than 5 steps must have a "What this guide does" section.
 (function checkR13() {
   const stepNums = getStepNumbers();
-  if (stepNums.length <= 5) return; // only required for >5 steps
-  const hasPartMap = /what this guide does|guide overview|parts of this guide/i.test(raw);
+  if (stepNums.length <= 5) return;
+  const hasPartMap = /what this guide does|guide overview|parts of this guide|overview of steps/i.test(raw);
   if (!hasPartMap) {
     fail('R13', 1,
       `Document has ${stepNums.length} steps but no "What this guide does" section.`,
-      'Add a "What this guide does" section after the preamble listing every part and its step range.');
+      'Add a "What this guide does" section after the preamble. Name every part and the step range it covers. Example: "Part 1 — Node.js: Steps 1 to 8."');
   }
 })();
 
-// ── R16 — ISOLATION-TAG (already confirmed above) ────────────────────────────
-// If we reached this point, R16 passes (the tag was found).
-
-// ── R9 — WAIT-STATE (heuristic) ──────────────────────────────────────────────
-(function checkR9() {
-  const LONG_PROCESS_PATTERNS = [
-    /npm install/i, /npm test/i, /npm run/i, /yarn install/i, /pip install/i,
-    /brew install/i, /git clone/i, /downloading/i, /installing/i,
-  ];
-  const HAS_WAIT_SIGNAL = /you will see|what you will see|you will know.*done|blinking cursor|cursor.*back/i;
-  for (let i = 0; i < lines.length; i++) {
-    const l = lines[i];
-    if (LONG_PROCESS_PATTERNS.some(p => p.test(l))) {
-      // Check if the surrounding context (±3 lines) has a wait signal
-      const ctx = lines.slice(Math.max(0, i - 1), Math.min(lines.length, i + 4)).join(' ');
-      if (!HAS_WAIT_SIGNAL.test(ctx)) {
-        fail('R9', i + 1,
-          `Long-running command without a wait signal: "${l.trim().slice(0, 60)}"`,
-          'Add a "What you will see:" block stating the maximum wait time and the exact text that signals completion.');
-      }
-    }
-  }
-})();
-
-// ── R14 — NO-PROSE-ACTION (heuristic) ────────────────────────────────────────
+// ── R14 — NO-PROSE-ACTION ────────────────────────────────────────────────────
+// Action text must not appear inside paragraphs, list items, or headings.
 (function checkR14() {
-  const ACTION_VERBS_IN_PROSE = [
-    /^open\s+[a-z]/i, /^click\s+/i, /^press\s+/i, /^type\s+/i,
-    /^go to\s+/i, /^navigate to\s+/i, /^run\s+/i, /^paste\s+/i,
-  ];
-  let inFence = false;
-  // Build a set of line indices that are step body lines (bare-integer heading style)
+  const PROSE_ACTION_VERBS = new RegExp(`^(${ACTION_VERBS.join('|')})\\s+\\S`, 'i');
+
+  // Build set of line indices that are step-body lines (bare-integer heading style)
   const stepBodyLines = new Set();
   for (let i = 0; i < lines.length; i++) {
-    const t = lines[i].trim();
-    // Bare-integer heading: line is just a number, next non-blank line is the step body
-    if (/^\d+$/.test(t) && i + 1 < lines.length) {
-      stepBodyLines.add(i + 1); // the action line right after
-    }
-    // Also skip lines immediately after "---" separators following a step
-    if (t === '---' && i + 1 < lines.length) {
-      // not a step body; do nothing
+    if (/^\d+$/.test(lines[i].trim()) && i + 1 < lines.length) {
+      stepBodyLines.add(i + 1);
     }
   }
+
   for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
     const l = lines[i];
-    if (l.trim().startsWith('```')) { inFence = !inFence; continue; }
-    if (inFence) continue;
-    // Skip numbered step lines (inline style)
-    if (/^\d+[.)]\s+/i.test(l.trim())) continue;
-    // Skip bare-integer heading lines
-    if (/^\d+$/.test(l.trim())) continue;
-    // Skip lines that are step bodies in bare-integer heading style
-    if (stepBodyLines.has(i)) continue;
-    // Skip sanctioned blocks
-    if (/if it looks different|what you will see|you will know|if you see/i.test(l)) continue;
-    // Skip headings
-    if (/^#{1,6}\s/.test(l.trim())) continue;
+    if (/^\d+[.)]\s+/i.test(l.trim())) continue;       // inline step line
+    if (/^\d+$/.test(l.trim())) continue;               // bare step number
+    if (stepBodyLines.has(i)) continue;                  // step body in bare-number style
+    if (/if it looks different|what you will see|you will see|if you see/i.test(l)) continue;
+    if (/^#{1,6}\s/.test(l.trim())) continue;           // heading
+    if (l.trim() === '') continue;
+
     const stripped = l.trim().replace(/^[-*]\s+/, '');
-    for (const re of ACTION_VERBS_IN_PROSE) {
-      if (re.test(stripped) && stripped.length > 10) {
-        fail('R14', i + 1,
-          `Action verb found in non-step text: "${stripped.slice(0, 60)}"`,
-          'Move this action into its own numbered step. Do not embed actions inside paragraphs or list items.');
-        break;
-      }
+    if (PROSE_ACTION_VERBS.test(stripped) && stripped.length > 10) {
+      fail('R14', i + 1,
+        `Action verb starts a non-step line: "${stripped.slice(0, 60)}"`,
+        'This action must be its own numbered step. Move it out of the paragraph or list item.');
     }
   }
 })();
 
-// ── R15 — SINGLE-PATH (gap/fork check, already in R8 gap check) ──────────────
-// R8 covers numbering gaps. R15 additionally checks for multiple "path forks"
-// that introduce new step numbers inside "If it looks different" blocks.
+// ── R15 — SINGLE-PATH ────────────────────────────────────────────────────────
+// No new step numbers inside "If it looks different" alternative blocks.
 (function checkR15() {
   let inAlt = false;
   for (let i = 0; i < lines.length; i++) {
+    if (FENCE[i] || COMMENT[i]) continue;
     const l = lines[i].trim().toLowerCase();
     if (l.includes('if it looks different') || l.includes('if you see')) {
       inAlt = true; continue;
     }
-    // Alt block ends at blank line followed by next step number
     if (inAlt && l === '') {
       const next = lines[i + 1]?.trim();
       if (next && /^\d+[.)]\s+/i.test(next)) inAlt = false;
@@ -430,97 +687,104 @@ const CONFIDENCE_WORDS = ['simply', 'just ', 'easy', 'quickly', 'obviously', 'of
     if (inAlt && /^\d+[.)]\s+\S/.test(l)) {
       fail('R15', i + 1,
         `New step number inside an "If it looks different" block: "${lines[i].trim().slice(0, 60)}"`,
-        'Alternative paths must not introduce new step numbers. Describe the alternative action in prose, then continue at the next main step number.');
+        'Alternative paths must not introduce new step numbers. Write the alternative action as plain text. Continue at the next main step number after the block.');
     }
   }
 })();
+
+// ── R16 — ISOLATION-TAG (already confirmed above) ────────────────────────────
+// If we reached this point, R16 passes.
 
 // ── Section 16.4.4 — No confidence language ──────────────────────────────────
 (function checkConfidenceLanguage() {
-  for (let i = 0; i < lines.length; i++) {
-    const l = lines[i].toLowerCase();
-    for (const word of CONFIDENCE_WORDS) {
-      if (l.includes(word)) {
-        fail('R-16.4.4', i + 1,
-          `Confidence language "${word.trim()}" found: "${lines[i].trim().slice(0, 60)}"`,
-          'Remove this word. It increases anxiety when the step does not feel simple or easy.');
-        break;
-      }
-    }
-  }
-})();
-
-// ── R1 — ONE-ACTION (heuristic) ───────────────────────────────────────────────
-(function checkR1() {
-  // Flag step action lines that contain "and" joining two verbs or two imperatives.
-  const TWO_VERB_AND = /\b(open|click|press|type|paste|run|go|navigate|select|enter)\b.{1,40}\band\b.{1,40}\b(open|click|press|type|paste|run|go|navigate|select|enter)\b/i;
-  for (const step of getStepLines()) {
-    if (TWO_VERB_AND.test(step.text)) {
-      fail('R1', step.lineNum,
-        `Two actions in one step: "${step.text.slice(0, 70)}"`,
-        'Split into two separate numbered steps. Each step must contain exactly one action.');
-    }
-  }
-})();
-
-// ── R2 — SELF-CONTAINED (heuristic) ──────────────────────────────────────────
-(function checkR2() {
-  const BACK_REFS = [
-    /use the (folder|file|value|name|path|command|output|result) from step \d+/i,
-    /you entered in step \d+/i,
-    /the value from step \d+/i,
-    /as (shown|described|listed) (above|in step \d+)/i,
-    /the previous step/i,
-    /same as step \d+/i,
+  const CONFIDENCE = [
+    { word: 'simply',     context: /\bsimply\b/i },
+    { word: 'just',       context: /\bjust\s+(a|an|one|click|press|type|run|go)\b/i },
+    { word: 'easy',       context: /\beasy\b/i },
+    { word: 'quickly',    context: /\bquickly\b/i },
+    { word: 'obviously',  context: /\bobviously\b/i },
+    { word: 'of course',  context: /\bof course\b/i },
+    { word: 'trivial',    context: /\btrivial\b/i },
+    { word: 'straightforward', context: /\bstraightforward\b/i },
+    { word: 'no problem', context: /\bno problem\b/i },
+    { word: 'nothing to worry', context: /nothing to worry about/i },
   ];
   for (let i = 0; i < lines.length; i++) {
-    for (const re of BACK_REFS) {
-      if (re.test(lines[i])) {
-        fail('R2', i + 1,
-          `Back-reference to a prior step: "${lines[i].trim().slice(0, 70)}"`,
-          'Restate the value or information directly in this step. Do not reference a prior step.');
+    if (FENCE[i] || COMMENT[i]) continue;
+    const l = lines[i];
+    for (const { word, context } of CONFIDENCE) {
+      if (context.test(l)) {
+        fail('R-CONF', i + 1,
+          `Confidence language "${word}" found: "${l.trim().slice(0, 60)}"`,
+          'Remove this word. It causes anxiety when the step does not feel simple. State what to do without implying it should feel easy.');
         break;
       }
     }
   }
 })();
 
-// ── R5 — SUCCESS-FIRST (heuristic) ───────────────────────────────────────────
-// Steps that have a long-running or UI-triggering action should have a "What you will see" block.
-(function checkR5() {
-  const ACTION_TRIGGERS = /\b(press|click|run|execute|paste|type|open|install)\b/i;
-  const HAS_PREVIEW = /what you will see|you will see|you will know/i;
-  for (const step of getStepLines()) {
-    if (!ACTION_TRIGGERS.test(step.text)) continue;
-    // Check 6 lines of context after the step
-    const ctx = lines.slice(step.index, Math.min(lines.length, step.index + 7)).join('\n');
-    if (!HAS_PREVIEW.test(ctx)) {
-      warn('R5', step.lineNum,
-        `Step has an action but no "What you will see" block nearby: "${step.text.slice(0, 60)}"`);
-    }
-  }
-})();
+// ── R5 supplementary — SUCCESS-FIRST ordering ────────────────────────────────
+// R5 above checks presence. This check verifies the "What you will see" block
+// comes AFTER the action line, not before it.
+(function checkR5Ordering() {
+  const PREVIEW_LINE = /what you will see|you will see:/i;
+  const PREV_PREVIEW_BEFORE_ACTION = /what you will see/i;
 
-// ── R10 — STOP-SAFE (heuristic) ──────────────────────────────────────────────
-// Steps that have error conditions should have a stop condition.
-// Heuristic: if a step mentions an error condition, look for a stop signal nearby.
-(function checkR10() {
-  const HAS_STOP = /stop here|do not continue|send me|ask for help|stop and tell/i;
-  for (let i = 0; i < lines.length; i++) {
-    const l = lines[i];
-    if (/if it looks different/i.test(l)) {
-      const ctx = lines.slice(i, Math.min(lines.length, i + 6)).join('\n');
-      if (!HAS_STOP.test(ctx)) {
-        warn('R10', i + 1,
-          `"If it looks different" block without a clear stop condition nearby.`);
-      }
+  for (const step of getStepLines()) {
+    // Find the nearest "What you will see" before this step (within 4 lines before)
+    const before = lines.slice(Math.max(0, step.index - 4), step.index).join('\n');
+    if (PREV_PREVIEW_BEFORE_ACTION.test(before)) {
+      // A preview block appeared BEFORE the action — that violates "state what to do, then what to see"
+      // However: R5 says state success BEFORE asking them to act. Re-reading the spec:
+      // "Every step states what the user will see BEFORE it asks them to act."
+      // This means the preview should come FIRST, then the action instruction.
+      // So a "What you will see" block before the action line is actually CORRECT per R5.
+      // We do not flag this. R5 ordering check: no violation here.
+      // NOTE: This block intentionally does nothing — the spec interpretation is preserved.
     }
   }
 })();
 
 // ── Output ────────────────────────────────────────────────────────────────────
-const errors   = violations.filter(v => !v.severity);
+const errors   = violations.filter(v => v.severity === 'error');
 const warnings = violations.filter(v => v.severity === 'warn');
+
+// ── Human review checklist ────────────────────────────────────────────────────
+// Four items require human judgment. Printed as a numbered Article XVI compliant checklist.
+const HUMAN_REVIEW_ITEMS = [
+  {
+    number: 1,
+    what: 'R1 — Multi-action sentences',
+    instruction: 'Read every numbered step out loud. Count the number of things you are asked to do. If you count more than one thing, that step has too many actions.',
+    look_for: 'Any step where you count two or more separate physical actions (for example: "Copy this command, paste it into Terminal, and press Return" — that is three actions).',
+    pass: 'Every step asks you to do exactly one thing.',
+    stop: 'If you are not sure whether a step has one action or two, stop. Do not continue. Add a note: "REVIEW NEEDED: Step [number] — possible multi-action."',
+  },
+  {
+    number: 2,
+    what: 'R5 — "What you will see" accuracy',
+    instruction: 'Read the "What you will see" text in each step. Then run the step on the actual system. Compare what appears on screen to what the document says you will see.',
+    look_for: 'Any mismatch between the text in "What you will see" and what actually appears on screen.',
+    pass: 'Every "What you will see" block matches what actually appears on screen when you run that step.',
+    stop: 'If the screen does not match the description, stop. Do not continue. Add a note: "REVIEW NEEDED: Step [number] — \"What you will see\" does not match actual output."',
+  },
+  {
+    number: 3,
+    what: 'R7 — Ambiguous UI labels',
+    instruction: 'Find every step that references a button, link, tab, icon, or field. Read the label in the document. Open the actual application. Find the element on screen and read its label.',
+    look_for: 'Any step where the label in the document does not exactly match the text on screen.',
+    pass: 'Every UI element label in the document matches the text that appears on screen exactly, character for character.',
+    stop: 'If a label does not match, stop. Do not continue. Add a note: "REVIEW NEEDED: Step [number] — label mismatch. Document says [X], screen shows [Y]."',
+  },
+  {
+    number: 4,
+    what: 'R12 — Word list clarity',
+    instruction: 'Read every definition in the word list section. For each definition, ask: does this definition use any technical words that are not themselves defined in the word list?',
+    look_for: 'Any definition that contains a technical word, acronym, or jargon term that a non-technical person would not know.',
+    pass: 'Every definition is written using only plain words. No definition requires prior technical knowledge to understand.',
+    stop: 'If you find a definition with unexplained technical language, stop. Do not continue. Rewrite the definition in plain words before this document can be used.',
+  },
+];
 
 if (jsonOut) {
   console.log(JSON.stringify({
@@ -529,6 +793,8 @@ if (jsonOut) {
     error_count: errors.length,
     warning_count: warnings.length,
     violations,
+    human_review_required: !noHuman,
+    human_review_items: noHuman ? [] : HUMAN_REVIEW_ITEMS,
   }, null, 2));
   process.exit(errors.length > 0 ? 1 : 0);
 }
@@ -537,31 +803,59 @@ if (quiet) {
   process.exit(errors.length > 0 ? 1 : 0);
 }
 
-const tag = `\n${B}Article XVI Validator${X} — ${D}${absPath}${X}\n`;
-console.log(tag);
+// ── Pretty output ─────────────────────────────────────────────────────────────
+const header = `\n${B}Article XVI Validator${X} — ${D}${absPath}${X}\n`;
+console.log(header);
 
 if (errors.length === 0 && warnings.length === 0) {
-  console.log(`${G}${B}PASS${X}  All R1–R16 rules satisfied.\n`);
-  process.exit(0);
-}
-
-if (errors.length > 0) {
-  console.log(`${R}${B}FAIL${X}  ${errors.length} violation(s):\n`);
-  for (const v of errors) {
-    const loc = v.line ? `line ${v.line}` : 'document';
-    console.log(`  ${R}[${v.rule}]${X} ${loc}: ${v.message}`);
-    if (v.suggestion) console.log(`  ${D}   Fix: ${v.suggestion}${X}`);
-    console.log('');
+  console.log(`${G}${B}PASS${X}  All machine-detectable rules (R1–R16) satisfied.\n`);
+} else {
+  if (errors.length > 0) {
+    console.log(`${R}${B}FAIL${X}  ${errors.length} violation(s):\n`);
+    for (const v of errors) {
+      const loc = v.line ? `line ${v.line}` : 'document';
+      console.log(`  ${R}[${v.rule}]${X} ${loc}: ${v.message}`);
+      if (v.suggestion) console.log(`     ${D}Fix: ${v.suggestion}${X}`);
+      console.log('');
+    }
+  }
+  if (warnings.length > 0) {
+    console.log(`${Y}WARN${X}  ${warnings.length} advisory item(s):\n`);
+    for (const v of warnings) {
+      const loc = v.line ? `line ${v.line}` : 'document';
+      console.log(`  ${Y}[${v.rule}]${X} ${loc}: ${v.message}`);
+      if (v.suggestion) console.log(`     ${D}Suggestion: ${v.suggestion}${X}`);
+      console.log('');
+    }
   }
 }
 
-if (warnings.length > 0) {
-  console.log(`${Y}WARN${X}  ${warnings.length} advisory violation(s):\n`);
-  for (const v of warnings) {
-    const loc = v.line ? `line ${v.line}` : 'document';
-    console.log(`  ${Y}[${v.rule}]${X} ${loc}: ${v.message}`);
+// ── Human review section ──────────────────────────────────────────────────────
+if (!noHuman) {
+  const divider = `${D}${'─'.repeat(70)}${X}`;
+  console.log(divider);
+  console.log(`\n${C}${B}HUMAN REVIEW REQUIRED${X}\n`);
+  console.log(`${B}Four things require a human. The machine cannot check them.${X}`);
+  console.log(`${B}Do these four checks in order, one at a time.${X}\n`);
+  console.log(`Read this first.`);
+  console.log(`  You cannot break the document by following these steps.`);
+  console.log(`  You can stop at any time. Stopping does not cause any harm.`);
+  console.log(`  You can take breaks. The checklist will wait for you.\n`);
+
+  for (const item of HUMAN_REVIEW_ITEMS) {
+    console.log(`${B}${item.number}. ${item.what}${X}`);
+    console.log(`   What to do: ${item.instruction}`);
+    console.log(`   What to look for: ${item.look_for}`);
+    console.log(`   Pass condition: ${item.pass}`);
+    console.log(`   ${R}Stop condition: ${item.stop}${X}`);
     console.log('');
   }
+
+  console.log(`${B}You are done with the human review checklist.${X}`);
+  console.log(`If all four steps show Pass, this document is fully compliant.`);
+  console.log(`If any step shows Stop, fix the issue before using this document.\n`);
+  console.log(divider);
+  console.log('');
 }
 
 process.exit(errors.length > 0 ? 1 : 0);

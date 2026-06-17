@@ -20,11 +20,11 @@ You can stop at any time. Stopping does not cause any harm.
 
 You can take breaks. The steps will wait for you.
 
-If something on your screen does not match what is written here, do not worry. Read the part that says "If it looks different." If you are still unsure, stop and send me the exact words you see.
+If something on your screen does not match what is written here, do not worry. Read the part labeled "If it looks different" in that step. If you are still unsure, stop here. Do not continue. Send me the exact words you see.
 
 Three things to know about typing commands:
 
-A command is a line of text you put into the Terminal app. Every command has a Copy button. Press Copy. Then, in Terminal, press the Command key and the V key together to paste it. Then press the Return key one time to run it. When you type a password, the letters will not appear on screen. This is normal and is a safety feature. Type it and press Return.
+A command is a line of text you put into the Terminal app. Every command has a Copy button. Press the button labeled Copy. Then, in Terminal, press the Command key and the V key together to paste it. Then press the Return key one time to run it. When you type a password, the letters will not appear on screen. This is normal. It is a safety feature. Type the password and press the Return key.
 
 ---
 
@@ -45,7 +45,7 @@ Part 3 — [PART 3 NAME]: [One sentence describing what Part 3 does.] Steps [M+1
 
 What you will see: [REPLACE: Exact text or screen state the user will see after the action succeeds. Use the exact words that appear on screen.]
 
-If it looks different: [REPLACE: What a known-safe difference looks like, and what the user should do. End with: "If you are unsure, stop here. Do not continue. Send me the exact words you see."]
+If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
 ---
 
@@ -54,7 +54,7 @@ If it looks different: [REPLACE: What a known-safe difference looks like, and wh
 
 What you will see: [REPLACE: Exact success signal.]
 
-If it looks different: [REPLACE: Known-safe difference, or stop condition.]
+If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
 ---
 
@@ -63,7 +63,7 @@ If it looks different: [REPLACE: Known-safe difference, or stop condition.]
 
 What you will see: [REPLACE: Exact success signal.]
 
-If it looks different: [REPLACE: Known-safe difference, or stop condition.]
+If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
 ---
 
@@ -74,7 +74,7 @@ If it looks different: [REPLACE: Known-safe difference, or stop condition.]
 
 What you will see: [REPLACE: Exact success signal.]
 
-If it looks different: [REPLACE: Known-safe difference, or stop condition.]
+If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
 ---
 
@@ -83,7 +83,7 @@ If it looks different: [REPLACE: Known-safe difference, or stop condition.]
 
 What you will see: [REPLACE: Exact success signal.]
 
-If it looks different: [REPLACE: Known-safe difference, or stop condition.]
+If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
 ---
 
@@ -94,7 +94,7 @@ If it looks different: [REPLACE: Known-safe difference, or stop condition.]
 
 What you will see: [REPLACE: Exact success signal.]
 
-If it looks different: [REPLACE: Known-safe difference, or stop condition.]
+If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
 ---
 
