@@ -24,6 +24,52 @@ npm run verify
 npm test
 ```
 
+---
+
+## Who Uses This System
+
+Two kinds of people use this repository.
+
+**The Operator (Corey)** starts governed work sessions, runs the session scripts, and ends sessions. The session loop is the daily workflow. Start point: `docs/HOW-TO-USE.md`.
+
+**The Reviewer (external researcher, funder, collaborator)** reads the registry and status files to understand what exists and what is claimed. Start point: `MODULE_STATUS.md`.
+
+---
+
+## Operator Userflow
+
+This diagram shows what the operator does in a normal work session — from opening Terminal to closing the session.
+
+```mermaid
+flowchart TD
+    START([Open Terminal]) --> HEALTH
+
+    HEALTH["1. Run tlc-health.mjs\n─────────────────────────────\nExpect: HEALTHY\n0 critical, 0 warnings"]
+    HEALTH -->|HEALTHY| DASH
+    HEALTH -->|DEGRADED or CRITICAL| STOP_HEALTH["Stop.\nSend the full output.\nDo not proceed."]
+
+    DASH["2. Run tlc-dashboard.mjs\n─────────────────────────────\nExpect: list of modules\nwith status labels"]
+    DASH --> PICK["3. Pick a module.\nWrite the module name down.\nOnly pick: working or partial.\nDo not pick: quarantined."]
+
+    PICK --> WORK["4. Run tlc-work.mjs\n──module YOUR-MODULE-NAME\n─────────────────────────────\nExpect: session started\nactive-session.md written"]
+    WORK --> AI["5. Open Hermes.\nPaste active-session.md contents.\nType: Operating under contract CRSP-NAME.\n─────────────────────────────\nExpect: Hermes confirms contract scope."]
+
+    AI --> DO["6. Do the work.\nThe contract scope is the boundary.\nIf a thought is outside scope,\nopen the contract file and read scope.\nYou can stop at any time."]
+
+    DO --> DONE["7. Run tlc-done.mjs\n──module YOUR-MODULE-NAME\n─────────────────────────────\nExpect: STATUS.md updated\nsession record closed"]
+    DONE --> ADD["8. Run: git add -A\n─────────────────────────────\nExpect: no output\n(blank line + cursor)"]
+    ADD --> COMMIT["9. Run: git commit -m\n─────────────────────────────\nExpect: line starting with main\nfollowed by a short code"]
+
+    COMMIT -->|Hook passes| END([Session closed.])
+    COMMIT -->|Hook fails| FIX["Read the hook output.\nIt names the rule violated.\nFix it. Re-run steps 8 and 9.\nIf you cannot fix it:\nuse TLC_BYPASS_HOOKS=1\nthen send me the output."]
+    FIX --> END
+```
+
+**Step-by-step instructions with exact commands, expected output, and stop conditions:**
+`docs/HOW-TO-USE.md`
+
+---
+
 ## System Topology
 
 ```mermaid
@@ -92,6 +138,8 @@ flowchart TD
     C -. must be curated before release .-> B
 ```
 
+---
+
 ## What This Repository Governs
 
 The Living Constitution 2.0 governs:
@@ -141,6 +189,7 @@ This requirement exists because the system must reduce cognitive load, not incre
 | Research template | templates/tlc-research-to-paper-to-product-template/ |
 | Public portfolio data | PORTFOLIO_DATA.json |
 | Active C-RSP contracts | contracts/active/ |
+| Operator instructions | docs/HOW-TO-USE.md |
 
 ## Public Surfaces
 

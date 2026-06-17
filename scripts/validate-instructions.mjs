@@ -345,15 +345,27 @@ const ACTION_VERB_RE = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
   const SHELL_TOOLS_ALWAYS = [
     'cd', 'npm', 'node', 'git', 'chmod', 'cat', 'python3', 'python',
     'brew', 'curl', 'tar', 'wget', 'sudo', 'mkdir', 'cp', 'mv',
-    'echo', 'export', 'source', 'which', 'grep', 'sed', 'awk',
+    'echo', 'export', 'source', 'grep', 'sed', 'awk',
     'defaults', 'killall', 'osascript', 'launchctl', 'rsync', 'make', 'ssh',
     'scp', 'xcode-select', 'softwareupdate', 'pkgutil', 'security', 'ditto',
     'zip', 'unzip', 'pbcopy', 'pbpaste', 'caffeinate', 'say',
     'nvm', 'pyenv', 'rbenv', 'asdf', 'volta', 'fnm', 'pnpm', 'yarn',
     'npx', 'tsx', 'deno', 'bun',
   ];
-  // These tools are only flagged when followed by a path argument
+  // These tools are only flagged when followed by a path argument or a tool name.
+  // "which node" = shell command. "tell me which project" = English. The regex
+  // requires whitespace + non-space after, but we further restrict "which" to
+  // only fire when followed by a lowercase identifier (tool name), not a plain noun.
   const SHELL_TOOLS_PATH_ONLY = ['find', 'ls', 'rm', 'open'];
+  // "which" fires only when followed by a word that looks like a command/binary.
+  // Shell: "which node", "which python3", "which brew" — tool names, often contain digits or dots.
+  // English: "which project", "which one", "which you", "which module", "which folder" — plain nouns.
+  // Heuristic: only fire when the word after "which" is itself in SHELL_TOOLS_ALWAYS or SHELL_TOOLS_PATH_ONLY,
+  // or ends with a digit (python3, node18). This eliminates all English false positives.
+  const WHICH_TOOLS = new Set([...SHELL_TOOLS_ALWAYS, ...SHELL_TOOLS_PATH_ONLY,
+    'homebrew','pip','pip3','gem','ruby','perl','java','javac','gradle','mvn',
+    'docker','kubectl','helm','terraform','ansible','vault','consul']);
+  const WHICH_RE = new RegExp('\\bwhich\\s+(' + [...WHICH_TOOLS].join('|') + ')\\b');
 
   const ALWAYS_RE = new RegExp(`\\b(${SHELL_TOOLS_ALWAYS.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\b`);
   // Path-only: tool word followed by whitespace then /, ~, ., or a flag (-name, --type, etc.)
@@ -364,7 +376,7 @@ const ACTION_VERB_RE = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
     const l = lines[i];
     if (l.includes('`')) continue;
     if (/^ {4,}/.test(l)) continue;
-    if (ALWAYS_RE.test(l) || PATH_ONLY_RE.test(l)) {
+    if (ALWAYS_RE.test(l) || PATH_ONLY_RE.test(l) || WHICH_RE.test(l)) {
       fail('R4', i + 1,
         `Command appears as plain prose text: "${l.trim().slice(0, 60)}"`,
         'Place every command inside a fenced code block (triple backticks) or an inline backtick span. Never write commands as plain text.');
