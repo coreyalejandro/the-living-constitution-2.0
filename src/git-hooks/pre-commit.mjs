@@ -18,14 +18,15 @@
  *   3. Registry path match against cwd
  */
 
-import { readFileSync, existsSync } from 'fs';
-import { join, resolve, dirname } from 'path';
+import { readFileSync, existsSync, appendFileSync, mkdirSync, readdirSync } from 'fs';
+import { join, resolve, dirname, homedir } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TLC_ROOT = resolve(__dirname, '..', '..');
-
+const HOME = homedir();
+const PROJECTS_DIR = process.env.TLC_PROJECTS_DIR || join(HOME, 'Projects');
 // --- Load registry ---
 const registryPath = join(TLC_ROOT, 'registry', 'modules.registry.json');
 if (!existsSync(registryPath)) {
@@ -34,7 +35,6 @@ if (!existsSync(registryPath)) {
 }
 
 const registry = JSON.parse(readFileSync(registryPath, 'utf8'));
-const PROJECTS_DIR = '/Users/coreyalejandro/Projects';
 
 // --- Determine module ID ---
 const cwd = process.cwd();
@@ -74,9 +74,28 @@ function halt(reason, details) {
 }
 
 // --- Break-glass bypass ---
+const BYPASS_LOG = join(TLC_ROOT, 'evidence', 'bypass-log.jsonl');
+
 if (process.env.TLC_BYPASS_HOOKS === '1') {
+  // I10: Record break-glass event unconditionally before allowing bypass
+  const bypassEntry = {
+    event: 'break_glass',
+    timestamp: new Date().toISOString(),
+    module_id: MODULE_ID || 'unknown',
+    operator: process.env.USER || process.env.USERNAME || 'unknown',
+    cwd,
+    justification: process.env.TLC_BYPASS_REASON || 'NO JUSTIFICATION PROVIDED',
+    commit_msg: (() => { try { return execSync('git log -1 --format=%s HEAD 2>/dev/null', { encoding: 'utf8' }).trim(); } catch { return ''; } })(),
+  };
+  try {
+    mkdirSync(join(TLC_ROOT, 'evidence'), { recursive: true });
+    appendFileSync(BYPASS_LOG, JSON.stringify(bypassEntry) + '\n');
+  } catch { /* non-fatal — still allow bypass */ }
   console.warn(`${Y}WARN: TLC pre-commit hooks bypassed via TLC_BYPASS_HOOKS=1${X}`);
-  console.warn(`${Y}This action will be logged if evidence observatory is active.${X}`);
+  console.warn(`${Y}Break-glass event recorded in evidence/bypass-log.jsonl${X}`);
+  if (!process.env.TLC_BYPASS_REASON) {
+    console.warn(`${Y}WARN: No TLC_BYPASS_REASON set. Set it for Article X compliance.${X}`);
+  }
   process.exit(0);
 }
 
@@ -140,26 +159,76 @@ if (acCompletionClaimed) {
 
 // --- I5: PII scan ---
 const PII_PATTERNS = [
-  /\b\d{3}-\d{2}-\d{4}\b/,           // SSN
-  /\b\d{4}[\s-]\d{4}[\s-]\d{4}[\s-]\d{4}\b/, // Credit card
-  /password\s*[:=]\s*["']?[^\s"']{6,}/i, // plaintext passwords
+  { re: /\b\d{3}-\d{2}-\d{4}\b/,                         label: 'SSN pattern' },
+  { re: /\b\d{4}[\s-]\d{4}[\s-]\d{4}[\s-]\d{4}\b/,      label: 'Credit card pattern' },
+  { re: /password\s*[:=]\s*["']?[^\s"']{6,}/i,           label: 'Plaintext password' },
+  { re: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/,label: 'Email address' },
 ];
 
-for (const file of stagedFiles.slice(0, 50)) { // limit scan to first 50 files
+for (const file of stagedFiles.slice(0, 50)) {
   if (!existsSync(file)) continue;
-  // Skip binary-ish extensions
   if (/\.(png|jpg|gif|pdf|zip|tar|gz|bin|woff|ttf)$/i.test(file)) continue;
+  // Skip the bypass log itself and evidence files with explicit pii_authorized
+  if (file.includes('bypass-log')) continue;
   try {
-    const content = readFileSync(file, 'utf8').slice(0, 50000); // first 50KB
-    for (const pattern of PII_PATTERNS) {
-      if (pattern.test(content)) {
+    const content = readFileSync(file, 'utf8').slice(0, 50000);
+    // If file declares pii_authorized, skip PII scan
+    if (/pii_authorized\s*[:=]/i.test(content)) continue;
+    for (const { re, label } of PII_PATTERNS) {
+      if (re.test(content)) {
         halt(
           `I5 VIOLATION — Possible PII detected in: ${file}`,
-          `Pattern matched: ${pattern}\nReview and redact before committing.`
+          `Pattern: ${label}\nReview and redact, or add "pii_authorized: <justification>" to the contract.`
         );
       }
     }
   } catch { /* skip unreadable */ }
+}
+
+// --- I11: Evidence chain integrity ---
+// If a STATUS.md is staged with a truth_status upgrade, require evidence file in same commit
+const statusFiles = stagedFiles.filter(f => /STATUS\.md$/i.test(f));
+for (const sf of statusFiles) {
+  if (!existsSync(sf)) continue;
+  try {
+    const content = readFileSync(sf, 'utf8');
+    const statusMatch = content.match(/[Tt]ruth[_ ][Ss]tatus[:\s]+(\w+)/);
+    if (statusMatch && ['working', 'partial'].includes(statusMatch[1].toLowerCase())) {
+      const hasEvidence = stagedFiles.some(f => /evidence/i.test(f));
+      if (!hasEvidence) {
+        console.warn(`${Y}WARN I11: STATUS.md declares truth_status: ${statusMatch[1]} but no evidence file is staged.${X}`);
+        console.warn(`${Y}Per Article XI: status upgrades require evidence. Stage an evidence file.${X}`);
+        // WARN not halt — allow self-correction, not hard block at baseline tier
+      }
+    }
+  } catch { /* skip */ }
+}
+
+// --- I13: Rollback required before deploy ---
+// If any staged file name contains "deploy" or "release", check for rollback evidence
+const deployFiles = stagedFiles.filter(f => /deploy|release/i.test(f));
+if (deployFiles.length > 0) {
+  const hasRollback = stagedFiles.some(f => /rollback/i.test(f));
+
+  // Also check evidence directory on disk
+  const evidenceDir = mod && mod.path
+    ? join(mod.path, 'evidence')
+    : join(TLC_ROOT, 'evidence');
+  let rollbackOnDisk = false;
+  if (existsSync(evidenceDir)) {
+    try {
+      rollbackOnDisk = readdirSync(evidenceDir).some(f => /rollback/i.test(f));
+    } catch { rollbackOnDisk = false; }
+  }
+
+  if (!hasRollback && !rollbackOnDisk) {
+    halt(
+      `I13 VIOLATION — Deploy file staged without rollback evidence.`,
+      `Staged: ${deployFiles.join(', ')}\n` +
+      `Create evidence/rollback-YYYY-MM-DD.md before committing deploy files.\n` +
+      `Article XI, Section 11.2: Rollback evidence required before deploy.`
+    );
+  }
 }
 
 // --- All checks passed ---

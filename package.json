@@ -35,7 +35,9 @@
     "tlc:register": "node scripts/tlc-register.mjs",
     "tlc:report": "node scripts/tlc-report.mjs",
     "tlc:sync-skills": "node scripts/tlc-sync-skills.mjs",
-    "tlc:hermes": "node scripts/tlc-hermes.mjs"
+    "tlc:hermes": "node scripts/tlc-hermes.mjs",
+    "tlc:purge": "node scripts/tlc-purge.mjs",
+    "tlc:health": "node scripts/tlc-health.mjs"
   },
   "keywords": [
     "governance",

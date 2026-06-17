@@ -153,9 +153,26 @@ else
   info "Run: source ~/.zshrc"
 fi
 
-# --- 9. Validate TLC root ---
+# --- 9. Path portability audit (Article XIV.3) ---
 echo ""
-echo "[9] Validating TLC repo scaffold..."
+echo "[9] Path portability audit (Article XIV.3)..."
+HARDCODED=$(grep -r "/Users/[a-zA-Z0-9_-]*/Projects" \
+  "$TLC_REPO/scripts" \
+  "$TLC_REPO/src" \
+  "$TLC_REPO/shell-integration.zsh" \
+  2>/dev/null | grep -v '.git' | grep -v 'node_modules' | head -5 || true)
+
+if [ -n "$HARDCODED" ]; then
+  fail "Hardcoded operator paths detected in shared scripts — violates Article XIV.3"
+  echo "$HARDCODED"
+  exit 1
+else
+  ok "No hardcoded operator paths in shared scripts"
+fi
+
+# --- 10. Validate TLC root scaffold ---
+echo ""
+echo "[10] Validating TLC repo scaffold..."
 if command -v python3 &>/dev/null; then
   python3 "$TLC_REPO/scripts/validate_repo.py" --path "$TLC_REPO" 2>&1 | grep -E 'PASS|FAIL|WARN|SUMMARY|Result' || true
 else

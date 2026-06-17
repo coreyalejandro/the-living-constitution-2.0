@@ -13,11 +13,13 @@
  */
 
 import { readFileSync, existsSync } from 'fs';
-import { join, resolve, dirname } from 'path';
+import { join, resolve, dirname, homedir } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, '..');
+const HOME = homedir();
+const PROJECTS_DIR = process.env.TLC_PROJECTS_DIR || join(HOME, 'Projects');
 
 // --- Determine project path ---
 const args = process.argv.slice(2);
@@ -29,7 +31,6 @@ const registryPath = join(REPO_ROOT, 'registry', 'modules.registry.json');
 if (!existsSync(registryPath)) process.exit(0); // silent exit — registry not found
 
 const registry = JSON.parse(readFileSync(registryPath, 'utf8'));
-const PROJECTS_DIR = '/Users/coreyalejandro/Projects';
 
 // Normalize paths for comparison
 function normalizePath(p) {
