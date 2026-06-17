@@ -669,12 +669,285 @@ operator's credentials.
 
 ---
 
+## ARTICLE XVI — DEFAULT DIRECTIONS STANDARD
+
+> **Scope:** This Article governs every instruction document, guide, README section, onboarding
+> file, and procedural step set produced under TLC 2.0 governance. It applies to all output
+> written for or by the operator, all AI-generated instructions, and all documentation
+> delivered to any user of a TLC-governed module.
+>
+> **Tag:** Every instruction document subject to this Article must carry the tag
+> `<default-directions>` in its title block or front matter.
+
+---
+
+### Section 16.1 — Rationale
+
+Instructions written without a neurodivergent-first standard cause direct harm to the operator
+of this system. The operator has a confirmed profile of autism, schizophrenia with episodic
+symptoms, and spatial reasoning impairment. These are not edge cases — they are the design
+target. Standard technical documentation is built for a neurotypical user with intact working
+memory, spatial processing, and low anxiety around ambiguity. That user is not the operator.
+
+This Article encodes, as enforceable governance rules, the instruction format that emerged
+from the following research bases:
+
+1. **Plain Language (cognitive load):** Redish 2012; Plain Language Action and Information
+   Network. Single-action sentences and elimination of conditionals from procedural text reduce
+   cognitive load and increase step completion rates.
+
+2. **Autism and procedural completion:** Banda & Grimmett 2008; Ganz et al. 2012. Step
+   completion rates are highest when each step contains exactly one imperative verb, one
+   object, and no embedded branch points. Steps containing "or" cause loop behavior.
+
+3. **Schizophrenia and working memory:** Forbes et al. 2009; Barch 2005. Symptom-load
+   working memory impairment means a step cannot require the user to hold any information
+   from a prior step in their head. Every step must be self-contained. Every input must
+   appear inside the step that uses it.
+
+4. **Spatial language and neurodivergent processing:** Hartley & Allen 2014; Edgin &
+   Pennington 2005. Directional language (above, below, left, right) fails when spatial
+   processing is impaired. Referencing by name, number, or exact copy-paste text does not
+   require spatial processing.
+
+5. **Predictability and anxiety reduction:** Horder et al. 2014; Gotham et al. 2015.
+   Unexpected outcomes produce anxiety escalation that halts action. Every step must describe
+   success before asking the user to act, so the screen can be matched to the description
+   without judgment.
+
+6. **Self-efficacy and panic prevention:** Rogers et al. 2006. Users who encounter
+   unexpected text during procedures stop and cannot resume without external reassurance.
+   A safety preamble and a "this is normal" note in every step remove the need for external
+   reassurance at each step.
+
+---
+
+### Section 16.2 — The Sixteen Rules (R1–R16)
+
+Each rule is a binary pass/fail test. No rule requires judgment to apply. All sixteen must
+pass for a document to be compliant with this Article.
+
+#### R1 — ONE-ACTION
+Each step contains exactly one imperative verb that describes one physical action.
+A step may not contain two actions joined by "and," "then," or a comma list.
+
+*Failing example:* "Open Terminal and paste the command and press Return."
+*Passing example:* Three separate steps — one to open Terminal, one to paste, one to press Return.
+
+#### R2 — SELF-CONTAINED
+Every piece of information a step requires is stated inside that step.
+A step may not depend on the user remembering information from a prior step.
+If a value was introduced in Step 3 and is needed again in Step 9, Step 9 repeats it.
+
+*Failing example:* "Use the folder name from Step 3."
+*Passing example:* "Open the folder named `digital-twin-health-coach`."
+
+#### R3 — NO-BRANCH
+The action line of a step contains no conditional or branch language.
+The words "or," "if," "unless," "depending on," "either," "choose," and "select one of"
+are forbidden in action lines.
+Conditional text is permitted only inside isolated "If it looks different" blocks
+that do not introduce new step numbers.
+
+*Failing example:* "Click Install or Continue, depending on which button is shown."
+*Passing example:* Action line: "Press the button labeled Install."
+Then, inside an isolated block: "If the button says Continue instead of Install, press Continue."
+
+#### R4 — COPY-PASTE
+Every string the user must type exactly — every command, URL, filename, flag, and
+button label — is placed inside a fenced code block or a Copy element.
+No exact-type string appears as inline prose.
+
+*Failing example:* "Type cd ~/Downloads in the Terminal window."
+*Passing example:* A fenced code block containing `cd ~/Downloads`.
+
+#### R5 — SUCCESS-FIRST
+Every step states what the user will see after the action succeeds, before asking the user
+to act. The success description uses the exact words or text that will appear on screen.
+Exception: the preamble block (R11) describes the guide's purpose, not a user action,
+and is exempt from this rule.
+
+*Failing example:* "Press Install. A progress bar will appear."
+*Passing example:* "What you will see: A progress bar appears and moves from left to right.
+When it reaches the end, the word 'Complete' appears." Then: "Press the button labeled Install."
+
+#### R6 — NO-SPATIAL
+No step uses spatial or directional language to locate a UI element or describe a position.
+Forbidden words in location context: above, below, left, right, top, bottom, corner, beside,
+next to, under, over, across from, toward, away from, upper, lower, middle, center.
+Elements are located by their visible label, their exact name, or the step number where
+they were introduced.
+
+*Failing example:* "Click the button in the top-right corner."
+*Passing example:* "Click the button labeled Sign In."
+
+#### R7 — EXACT-LABEL
+Every UI element is referenced by its exact visible label as it appears on screen.
+Descriptive references ("the big button," "the green button," "the main menu") are forbidden.
+
+*Failing example:* "Press the large download button."
+*Passing example:* "Press the button labeled Download LTS."
+
+#### R8 — NUMBERED
+Steps are numbered with a single integer. Numbering starts at 1 and increments by 1.
+Sub-steps are forbidden (1a, 1b, Step 2i). Lettered alternatives are forbidden.
+If a document has parts, each part begins at the next integer — it does not restart at 1.
+
+*Failing example:* Steps numbered 1, 2a, 2b, 3.
+*Passing example:* Steps numbered 1, 2, 3, 4.
+
+#### R9 — WAIT-STATE
+Any step that starts a process that takes time must state:
+(a) the maximum expected wait time in seconds or minutes, and
+(b) the exact text or symbol that signals the process is complete.
+
+*Failing example:* "Run npm install. Wait for it to finish."
+*Passing example:* "Run `npm install`. This can take up to two minutes. You will know it is
+done when the blinking cursor comes back with no error text above it."
+
+#### R10 — STOP-SAFE
+Any step where the outcome may not match the success description must include a stop condition:
+the exact words to look for that mean "stop here and ask for help."
+The stop condition is a separate labeled block, not embedded in the success description.
+
+*Failing example:* "If something goes wrong, contact support."
+*Passing example:* "If it looks different: If you see the words `command not found`,
+stop here. Do not continue. Send me the exact words you see on your screen."
+
+#### R11 — PREAMBLE
+Every instruction document that carries the `<default-directions>` tag must begin with
+a preamble block before Step 1. The preamble must contain all four of the following:
+
+(a) A safety statement: a sentence stating the user cannot cause harm by following
+    these steps.
+(b) A normalization statement: a sentence stating that text appearing on screen that
+    the user does not understand is normal and is not a problem.
+(c) A stop-is-safe statement: a sentence stating that stopping at any time causes no harm.
+(d) A break-is-allowed statement: a sentence stating that taking a break is permitted
+    and the guide will wait.
+
+#### R12 — WORD-LIST
+Every instruction document that carries the `<default-directions>` tag must end with
+a word list. The word list defines every technical term used in the document.
+Each definition is one sentence. Definitions contain no jargon. If a definition requires
+a technical term, that term also appears in the word list.
+
+#### R13 — PART-MAP
+Any instruction document with more than five steps must include a section titled
+"What this guide does" immediately after the preamble. The part map must name every
+part of the guide, describe its purpose in one sentence, and state its step range
+as a single integer or integer range (example: "Steps 3 to 7").
+
+#### R14 — NO-PROSE-ACTION
+No action — no thing the user is asked to do — is embedded inside a paragraph of
+reading text. Every action is its own numbered step. Explanatory text and action text
+are never in the same block.
+
+*Failing example:* "Node.js is the runtime for this project, which was built in 2025.
+To install it, open your browser and go to nodejs.org."
+*Passing example:* An explanatory paragraph about Node.js, then a separate numbered step
+containing only the action of opening the browser and going to nodejs.org.
+
+#### R15 — SINGLE-PATH
+The document has exactly one primary path from Step 1 to the final step.
+That path is a straight sequence of integers with no gaps and no forks.
+Alternative paths exist only inside isolated "If it looks different" blocks.
+Alternative paths do not introduce new step numbers. They rejoin the main path
+at the next integer step.
+
+#### R16 — ISOLATION-TAG
+Every instruction document that is subject to this Article carries the tag
+`<default-directions>` in its title block or YAML front matter.
+The tag is the signal to human reviewers and automated validators that the document
+must pass R1–R15. Documents without this tag are not governed by this Article.
+
+---
+
+### Section 16.3 — Compliance and Enforcement
+
+**16.3.1 — Pre-commit enforcement**
+
+The TLC 2.0 pre-commit hook (`src/git-hooks/pre-commit.mjs`) runs
+`scripts/validate-instructions.mjs` against every staged Markdown file that contains
+the `<default-directions>` tag. Any file that fails one or more of R1–R16 halts the commit.
+The output names the file, the rule code (R1–R16), the failing line number, and a plain-
+language description of the violation.
+
+**16.3.2 — Validation script**
+
+`scripts/validate-instructions.mjs` is the canonical validator. It accepts a file path
+and exits 0 if the file passes all applicable rules, exits 1 with structured output if
+any rule fails. It may be run manually at any time:
+
+```
+node scripts/validate-instructions.mjs <path-to-file.md>
+```
+
+**16.3.3 — Template**
+
+`templates/tlc-default-directions-template.md` is the canonical blank scaffold for a
+compliant instruction document. All new instruction documents must start from this template.
+
+**16.3.4 — AI generation requirement**
+
+Any AI assistant operating under a TLC 2.0 governed session that is asked to produce
+instructions, guides, README setup sections, or onboarding documents for the operator
+must apply R1–R16 to its output before delivering it. The AI must tag the output with
+`<default-directions>` and must self-validate against R1–R16. If the AI cannot satisfy
+all sixteen rules, it must state which rules it cannot satisfy and why before delivering
+partial output.
+
+---
+
+### Section 16.4 — Operator-Specific Constraints
+
+The following constraints apply specifically to the operator of this TLC 2.0 instance
+(Corey Alejandro) and any person producing instructions for the operator. They are not
+general recommendations — they are constitutional requirements enforceable by this Article.
+
+**16.4.1 — No spatial anchors.** R6 is absolute. No exception for "quick" references.
+
+**16.4.2 — No implied steps.** Every physical action is explicit. If turning on Wi-Fi
+requires pressing three things in sequence, those are three steps, not one step that says
+"turn on Wi-Fi."
+
+**16.4.3 — No assumed knowledge.** Instructions may not assume the user knows what
+Terminal is, what a cursor is, what npm is, or what any acronym means unless the term
+appears in the word list (R12) of that document.
+
+**16.4.4 — No confidence language.** Instructions may not contain phrases like
+"simply," "just," "easy," "quickly," "obviously," or "of course." These words
+increase anxiety when the step does not feel simple, easy, or obvious.
+
+**16.4.5 — No open-ended wait.** R9 is absolute. "Wait for it to finish" is never
+acceptable. Every wait has a stated maximum time and a stated success signal.
+
+---
+
+### Section 16.5 — Invariant I16
+
+**I16 — Default Directions Compliance**
+
+Any instruction document tagged `<default-directions>` that is staged for commit
+and fails any of R1–R16 is blocked at the pre-commit hook.
+The block message names the file, the failing rule code, and the line number.
+Break-glass (`TLC_BYPASS_HOOKS=1`) does not bypass I16 checks on instruction files.
+Instruction files may only be committed when they pass the validator.
+
+Exception: A document may be committed in a `draft` state without passing validation
+if the commit message contains the token `[DRAFT-INSTRUCTIONS]`. Draft-state
+instruction files may not be linked from any README, onboarding guide, or public surface.
+
+---
+
 ## AMENDMENT LOG
+
 
 | Date | Article | Change | Author | Justification |
 |------|---------|--------|--------|---------------|
 | 2026-06-17 | All | Initial ratification of Articles I-IX | TLC 2.0 build | First formal version; SOCIOTECHNICAL_CONSTITUTION.md previously empty |
 | 2026-06-17 | X-XV | Added enterprise, production, privacy, AI governance, installability, shareability articles | TLC 2.0 build | Canonical conditions for public distribution and enterprise adoption |
+| 2026-06-17 | XVI | Added Article XVI — Default Directions Standard | TLC 2.0 build | R1–R16 neurodivergent-first instruction rules; I16 invariant; enforcement via validate-instructions.mjs; research basis: Redish 2012, Banda & Grimmett 2008, Forbes et al. 2009, Hartley & Allen 2014, Horder et al. 2014, Rogers et al. 2006 |
 
 ---
 

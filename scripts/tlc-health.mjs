@@ -306,9 +306,66 @@ function checkConstitution() {
     if (!content.includes('ARTICLE X') || !content.includes('ARTICLE XV')) {
       return { status: 'warn', detail: 'Constitution missing Articles X-XV — run constitution expansion' };
     }
-    return { status: 'ok', detail: `${content.split('\n').length} lines` };
+    if (!content.includes('ARTICLE XVI')) {
+      return { status: 'warn', detail: 'Constitution missing Article XVI (Default Directions Standard)' };
+    }
+    return { status: 'ok', detail: `${content.split('\n').length} lines, Articles I-XVI present` };
   });
 }
+
+function checkDefaultDirections() {
+  // Check 1: validator script exists
+  check('Article XVI validator present', () => {
+    const p = join(TLC_ROOT, 'scripts', 'validate-instructions.mjs');
+    if (!existsSync(p)) return { status: 'warn', detail: 'scripts/validate-instructions.mjs missing — I16 enforcement offline' };
+    return { status: 'ok', detail: 'validate-instructions.mjs present' };
+  });
+
+  // Check 2: template exists
+  check('Article XVI template present', () => {
+    const p = join(TLC_ROOT, 'templates', 'tlc-default-directions-template.md');
+    if (!existsSync(p)) return { status: 'warn', detail: 'templates/tlc-default-directions-template.md missing' };
+    return { status: 'ok', detail: 'tlc-default-directions-template.md present' };
+  });
+
+  // Check 3: scan all tagged instruction files and validate them
+  check('Article XVI: tagged instruction files compliant', () => {
+    const validator = join(TLC_ROOT, 'scripts', 'validate-instructions.mjs');
+    if (!existsSync(validator)) return { status: 'warn', detail: 'Validator missing — cannot check' };
+
+    let tagged = [];
+    try {
+      const out = execSync(`git -C "${TLC_ROOT}" ls-files "*.md" "*.markdown" 2>/dev/null`, { encoding: 'utf8' });
+      tagged = out.trim().split('\n').filter(Boolean)
+        .map(f => join(TLC_ROOT, f))
+        .filter(f => {
+          try {
+            const c = readFileSync(f, 'utf8');
+            // Only count files where the tag appears outside backtick code spans / fenced blocks
+            const noFence = c.replace(/```[\s\S]*?```/g, '');
+            const noCode = noFence.replace(/`[^`\n]+`/g, '');
+            return noCode.includes('<default-directions>');
+          } catch { return false; }
+        });
+    } catch { return { status: 'warn', detail: 'Could not enumerate tracked markdown files' }; }
+
+    if (tagged.length === 0) return { status: 'ok', detail: 'No <default-directions> files found' };
+
+    const failures = [];
+    for (const f of tagged) {
+      try {
+        execSync(`node "${validator}" "${f}" --quiet`, { encoding: 'utf8', stdio: 'pipe' });
+      } catch {
+        failures.push(f.replace(TLC_ROOT + '/', ''));
+      }
+    }
+    if (failures.length > 0) {
+      return { status: 'warn', detail: `${failures.length} tagged file(s) fail XVI: ${failures.join(', ')}` };
+    }
+    return { status: 'ok', detail: `${tagged.length} tagged file(s) pass R1–R16` };
+  });
+}
+
 
 function checkModule(id) {
   const registryPath = join(TLC_ROOT, 'registry', 'modules.registry.json');
@@ -390,6 +447,9 @@ function main() {
     log('');
     if (!quiet && !jsonOut) log(`${BOLD}Constitution${RESET}`);
     checkConstitution();
+    log('');
+    if (!quiet && !jsonOut) log(`${BOLD}Default Directions (XVI)${RESET}`);
+    checkDefaultDirections();
   }
 
   // ── Output ──────────────────────────────────────────────────────────────────

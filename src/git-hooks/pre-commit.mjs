@@ -253,6 +253,54 @@ if (deployFiles.length > 0) {
   }
 }
 
+// --- I16: Default directions compliance ---
+// Staged .md files tagged <default-directions> must pass the Article XVI validator.
+// TLC_BYPASS_HOOKS=1 does NOT bypass this check.
+// Exception: commit message contains [DRAFT-INSTRUCTIONS] → allows commit without validation.
+const stagedMd = stagedFiles.filter(f => /\.(md|markdown)$/i.test(f));
+if (stagedMd.length > 0) {
+  const validatorPath = join(TLC_ROOT, 'scripts', 'validate-instructions.mjs');
+  if (existsSync(validatorPath)) {
+    // Read COMMIT_EDITMSG if present (captures in-progress commit message)
+    let commitMsg = '';
+    const editmsgPath = join(TLC_ROOT, '.git', 'COMMIT_EDITMSG');
+    if (existsSync(editmsgPath)) {
+      try { commitMsg = readFileSync(editmsgPath, 'utf8'); } catch {}
+    }
+    const isDraft = /\[DRAFT-INSTRUCTIONS\]/i.test(commitMsg);
+    for (const mdFile of stagedMd) {
+      const absFile = resolve(process.cwd(), mdFile);
+      if (!existsSync(absFile)) continue;
+      let content = '';
+      try { content = readFileSync(absFile, 'utf8'); } catch { continue; }
+      // Only count files where the tag appears outside backtick code spans / fenced blocks
+      const noFence = content.replace(/```[\s\S]*?```/g, '');
+      const noCode = noFence.replace(/`[^`\n]+`/g, '');
+      if (!noCode.includes('<default-directions>')) continue;
+      // File is tagged — must pass validator (unless [DRAFT-INSTRUCTIONS] in commit message)
+      if (isDraft) {
+        console.log(`${Y}[I16] DRAFT-INSTRUCTIONS — skipping validation for ${mdFile}${X}`);
+        continue;
+      }
+      try {
+        execSync(`node "${validatorPath}" "${absFile}" --quiet`, { encoding: 'utf8', stdio: 'pipe' });
+      } catch {
+        let detail = '';
+        try {
+          const r = execSync(`node "${validatorPath}" "${absFile}"`, { encoding: 'utf8', stdio: ['pipe','pipe','pipe'] });
+          detail = r;
+        } catch (e2) { detail = (e2.stdout || '') + (e2.stderr || ''); }
+        halt(
+          `I16 VIOLATION — <default-directions> file fails Article XVI: ${mdFile}`,
+          (detail.trim() || '') + '\nRun manually: node scripts/validate-instructions.mjs ' + mdFile +
+          '\nFix all R1–R16 errors, then commit again.' +
+          '\nTo commit a draft (not yet compliant), add [DRAFT-INSTRUCTIONS] to your commit message.'
+        );
+      }
+    }
+  }
+}
+
 // --- All checks passed ---
 console.log(`${G}[tlc-hook] ✓ Pre-commit checks passed — Module: ${MODULE_ID} (${mod.truth_status})${X}`);
 process.exit(0);
