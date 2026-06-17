@@ -40,6 +40,7 @@ import {
 import { join, dirname } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TLC_ROOT = join(__dirname, '..');
@@ -202,12 +203,52 @@ function checkRetentionCoverage() {
   }
 }
 
-// ── Check 3: Truncation detection via checkpoint ──────────────────────────────
+// ── Check 3: Truncation detection ────────────────────────────────────────────
+// Two independent paths — either one is sufficient to catch truncation:
+//
+// Path A: Checkpoint comparison (requires two runs)
+//   Compares current entry count against the last saved state.
+//   Misses truncation that happened before the first run.
+//
+// Path B: Git baseline comparison (works on first run)
+//   Compares current file against its last committed version via git.
+//   Catches truncation that occurred outside of git rm — e.g. direct
+//   file truncation, overwrite, or manual editing.
+//   Does not require a prior checkpoint run.
+//
+// Together they eliminate the single-run blind spot.
 
 function checkTruncation() {
   log(`\n${B}Truncation Detection${X}`);
 
-  // Load previous checkpoint
+  // ── Path B: Git baseline (first-run safe) ────────────────────────────────
+  for (const { name, label } of AUDIT_LOGS) {
+    const p = join(EVIDENCE_DIR, name);
+    if (!existsSync(p)) continue;
+
+    const current = parseJSONL(p).length;
+
+    try {
+      // Get committed line count from git — works even with no checkpoint
+      const committedRaw = execSync(
+        `git -C ${JSON.stringify(TLC_ROOT)} show HEAD:evidence/${name} 2>/dev/null | wc -l`,
+        { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }
+      ).trim();
+      const committed = parseInt(committedRaw, 10);
+
+      if (!isNaN(committed) && current < committed) {
+        violation('I9-T0',
+          `${label} truncated vs committed state (git baseline)`,
+          `Committed: ${committed} line(s)  Current: ${current} line(s)\n` +
+          `       This is detectable on first run — no checkpoint needed.\n` +
+          `       File was modified outside of tlc-purge and git.`
+        );
+      }
+      // If current >= committed, git baseline passes — checkpoint handles growth tracking
+    } catch { /* git not available or file not committed yet — skip Path B */ }
+  }
+
+  // ── Path A: Checkpoint comparison ────────────────────────────────────────
   let state = {};
   if (existsSync(STATE_FILE)) {
     try { state = JSON.parse(readFileSync(STATE_FILE, 'utf8')); } catch { state = {}; }
@@ -238,20 +279,19 @@ function checkTruncation() {
     if (prev && prev.count > count) {
       truncationFound = true;
       violation('I9-T1',
-        `${label} was TRUNCATED`,
+        `${label} was TRUNCATED (checkpoint path)`,
         `Previous count: ${prev.count} entries → Current: ${count} entries.\n` +
-        `       ${D}Log was modified outside of tlc-purge. This is a constitutional violation.\n` +
-        `       Last checkpoint: ${prev.last_checked}${X}`
+        `       Last checkpoint: ${prev.last_checked}`
       );
     } else if (prev) {
       const added = count - prev.count;
       notice(`${label}: ${count} entries (${added >= 0 ? '+' + added : added} since last check)`);
     } else {
-      notice(`${label}: ${count} entries (first checkpoint)`);
+      notice(`${label}: ${count} entries (first checkpoint — git baseline active)`);
     }
   }
 
-  // Write new checkpoint (unless we found truncation in fix mode — reset)
+  // Write new checkpoint
   if (fixMode && truncationFound) {
     log(`\n${Y}--fix: Resetting checkpoint state. Truncation violations cleared.${X}`);
     log(`${Y}Note: This does NOT restore deleted log entries.${X}`);
