@@ -22,6 +22,7 @@ import { readFileSync, existsSync, appendFileSync, mkdirSync, readdirSync } from
 import { join, resolve, dirname, homedir } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
+import { appendAuditEntry } from '../core/audit.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TLC_ROOT = resolve(__dirname, '..', '..');
@@ -88,8 +89,7 @@ if (process.env.TLC_BYPASS_HOOKS === '1') {
     commit_msg: (() => { try { return execSync('git log -1 --format=%s HEAD 2>/dev/null', { encoding: 'utf8' }).trim(); } catch { return ''; } })(),
   };
   try {
-    mkdirSync(join(TLC_ROOT, 'evidence'), { recursive: true });
-    appendFileSync(BYPASS_LOG, JSON.stringify(bypassEntry) + '\n');
+    appendAuditEntry(BYPASS_LOG, bypassEntry);
   } catch { /* non-fatal — still allow bypass */ }
   console.warn(`${Y}WARN: TLC pre-commit hooks bypassed via TLC_BYPASS_HOOKS=1${X}`);
   console.warn(`${Y}Break-glass event recorded in evidence/bypass-log.jsonl${X}`);

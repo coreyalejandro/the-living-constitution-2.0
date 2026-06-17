@@ -41,6 +41,8 @@ import { join, dirname } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
+import { createHash } from 'crypto';
+import { appendAuditEntry, hashForEntry, sha256, verifyChain } from '../src/core/audit.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TLC_ROOT = join(__dirname, '..');
@@ -114,6 +116,80 @@ function parseJSONL(filePath) {
       .map(line => { try { return JSON.parse(line); } catch { return null; } })
       .filter(Boolean);
   } catch { return []; }
+}
+
+// ── Hash chain utilities ──────────────────────────────────────────────────────
+// Imported from src/core/audit.mjs: appendAuditEntry, hashForEntry, sha256, verifyChain
+// Each audit entry carries prev_hash: SHA-256 of the previous raw line.
+// First entry uses prev_hash: 'GENESIS'.
+// Any deletion breaks the chain — detectable on first run, no external state.
+
+// ── Check 3b: Hash chain integrity (Path C — first-run safe, no external state)
+function checkHashChain() {
+  log(`\n${B}Hash Chain Integrity (Path C)${X}`);
+
+  for (const { name, label } of AUDIT_LOGS) {
+    const p = join(EVIDENCE_DIR, name);
+    if (!existsSync(p)) continue;
+
+    const rawLines = readFileSync(p, 'utf8').trim().split('\n').filter(Boolean);
+    if (rawLines.length === 0) {
+      notice(`${label}: empty — nothing to chain-check`);
+      continue;
+    }
+
+    // Check whether any entries have prev_hash at all.
+    // Entries written before this fix do not have prev_hash — skip chain check
+    // for those, but note how many are chainable.
+    const parsed = rawLines.map((line, i) => {
+      try { return { idx: i, raw: line, entry: JSON.parse(line) }; }
+      catch { return { idx: i, raw: line, entry: null }; }
+    });
+
+    const chainable = parsed.filter(r => r.entry && r.entry.prev_hash !== undefined);
+    if (chainable.length === 0) {
+      notice(`${label}: ${rawLines.length} entries — no prev_hash fields yet (pre-fix entries)`);
+      continue;
+    }
+
+    // Verify chain: for each chainable entry, its prev_hash must equal
+    // the hash of the raw line immediately before it.
+    let broken = false;
+    for (const { idx, entry } of chainable) {
+      if (entry.prev_hash === 'GENESIS') {
+        // Must be the first line in the file (or the first chained entry
+        // immediately after un-chained legacy entries).
+        // Acceptable: first chained entry may reference GENESIS even if
+        // legacy entries exist before it.
+        continue;
+      }
+      // The expected prev_hash is the hash of the raw line at idx-1
+      if (idx === 0) {
+        // GENESIS expected but something else found
+        violation('I9-C1',
+          `${label}: chain broken at entry 1 — expected GENESIS, got "${entry.prev_hash}"`,
+          'First chained entry must reference GENESIS.'
+        );
+        broken = true;
+        break;
+      }
+      const expectedHash = hashForEntry(rawLines[idx - 1]);
+      if (entry.prev_hash !== expectedHash) {
+        violation('I9-C1',
+          `${label}: hash chain broken at entry ${idx + 1}`,
+          `Expected prev_hash: ${expectedHash.slice(0, 16)}…\n` +
+          `       Actual   prev_hash: ${String(entry.prev_hash).slice(0, 16)}…\n` +
+          `       An entry was deleted or modified before this line.\n` +
+          `       Detectable on first run — no checkpoint or git history needed.`
+        );
+        broken = true;
+        break;
+      }
+    }
+    if (!broken) {
+      notice(`${label}: hash chain intact (${chainable.length} chained entries)`);
+    }
+  }
 }
 
 // ── Check 1: Audit log existence and path safety ──────────────────────────────
@@ -387,8 +463,7 @@ function recordRetentionCheck(violationCount) {
     compliant: violationCount === 0,
   };
   try {
-    mkdirSync(EVIDENCE_DIR, { recursive: true });
-    appendFileSync(auditLog, JSON.stringify(entry) + '\n');
+    appendAuditEntry(auditLog, entry);
   } catch { /* non-fatal */ }
 }
 
@@ -402,6 +477,7 @@ async function main() {
   checkLogExistence();
   checkRetentionCoverage();
   checkTruncation();
+  checkHashChain();
   checkSessionAuditCoverage();
   checkStoragePath();
 

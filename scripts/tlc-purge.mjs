@@ -31,6 +31,7 @@ import {
 import { join, dirname, basename } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
+import { appendAuditEntry } from '../src/core/audit.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TLC_ROOT = join(__dirname, '..');
@@ -234,8 +235,7 @@ function recordPurge(purgedFiles) {
     dry_run: !confirmed,
   };
   try {
-    mkdirSync(join(TLC_ROOT, 'evidence'), { recursive: true });
-    appendFileSync(PURGE_LOG, JSON.stringify(entry) + '\n');
+    appendAuditEntry(PURGE_LOG, entry);
   } catch { /* non-fatal */ }
 }
 
@@ -273,14 +273,14 @@ function handlePurgeLog() {
   writeFileSync(BYPASS_LOG, kept.join('\n') + (kept.length ? '\n' : ''));
   ok(`Bypass log: ${removed} entries purged, ${kept.length} retained.`);
 
-  // Record this purge in the purge log
-  appendFileSync(PURGE_LOG, JSON.stringify({
+  // Record this purge in the purge log (chained)
+  appendAuditEntry(PURGE_LOG, {
     event: 'purge_bypass_log',
     timestamp: new Date().toISOString(),
     operator: process.env.USER || 'unknown',
     before_date: beforeDate,
     entries_removed: removed,
-  }) + '\n');
+  });
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
