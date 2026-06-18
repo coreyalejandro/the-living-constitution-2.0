@@ -38,7 +38,8 @@
     "tlc:hermes": "node scripts/tlc-hermes.mjs",
     "tlc:purge": "node scripts/tlc-purge.mjs",
     "tlc:health": "node scripts/tlc-health.mjs",
-    "tlc:audit-retention": "node scripts/tlc-audit-retention.mjs"
+    "tlc:audit-retention": "node scripts/tlc-audit-retention.mjs",
+    "tlc": "node scripts/tlc.mjs"
   },
   "keywords": [
     "governance",
