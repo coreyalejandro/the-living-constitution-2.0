@@ -1,0 +1,8 @@
+I1_Trust
+I2_Authenticity
+I3_Status
+I4_Identity
+I5_EnactedFidelity
+I6_Quality
+I7_ContextualPerf
+I8_Narrative

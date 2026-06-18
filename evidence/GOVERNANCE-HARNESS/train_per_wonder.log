@@ -1,0 +1,98 @@
+STEP 1: LOADING DATA...
+  Loaded 256 prompts
+  I1_Trust                  : 32 prompts (16 sov, 16 def)
+  I2_Authenticity           : 32 prompts (16 sov, 16 def)
+  I3_Status                 : 32 prompts (16 sov, 16 def)
+  I4_Identity               : 32 prompts (16 sov, 16 def)
+  I5_EnactedFidelity        : 32 prompts (16 sov, 16 def)
+  I6_Quality                : 32 prompts (16 sov, 16 def)
+  I7_ContextualPerf         : 32 prompts (16 sov, 16 def)
+  I8_Narrative              : 32 prompts (16 sov, 16 def)
+
+STEP 2: LOADING MODEL...
+The following generation flags are not valid and may be ignored: ['output_hidden_states']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+The following generation flags are not valid and may be ignored: ['output_hidden_states']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:03<00:11,  3.92s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:06<00:06,  3.37s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:09<00:03,  3.19s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:12<00:00,  2.86s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:12<00:00,  3.06s/it]
+Some parameters are on the meta device because they were offloaded to the disk.
+  Device: mps:0  |  Layers: 28
+
+STEP 3: EXTRACTING HIDDEN STATES (1 pass, caching layers [4, 8, 12, 14, 16, 18, 22, 26])...
+  [2/256] processed...
+  [22/256] processed...
+  [42/256] processed...
+  [62/256] processed...
+  [82/256] processed...
+  [102/256] processed...
+  [122/256] processed...
+  [142/256] processed...
+  [162/256] processed...
+  [182/256] processed...
+  [202/256] processed...
+  [222/256] processed...
+  [242/256] processed...
+  Layer  4: shape (256, 3584)
+  Layer  8: shape (256, 3584)
+  Layer 12: shape (256, 3584)
+  Layer 14: shape (256, 3584)
+  Layer 16: shape (256, 3584)
+  Layer 18: shape (256, 3584)
+  Layer 22: shape (256, 3584)
+  Layer 26: shape (256, 3584)
+  Extraction complete.
+
+STEP 4: TRAINING PER-WONDER LDA PROBES...
+  I1_Trust                   layer= 4  PCA=31 (var=1.000)  acc=0.969  lda_norm=0.3008
+  I2_Authenticity            layer= 8  PCA=31 (var=1.000)  acc=0.969  lda_norm=0.2877
+  I3_Status                  layer=12  PCA=31 (var=1.000)  acc=1.000  lda_norm=0.4040
+  I4_Identity                layer=14  PCA=31 (var=1.000)  acc=1.000  lda_norm=0.2709
+  I5_EnactedFidelity         layer=16  PCA=31 (var=1.000)  acc=1.000  lda_norm=0.2605
+  I6_Quality                 layer=18  PCA=31 (var=1.000)  acc=1.000  lda_norm=0.4421
+  I7_ContextualPerf          layer=22  PCA=31 (var=1.000)  acc=1.000  lda_norm=0.8349
+  I8_Narrative               layer=26  PCA=31 (var=1.000)  acc=1.000  lda_norm=0.4446
+  All probes trained and saved.
+
+STEP 5: BUILDING (256, 8) WONDER MATRIX...
+  I1_Trust                  : min=-20.096  max=13.428  mean=2.327  std=7.178
+  I2_Authenticity           : min=-14.996  max=8.942  mean=0.984  std=5.419
+  I3_Status                 : min=-18.611  max=15.071  mean=0.692  std=7.581
+  I4_Identity               : min=-13.379  max=8.265  mean=-1.663  std=5.109
+  I5_EnactedFidelity        : min=-14.499  max=7.287  mean=-1.367  std=5.232
+  I6_Quality                : min=-20.169  max=14.389  mean=-2.135  std=8.693
+  I7_ContextualPerf         : min=-27.175  max=25.636  mean=-3.308  std=13.344
+  I8_Narrative              : min=-21.089  max=15.726  mean=-2.040  std=7.608
+
+  Matrix shape: (256, 8)
+
+  Cross-Wonder Pearson correlation (off-diagonals should NOT all be 0.99):
+                 I1      I2      I3      I4      I5      I6      I7      I8
+        I1:   1.000   0.976   0.946   0.911   0.931   0.916   0.874   0.868
+        I2:   0.976   1.000   0.975   0.955   0.964   0.947   0.917   0.935
+        I3:   0.946   0.975   1.000   0.976   0.962   0.951   0.946   0.942
+        I4:   0.911   0.955   0.976   1.000   0.962   0.931   0.928   0.946
+        I5:   0.931   0.964   0.962   0.962   1.000   0.963   0.936   0.957
+        I6:   0.916   0.947   0.951   0.931   0.963   1.000   0.964   0.926
+        I7:   0.874   0.917   0.946   0.928   0.936   0.964   1.000   0.924
+        I8:   0.868   0.935   0.942   0.946   0.957   0.926   0.924   1.000
+
+STEP 6: GES CAUSAL DISCOVERY...
+
+  GES edges:
+    I1_Trust --> I2_Authenticity
+    I1_Trust --> I5_EnactedFidelity
+    I1_Trust --> I8_Narrative
+    I3_Status --> I2_Authenticity
+    I5_EnactedFidelity --> I2_Authenticity
+    I4_Identity --> I3_Status
+    I5_EnactedFidelity --> I3_Status
+    I3_Status --> I7_ContextualPerf
+    I4_Identity --> I5_EnactedFidelity
+    I4_Identity --> I6_Quality
+    I8_Narrative --> I4_Identity
+    I5_EnactedFidelity --> I6_Quality
+    I8_Narrative --> I5_EnactedFidelity
+    I8_Narrative --> I7_ContextualPerf
+
+  Total edges: 16
+  Saved: ges_adjacency_v2.npy
+
+DONE.

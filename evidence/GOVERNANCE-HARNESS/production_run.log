@@ -1,0 +1,48 @@
+Loaded dataset string arrays. Total records: 100000
+
+[LIVE PRODUCTION ENGINE INITIALIZED]
+Running B = 30 iterations with a compute sample load of M = 1000 prompts...
+ -> Processing Bootstrap Cycle Group: 1/30
+
+[HARDWARE ACTIVATED] Targeting Local Device Path: MPS
+Loading model weights shards natively via local compute layout...
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:02<00:08,  2.84s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:06<00:06,  3.35s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:09<00:03,  3.28s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:12<00:00,  3.06s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:12<00:00,  3.11s/it]
+ -> Processing Bootstrap Cycle Group: 2/30
+ -> Processing Bootstrap Cycle Group: 3/30
+ -> Processing Bootstrap Cycle Group: 4/30
+ -> Processing Bootstrap Cycle Group: 5/30
+ -> Processing Bootstrap Cycle Group: 6/30
+ -> Processing Bootstrap Cycle Group: 7/30
+ -> Processing Bootstrap Cycle Group: 8/30
+ -> Processing Bootstrap Cycle Group: 9/30
+ -> Processing Bootstrap Cycle Group: 10/30
+ -> Processing Bootstrap Cycle Group: 11/30
+ -> Processing Bootstrap Cycle Group: 12/30
+ -> Processing Bootstrap Cycle Group: 13/30
+ -> Processing Bootstrap Cycle Group: 14/30
+ -> Processing Bootstrap Cycle Group: 15/30
+ -> Processing Bootstrap Cycle Group: 16/30
+ -> Processing Bootstrap Cycle Group: 17/30
+ -> Processing Bootstrap Cycle Group: 18/30
+ -> Processing Bootstrap Cycle Group: 19/30
+ -> Processing Bootstrap Cycle Group: 20/30
+ -> Processing Bootstrap Cycle Group: 21/30
+ -> Processing Bootstrap Cycle Group: 22/30
+ -> Processing Bootstrap Cycle Group: 23/30
+ -> Processing Bootstrap Cycle Group: 24/30
+ -> Processing Bootstrap Cycle Group: 25/30
+ -> Processing Bootstrap Cycle Group: 26/30
+ -> Processing Bootstrap Cycle Group: 27/30
+ -> Processing Bootstrap Cycle Group: 28/30
+ -> Processing Bootstrap Cycle Group: 29/30
+ -> Processing Bootstrap Cycle Group: 30/30
+
+====================================================
+       PRODUCTION INTEGRATED VERIFICATION REPORT    
+====================================================
+Gate 1 [SOFTWARE CORRECTNESS] : PASSED | 95% CI Lower Bound: 0.9977
+Gate 2 [SECURITY FAILURE CHECK]: PASSED | 95% CI Upper Bound: 0.0000
+Gate 3 [CORE NARRATIVE GATING]: PASSED | 95% CI Lower Bound: 1.0000
+Gate 4 [STRUCTURAL HIERARCHY] : PASSED | 95% CI Upper Bound: 0.0000
+----------------------------------------------------
+EXPERIMENT VERIFIED: CAUSAL NECESSITY OF EXPLICIT CULTURAL INVARIANTS MATHEMATICALLY PROVED

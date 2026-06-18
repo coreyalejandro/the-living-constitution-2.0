@@ -188,6 +188,8 @@ function drawHelp() {
     ['/new <NAME>',      'Create a new module (guided)'],
     ['/dashboard',       'Show the full module dashboard'],
     ['/validate <FILE>', 'Run Article XVI validator on a markdown file'],
+    ['/probe',           'Run live invariant probe (Qwen2.5-7B — synthetic weights)'],
+    ['/harness',         'Run full governance harness, all 4 gates'],
     ['/context',         'Show the active session contract'],
     ['/git status',      'Run git status in the TLC repo'],
     ['/git push',        'Run git push for the TLC repo'],
@@ -349,6 +351,64 @@ async function dispatch(line) {
         console.log('');
         break;
       }
+
+      case 'probe': {
+        const probePath = join(ROOT, 'modules', 'governance-harness', 'probes', 'run_live.py');
+        const weightsPath = join(ROOT, 'modules', 'governance-harness', 'probes', 'weights');
+        if (!existsSync(probePath)) {
+          console.log(C.error('  governance-harness probe not found.'));
+          console.log(C.muted('  Expected: modules/governance-harness/probes/run_live.py'));
+          break;
+        }
+        console.log(C.muted('  Running live invariant probe (Qwen2.5-7B required)...'));
+        console.log(C.warn('  NOTE: Current weights trained on synthetic data. Results are not empirically valid.'));
+        console.log(C.muted('  See evidence/GOVERNANCE-HARNESS/VERIFICATION_AND_TRUTH.md for full disclosure.'));
+        console.log('');
+        const { ok, out } = await new Promise((resolve) => {
+          exec(
+            `cd ${join(ROOT, 'modules', 'governance-harness', 'probes')} && HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 python run_live.py`,
+            { cwd: ROOT, env: { ...process.env }, timeout: 120000 },
+            (err, stdout, stderr) => resolve({ ok: !err, out: (stdout + stderr).trim() })
+          );
+        });
+        const color = ok ? C.text : C.error;
+        out.split('\n').forEach(l => {
+          const colored =
+            l.includes('sovereign') ? C.good(l) :
+            l.includes('defensive') ? C.warn(l) :
+            l.includes('LDA score') ? C.accent(l) :
+            l.includes('ERROR') || l.includes('Error') ? C.error(l) :
+            color(l);
+          console.log('  ' + colored);
+        });
+        console.log('');
+        break;
+      }
+
+      case 'harness': {
+        console.log(C.muted('  Running governance harness (all 4 gates, Qwen2.5-7B required)...'));
+        console.log(C.warn('  NOTE: Synthetic dataset — gate results not empirically valid.'));
+        console.log('');
+        const { ok, out } = await new Promise((resolve) => {
+          exec(
+            `cd ${join(ROOT, 'modules', 'governance-harness')} && HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 python run_harness.py`,
+            { cwd: ROOT, env: { ...process.env }, timeout: 300000 },
+            (err, stdout, stderr) => resolve({ ok: !err, out: (stdout + stderr).trim() })
+          );
+        });
+        out.split('\n').forEach(l => {
+          const colored =
+            l.includes('PASS') || l.includes('✓') ? C.good(l) :
+            l.includes('FAIL') || l.includes('FATAL') ? C.critical(l) :
+            l.includes('GATE') ? C.accent(l) :
+            l.includes('WARNING') ? C.warn(l) :
+            C.text(l);
+          console.log('  ' + colored);
+        });
+        console.log('');
+        break;
+      }
+
 
       case 'clear':
         process.stdout.write('\x1bc');
