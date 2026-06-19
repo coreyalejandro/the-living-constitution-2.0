@@ -17,9 +17,9 @@ for TLC 2.0's governance invariants.
 
 ## Scope
 
-- paper_v5.1.md is the submission artifact
-- simulation/benchmark.py reproduces Table 3 (N=100,000)
-- simulation/hitl_harness.py reproduces Table 5 (N=30 HITL)
+- paper_v09_tlc_aligned.md is the submission artifact (supersedes v5.1)
+- simulation/benchmark.py reproduces Table 1 and Table 2 (N=100,000 synthetic)
+- simulation/hitl_harness.py reproduces Table 3 (N=30 HITL)
 - tests/ are the adversarial red-team suite
 - tlc_kernel/ is the governance engine described in the paper
 
@@ -34,7 +34,7 @@ for TLC 2.0's governance invariants.
 - [ ] AC-001: python -m pytest tests/ exits 0 — all 4 adversarial tests pass
 - [ ] AC-002: simulation/benchmark.py runs to completion — Table 3 reproduced
 - [ ] AC-003: simulation/hitl_harness.py runs to completion — Table 5 reproduced
-- [ ] AC-004: paper_v5.1.md contains no placeholders — every section complete
+- [ ] AC-004: paper_v09_tlc_aligned.md has no placeholders and V&T statement present
 - [ ] AC-005: council verdict on paper claims — llm-council reviews before submission
 - [ ] AC-006: submission receipt from target venue obtained
 - [ ] AC-007: paper uploaded to arXiv before submission (open access)
