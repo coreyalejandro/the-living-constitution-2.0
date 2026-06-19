@@ -826,6 +826,25 @@
         "All 4 falsification conditions automatable",
         "ccd-detector pip package"
       ]
+    },
+    {
+      "id": "NARRATIVE-CONDITIONED-INTERFACES",
+      "name": "narrative-conditioned-interfaces",
+      "surface": "academic_public_lab",
+      "truth_status": "partial",
+      "contract": "CRSP-NARRATIVE-CONDITIONED-INTERFACES",
+      "path": "modules/narrative-conditioned-interfaces",
+      "created_date": "2026-06-19",
+      "description": "Position paper: Narrative-Conditioned Interfaces as a design intervention to preserve analytical fluency in AI-augmented workflows. Proposes the Narrative-First Adversarial Loop (NFL) and Narrative Invariance Index (NII). Target venue: NeurIPS 2026 Position Papers.",
+      "unverified_scope": [
+        "Citations verified against direct paper access (not Kimi summaries)",
+        "NeurIPS 4-page conformance check",
+        "NII instrument validated (Krippendorff alpha >= 0.81)",
+        "IQR instrument validated (ICC >= 0.86)",
+        "Pilot study (N=24) completed with all 4 gate checks passed",
+        "Reviewer sign-off before public sharing",
+        "arXiv submission receipt"
+      ]
     }
   ]
 }
