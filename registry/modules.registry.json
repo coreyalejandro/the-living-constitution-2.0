@@ -791,6 +791,41 @@
         "FLAGGED status on governance regression",
         "BLOCKED status on pre-commit rejection"
       ]
+    },
+    {
+      "id": "GOVERNED-INVESTIGATION",
+      "name": "governed-investigation",
+      "surface": "research_public",
+      "truth_status": "partial",
+      "contract": "CRSP-GOVERNED-INVESTIGATION",
+      "path": "modules/governed-investigation",
+      "absorbed_from": "https://github.com/coreyalejandro/governed-investigation",
+      "absorbed_date": "2026-06-19",
+      "description": "Theoretical foundation of TLC 2.0. AHI + Eight Wonders I1-I8 + TLC kernel FSM. Target: NeurIPS Safety Track.",
+      "unverified_scope": [
+        "pytest tests/ exits 0",
+        "simulation/benchmark.py Table 3 reproduction",
+        "simulation/hitl_harness.py Table 5 reproduction",
+        "council review of paper claims",
+        "venue submission receipt"
+      ]
+    },
+    {
+      "id": "CCD",
+      "name": "ccd",
+      "surface": "research_public",
+      "truth_status": "unverified",
+      "contract": "CRSP-CCD",
+      "path": "modules/ccd",
+      "created_date": "2026-06-19",
+      "description": "Construct-Confidence Deception detector. PROACTIVE: F1-F4 features. Human-free RCT. Target: Anthropic Safety Research / arXiv.",
+      "unverified_scope": [
+        "PROACTIVE detector implementation",
+        "Synthetic corpus generation (n=20 control + n=19 CCD)",
+        "ANNOTATOR Kappa >= 0.75",
+        "All 4 falsification conditions automatable",
+        "ccd-detector pip package"
+      ]
     }
   ]
 }
