@@ -189,6 +189,8 @@ function drawHelp() {
     ['/dashboard',       'Show the full module dashboard'],
     ['/validate <FILE>', 'Run Article XVI validator on a markdown file'],
     ['/probe',           'Run live invariant probe (Qwen2.5-7B — synthetic weights)'],
+    ['/council <QUESTION>', 'Convene llm-council deliberation on a governance question'],
+    ['/autoresearch',    'Show autoresearch results.tsv — val_bpb + I1-I8 per experiment'],
     ['/harness',         'Run full governance harness, all 4 gates'],
     ['/context',         'Show the active session contract'],
     ['/git status',      'Run git status in the TLC repo'],
@@ -409,6 +411,52 @@ async function dispatch(line) {
         break;
       }
 
+
+      case 'council': {
+        const question = args.slice(1).join(' ').trim();
+        if (!question) {
+          print(COLORS.warn, 'Usage: /council <your governance question>');
+          print(COLORS.muted, 'Example: /council Should NANOCHAT advance to working status?');
+          break;
+        }
+        const councilPath = join(ROOT, 'modules', 'llm-council');
+        const envPath = join(ROOT, '.env');
+        const hasEnv = existsSync(envPath);
+        print(COLORS.accent, 'LLM-COUNCIL');
+        print(COLORS.text, `Question: ${question}`);
+        if (!hasEnv) {
+          print(COLORS.warn, 'No .env found at repo root.');
+          print(COLORS.muted, 'Create .env with: OPENROUTER_API_KEY=sk-or-...');
+          print(COLORS.muted, `Council path: ${councilPath}`);
+          print(COLORS.muted, 'Run manually: cd modules/llm-council && uv run python -m backend.main');
+        } else {
+          print(COLORS.muted, 'Starting council backend — open http://localhost:8001 in browser');
+          print(COLORS.muted, `Or run: cd ${councilPath} && ./start.sh`);
+        }
+        break;
+      }
+
+      case 'autoresearch': {
+        const resultsPath = join(ROOT, 'modules', 'autoresearch', 'results.tsv');
+        print(COLORS.accent, 'AUTORESEARCH — Experiment Results');
+        if (existsSync(resultsPath)) {
+          try {
+            const rows = readFileSync(resultsPath, 'utf8').trim().split('\n');
+            print(COLORS.muted, `${rows.length - 1} experiments recorded`);
+            print(COLORS.border, '─'.repeat(80));
+            rows.forEach(r => print(COLORS.text, r));
+          } catch {
+            print(COLORS.warn, 'results.tsv exists but could not be read');
+          }
+        } else {
+          print(COLORS.muted, 'No results.tsv yet — no experiments have run.');
+          print(COLORS.muted, 'Requires NVIDIA GPU (CUDA). Run on Colab or cloud instance:');
+          print(COLORS.muted, `  cd ${join(ROOT, 'modules', 'autoresearch')}`);
+          print(COLORS.muted, '  uv run prepare.py');
+          print(COLORS.muted, '  uv run train.py');
+        }
+        break;
+      }
 
       case 'clear':
         process.stdout.write('\x1bc');

@@ -745,6 +745,52 @@
         "Probe labels assigned by naming convention, not validated alignment"
       ],
       "notes": "Absorbed from governance-harness repo 2026-06-18. Working scaffold, not empirically valid. See CRSP-GOVERNANCE-HARNESS AC-001..AC-010 for repair path. Do not use for external claims until Phase 2 complete."
+    },
+    {
+      "id": "NANOCHAT",
+      "name": "nanochat",
+      "surface": "private_lab",
+      "truth_status": "unverified",
+      "contract": "CRSP-NANOCHAT",
+      "path": "modules/nanochat",
+      "absorbed_from": "https://github.com/karpathy/nanochat",
+      "absorbed_date": "2026-06-19",
+      "description": "From-scratch GPT training stack. TLC owns the model it trains.",
+      "dependencies": [
+        "GOVERNANCE-HARNESS",
+        "AUTORESEARCH",
+        "LLM-COUNCIL"
+      ],
+      "unverified_scope": [
+        "INSTALL.ipynb on clean Colab GPU runtime",
+        "Pretrain val_bpb on TLC-governed corpus",
+        "SFT completion without NaN",
+        "governance-harness probe scores on checkpoint",
+        "chat_web UI public URL"
+      ]
+    },
+    {
+      "id": "AUTORESEARCH",
+      "name": "autoresearch",
+      "surface": "private_lab",
+      "truth_status": "partial",
+      "contract": "CRSP-AUTORESEARCH",
+      "path": "modules/autoresearch",
+      "absorbed_from": "https://github.com/karpathy/autoresearch",
+      "absorbed_date": "2026-06-19",
+      "description": "Autonomous GPT experiment loop. Extended results.tsv tracks val_bpb + I1-I8 governance scores.",
+      "dependencies": [
+        "NANOCHAT",
+        "GOVERNANCE-HARNESS",
+        "nvidia_gpu_cuda"
+      ],
+      "unverified_scope": [
+        "prepare.py on GPU runtime",
+        "train.py 5-minute run completing",
+        "Extended results.tsv with governance probe scores",
+        "FLAGGED status on governance regression",
+        "BLOCKED status on pre-commit rejection"
+      ]
     }
   ]
 }
