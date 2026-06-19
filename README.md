@@ -1,235 +1,291 @@
 # The Living Constitution 2.0
 
-**The mothership governance system for Corey Alejandro's AI safety research, evidence, product modules, and public reviewer surfaces.**
-
-The Living Constitution 2.0 is the governing control plane for a portfolio of AI safety research and research-engineering projects. It organizes work through registries, C-RSP contracts, evidence records, verification outputs, reusable research templates, and public-safe portfolio data.
-
-This repository is the source of truth for what exists, what is verified, what is partial, what is draft, and what is not claimed.
-
-## Current Functional Status
-
-**Status:** working within verified local governance/control-plane scope.
-
-| Registry Surface | Current Count |
-|---|---:|
-| Modules | 21 |
-| Artifacts | 36 |
-| Routes | 18 |
-
-Verified locally with:
+**One command. One terminal. AI governance that runs.**
 
 ```bash
-npm run ingest:verify
-npm run verify
-npm test
+node scripts/tlc.mjs
+```
+
+That is it. You are in.
+
+---
+
+## What is this?
+
+TLC 2.0 is an AI governance system that you can actually run.
+
+Not a framework document. Not a set of principles. A system with a terminal,
+a registry, a deliberation engine, probes, an experiment loop, and a model it
+trains from scratch — all governed by a written constitution with enforced rules.
+
+Every other AI governance system asks you to trust it.
+This one asks you to verify it.
+
+---
+
+## Who is this for?
+
+**You if you are a researcher at Anthropic, OpenAI, DeepMind, or any lab**
+that publishes principles but does not have running infrastructure to enforce them.
+
+**You if you are an AI safety engineer** who wants a governance system that
+produces evidence, not just documentation.
+
+**You if you are Corey** — or anyone like him — who thinks in systems,
+needs explicit structure, and needs every instruction to say exactly what to do
+with zero ambiguity.
+
+---
+
+## Start in 60 seconds
+
+**Step 1.** Make sure you have Node.js 18 or higher.
+
+```bash
+node --version
+```
+
+If it says v18 or higher, you are ready. If not, install Node from nodejs.org.
+
+**Step 2.** Clone this repository.
+
+```bash
+git clone https://github.com/coreyalejandro/the-living-constitution-2.0
+cd the-living-constitution-2.0
+```
+
+**Step 3.** Start the TLC terminal.
+
+```bash
+node scripts/tlc.mjs
+```
+
+A gold-themed terminal opens. Type `/help` to see everything you can do.
+Type `/setup` to walk through first-time configuration.
+Type `/quit` to exit.
+
+That is the whole setup.
+
+---
+
+## What the terminal does
+
+When you run `node scripts/tlc.mjs` you get a terminal that looks and
+behaves like Claude or ChatGPT — same kind of interface, same feel —
+except it is your governance system, running locally, with no internet
+required for the core features.
+
+Commands you will use most:
+
+```
+/help                    see all commands
+/setup                   first-time walkthrough
+/modules                 list all 24 governed modules
+/status                  color-coded health of every module
+/work MODULE-ID          start a governed session on a module
+/done MODULE-ID          close the session and record evidence
+/validate path/to/file   check a file for plain-language violations
+/council YOUR QUESTION   ask the multi-model council a question
+/probe                   run neural probe scores on the nanochat model
+/autoresearch            see experiment results table
+/health                  full system health check
+/quit                    exit
 ```
 
 ---
 
-## Who Uses This System
+## What TLC 2.0 actually does — five plain-language sentences
 
-Two kinds of people use this repository.
+**1. It enforces rules on every file you write.**
+The validator checks that instructions are unambiguous, spatial-reasoning-safe,
+and do not use shell commands as natural language. Violations are named and blocked.
 
-**The Operator (Corey)** starts governed work sessions, runs the session scripts, and ends sessions. The session loop is the daily workflow. Start point: `docs/HOW-TO-USE.md`.
+**2. It enforces rules on every git commit.**
+The pre-commit hook checks that every module is registered, no quarantined
+module is being edited, and no invariant is bypassed. A bad commit does not land.
 
-**The Reviewer (external researcher, funder, collaborator)** reads the registry and status files to understand what exists and what is claimed. Start point: `MODULE_STATUS.md`.
+**3. It deliberates on governance decisions.**
+When you need to know whether a module is ready to advance, or whether a
+constitutional change is sound, the council runs — multiple models answer
+independently, review each other anonymously, and a Chairman synthesizes
+the verdict.
 
----
+**4. It measures governance in activation space.**
+Eight neural probes — one per constitutional invariant — score every model
+checkpoint. An experiment that improves language model performance but
+degrades governance alignment is flagged before it lands.
 
-## Operator Userflow
-
-This diagram shows what the operator does in a normal work session — from opening Terminal to closing the session.
-
-```mermaid
-flowchart TD
-    START([Open Terminal]) --> HEALTH
-
-    HEALTH["1. Run tlc-health.mjs\n─────────────────────────────\nExpect: HEALTHY\n0 critical, 0 warnings"]
-    HEALTH -->|HEALTHY| DASH
-    HEALTH -->|DEGRADED or CRITICAL| STOP_HEALTH["Stop.\nSend the full output.\nDo not proceed."]
-
-    DASH["2. Run tlc-dashboard.mjs\n─────────────────────────────\nExpect: list of modules\nwith status labels"]
-    DASH --> PICK["3. Pick a module.\nWrite the module name down.\nOnly pick: working or partial.\nDo not pick: quarantined."]
-
-    PICK --> WORK["4. Run tlc-work.mjs\n──module YOUR-MODULE-NAME\n─────────────────────────────\nExpect: session started\nactive-session.md written"]
-    WORK --> AI["5. Open Hermes.\nPaste active-session.md contents.\nType: Operating under contract CRSP-NAME.\n─────────────────────────────\nExpect: Hermes confirms contract scope."]
-
-    AI --> DO["6. Do the work.\nThe contract scope is the boundary.\nIf a thought is outside scope,\nopen the contract file and read scope.\nYou can stop at any time."]
-
-    DO --> DONE["7. Run tlc-done.mjs\n──module YOUR-MODULE-NAME\n─────────────────────────────\nExpect: STATUS.md updated\nsession record closed"]
-    DONE --> ADD["8. Run: git add -A\n─────────────────────────────\nExpect: no output\n(blank line + cursor)"]
-    ADD --> COMMIT["9. Run: git commit -m\n─────────────────────────────\nExpect: line starting with main\nfollowed by a short code"]
-
-    COMMIT -->|Hook passes| END([Session closed.])
-    COMMIT -->|Hook fails| FIX["Read the hook output.\nIt names the rule violated.\nFix it. Re-run steps 8 and 9.\nIf you cannot fix it:\nuse TLC_BYPASS_HOOKS=1\nthen send me the output."]
-    FIX --> END
-```
-
-**Step-by-step instructions with exact commands, expected output, and stop conditions:**
-`docs/HOW-TO-USE.md`
+**5. It trains a model under its own constitution.**
+nanochat is the model TLC builds from scratch. Every training commit is
+governed. Every checkpoint is probed. The training loop and the governance
+system are the same system.
 
 ---
 
-## System Topology
+## The modules
 
-```mermaid
-flowchart TD
-    A[The Living Constitution 2.0<br/>Mothership Governance System] --> B[Registry Layer]
-    A --> C[C-RSP Contract Layer]
-    A --> D[Evidence and Verification Layer]
-    A --> E[Research-to-Paper-to-Product Template]
-    A --> F[Portfolio Data Export]
-    B --> B1[modules.registry.json]
-    B --> B2[artifacts.registry.json]
-    B --> B3[routes.registry.json]
-    C --> C1[contracts/active]
-    C --> C2[scope boundaries]
-    C --> C3[halt conditions]
-    C --> C4[truth surfaces]
-    D --> D1[evidence/]
-    D --> D2[verification/]
-    D --> D3[test and build records]
-    E --> E1[research protocol]
-    E --> E2[visual understanding layer]
-    E --> E3[paper packet]
-    E --> E4[product packet]
-    F --> F1[MODULE_STATUS.md]
-    F --> F2[PORTFOLIO_DATA.json]
-    F --> F3[public portfolio surfaces]
-```
+TLC 2.0 has 24 registered modules. Here is every one of them, grouped by
+what they do and whether they are ready to run right now.
 
-## Research-to-Paper-to-Product Pipeline
+### Running right now — no setup needed
 
-```mermaid
-flowchart LR
-    A[Research Question] --> B[Protocol]
-    B --> C[Evidence Capture]
-    C --> D[Analysis]
-    D --> E[Paper Packet]
-    D --> F[Product Module]
-    E --> G[Portfolio Packet]
-    F --> G
-    G --> H[Registry Classification]
-    H --> I[Public Reviewer Surface]
-    C --> C1[Evidence Index]
-    D --> D1[Verified Outputs]
-    E --> E1[Claims and Limitations]
-    F --> F1[Buildable Artifact]
-    H --> H1[working / partial / draft / unverified]
-```
-
-## Public and Private Boundary
-
-```mermaid
-flowchart TD
-    A[The Living Constitution 2.0] --> B[Public-Safe Outputs]
-    A --> C[Private or Restricted Materials]
-    B --> B1[MODULE_STATUS.md]
-    B --> B2[PORTFOLIO_DATA.json]
-    B --> B3[public repo README files]
-    B --> B4[coreyalejandro.com]
-    B --> B5[reviewer paths]
-    C --> C1[private lab mechanics]
-    C --> C2[raw incident transcripts]
-    C --> C3[unpublished drafts]
-    C --> C4[private evidence]
-    C --> C5[secrets and environment data]
-    C --> C6[unreviewed claims]
-    C -. must be curated before release .-> B
-```
-
----
-
-## What This Repository Governs
-
-The Living Constitution 2.0 governs:
-
-- project modules
-- artifact records
-- public routes
-- C-RSP contracts
-- evidence records
-- verification outputs
-- reusable research repo templates
-- public and private publication boundaries
-- portfolio-safe data exports
-- truth-status labels
-
-## C-RSP Is a Subsystem
-
-C-RSP means Constitutionally-Regulated Single Pass.
-
-C-RSP is a contract mechanism inside The Living Constitution 2.0. It is not the entire system.
-
-C-RSP contracts define objective, scope, not-claimed boundary, dependencies, artifacts, invariants, acceptance criteria, halt conditions, truth surface, and rollback or recovery.
-
-## Required Visual Understanding Layer
-
-Research projects governed by this system must include visual aids. A project is incomplete without a visual understanding layer.
-
-Minimum visual set:
-
-1. Architecture diagram
-2. App or workflow diagram
-3. User journey diagram
-4. Pictograph or process explanation
-5. Mock demo, storyboard, or simulation
-6. Illustration brief
-
-This requirement exists because the system must reduce cognitive load, not increase it.
-
-## Reviewer Start Points
-
-| Reviewer Need | Start Here |
+| Module | What it does |
 |---|---|
-| System status | MODULE_STATUS.md |
-| Module registry | registry/modules.registry.json |
-| Artifact registry | registry/artifacts.registry.json |
-| Route registry | registry/routes.registry.json |
-| Research template | templates/tlc-research-to-paper-to-product-template/ |
-| Public portfolio data | PORTFOLIO_DATA.json |
-| Active C-RSP contracts | contracts/active/ |
-| Operator instructions | docs/HOW-TO-USE.md |
+| CRSP-STC-RUNTIME-001 | The governance runtime itself. This is what you are running. |
+| THE-LIVING-CONSTITUTION | The written constitution — Articles I through XVI. |
 
-## Public Surfaces
+### Running — needs your OpenRouter API key
 
-Primary public site:
+| Module | What it does | One-time setup |
+|---|---|---|
+| LLM-COUNCIL | Multi-model deliberation engine. 3-stage: independent → peer review → Chairman. | Add `OPENROUTER_API_KEY=sk-or-...` to a `.env` file in the repo root. Get a key at openrouter.ai. |
 
-https://coreyalejandro.com
+### Running — needs a GPU (Colab or cloud)
 
-Static Living Constitution site repository:
+| Module | What it does | What you need |
+|---|---|---|
+| NANOCHAT | GPT model trained under TLC governance. | Google Colab GPU runtime. Open `modules/nanochat/INSTALL.ipynb` and press Run All. |
+| GOVERNANCE-HARNESS | 8 neural probes measuring I1-I8 in activation space. | GPU to run probes on a checkpoint. |
+| AUTORESEARCH | Autonomous experiment loop — val_bpb + governance scores per commit. | NVIDIA GPU (CUDA). Not runnable on Mac. |
 
-https://github.com/coreyalejandro/the-living-constitution-2.0-portfolio
+### Active research — in progress
 
-This repository is not the public website. It is the governing system that produces and verifies public-safe status data.
+These modules have contracts and evidence records. Work is underway.
 
-## What This Repository Does Not Claim
+| Module | Status | What it needs to advance |
+|---|---|---|
+| AGENT-SENTINEL | partial | Evidence validation by council |
+| COGNITIVE-GOVERNANCE-LAB | partial | Visual understanding layer + evidence |
+| CONSENTCHAIN | partial | Technical implementation milestone |
+| CONSENT-GATEWAY-AUTH0 | partial | Auth0 integration tested |
+| COREYS-AGENTIC-PORTFOLIO | partial | Portfolio data export verified |
+| HIDRS | partial | C1L4 complete. Next: C1L5 dataset |
+| TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE | partial | Paper packet complete |
 
-This repository does not claim:
+### Planned — not started yet
 
-- every registered module is production-ready
-- every research project is complete
-- every artifact is publication-ready
-- every route is deployed
-- every public surface is final
-- the repository itself is a deployed web app
-- the public portfolio and governance runtime are the same system
-- C-RSP is the entire system
+| Module | What it will be |
+|---|---|
+| CONTRACT-WINDOW-EXHIBIT | Public-facing contract visualization |
+| TLC-EVIDENCE-OBSERVATORY | Real-time evidence monitoring dashboard |
+| MULTIAGENT-DEBATE | Structured multi-agent debate on governance claims |
+| META-PROMPT-ARCHITECT | Prompt architecture for governance-safe LLM calls |
+| MISALIGNMENT-EVIDENCE-LAB | Evidence lab for detecting misalignment patterns |
+| PROACTIVE-AI-CONSTITUTION-TOOLKIT | Toolkit for deploying TLC in other organizations |
+| AI-SAFETY-IDENTITY-STRATEGY | Identity and attribution framework for AI systems |
+| ZERO-SHOT-BUILD-OS-DOCS | Zero-shot documentation builder for governed repos |
+| PORTFOLIO-V2 | Portfolio v2 with full evidence integration |
+| TLC-ARTIFACTS-RESTRUCTURE | Artifact registry restructure |
 
-## Naming Boundary
+---
 
-Canonical name:
+## The architecture in one diagram
 
-The Living Constitution 2.0
+```
+YOUR TERMINAL
+     │
+     ▼
+node scripts/tlc.mjs
+     │
+     ├─ /validate     → validate-instructions.mjs
+     │                  Checks files for plain-language violations (Article XVI)
+     │
+     ├─ /work /done   → Session system
+     │                  Starts and closes governed work sessions
+     │                  Writes active-session.md for your AI assistant to read
+     │
+     ├─ /council      → modules/llm-council/backend/council.py
+     │                  Stage 1: all models answer independently
+     │                  Stage 2: anonymous peer review + ranking
+     │                  Stage 3: Chairman synthesizes verdict
+     │                  Requires: OPENROUTER_API_KEY in .env
+     │
+     ├─ /probe        → modules/governance-harness/probes/run_live.py
+     │                  Scores a model checkpoint on I1-I8
+     │                  Requires: GPU + nanochat checkpoint
+     │
+     ├─ /autoresearch → modules/autoresearch/results.tsv
+     │                  Shows val_bpb + I1-I8 per experiment commit
+     │                  Requires: GPU to populate
+     │
+     └─ /health       → scripts/tlc-health.mjs
+                        Checks git status, registry, hash chain, hook install
+```
 
-Repository slug:
+---
 
-the-living-constitution-2.0
+## The constitution
 
-The term sociotechnical may appear in descriptions and research framing, but it is not the repository name.
+The rules TLC enforces are written in `SOCIOTECHNICAL_CONSTITUTION.md`.
+There are 16 Articles and 8 Invariants (I1 through I8).
 
-No repo, project, module, artifact, route, or system name should be changed without explicit user approval.
+The short version:
 
-## Public Claim Allowed
+- **I1** Every module needs a contract before any work starts
+- **I2** Claims need evidence — assertion is not evidence
+- **I3** Work must stay inside the contract scope
+- **I4** Invariants cannot be bypassed by reframing
+- **I5** No unauthorized personal data
+- **I6** Quarantined modules are read-only
+- **I7** Status labels must reflect reality — no inflation
+- **I8** Every project needs a visual understanding layer
 
-The Living Constitution 2.0 is a working local governance-control-plane repository for organizing AI safety research, evidence, project modules, C-RSP contracts, reusable research templates, and portfolio-safe public status data within verified local scope.
+Article XVI (the one you will notice most) says: every instruction in this
+system must be explicit, unambiguous, and safe for someone with spatial
+reasoning differences to follow without guessing. That is why the instructions
+here say exactly what to type and exactly what to expect.
+
+---
+
+## For AI safety researchers
+
+The full case for why TLC 2.0 matters to your lab is in `docs/WHY-TLC.md`.
+
+Short version: every major AI lab has published principles. None of them have
+running infrastructure that enforces those principles, produces empirical
+evidence of compliance, and amends itself through governed deliberation.
+TLC 2.0 is that infrastructure. It is open. It is reproducible. Every claim
+maps to a file in this repository.
+
+---
+
+## Files to know
+
+```
+SOCIOTECHNICAL_CONSTITUTION.md    the rules
+README.md                         this file
+docs/HOW-TO-USE.md                step-by-step operator instructions
+docs/WHY-TLC.md                   why every AI lab needs this
+registry/modules.registry.json    all 24 modules, truth_status, contracts
+scripts/tlc.mjs                   the terminal UI — start here
+scripts/tlc-health.mjs            system health check
+scripts/tlc-setup.mjs             first-time setup wizard
+scripts/validate-instructions.mjs Article XVI validator
+modules/governance-harness/       neural probes for I1-I8
+modules/llm-council/              3-stage deliberation engine
+modules/autoresearch/             autonomous experiment loop
+modules/nanochat/                 GPT model trained under governance
+evidence/                         all evidence records, indexed
+```
+
+---
+
+## What this does not claim
+
+- That any unverified module is production-ready
+- That governance-harness probes are validated on real data (they are trained
+  on synthetic data — see `evidence/GOVERNANCE-HARNESS/VERIFICATION_AND_TRUTH.md`)
+- That nanochat training has been completed (it has not — INSTALL.ipynb is the
+  installer, the training run requires a GPU)
+- That llm-council verdicts are infallible
+- That TLC 2.0 is a deployed product — it is research infrastructure
+
+Every module's truth_status is honest. `unverified` means unverified.
+`partial` means partial. Nothing here is inflated.
+
+---
+
+## Questions
+
+Open an issue at github.com/coreyalejandro/the-living-constitution-2.0
+or reach out directly through the contact in `docs/WHY-TLC.md`.

@@ -181,6 +181,7 @@ function drawModuleList() {
 // ── HELP ──────────────────────────────────────────────────────────────────────
 function drawHelp() {
   const cmds = [
+    ['/setup',           'First-time setup wizard — start here if you are new'],
     ['/modules',         'List all registered modules and their status'],
     ['/health',          'Run tlc-health check and show result'],
     ['/work <MODULE>',   'Start a governed session on a module'],
@@ -411,6 +412,16 @@ async function dispatch(line) {
         break;
       }
 
+
+      case 'setup': {
+        const setupPath = join(ROOT, 'scripts', 'tlc-setup.mjs');
+        print(COLORS.muted, 'Launching setup wizard...');
+        rl.close();
+        const { spawnSync } = await import('child_process');
+        spawnSync('node', [setupPath], { stdio: 'inherit' });
+        process.exit(0);
+        break;
+      }
 
       case 'council': {
         const question = args.slice(1).join(' ').trim();
