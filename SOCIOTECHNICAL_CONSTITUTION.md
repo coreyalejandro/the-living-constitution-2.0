@@ -940,6 +940,72 @@ instruction files may not be linked from any README, onboarding guide, or public
 
 ---
 
+## ARTICLE XVII — TLC CORE CONSTITUTION
+
+### Section 17.1 — Ratification
+
+The TLC Core Constitution v1.0, located at
+`constitutions/core/TLC_Core_Constitution_v1.0.md`, is hereby ratified
+as a governing document of TLC 2.0 and incorporated by reference into
+this Sociotechnical Constitution.
+
+The Core Constitution defines the normative vocabulary of TLC. Every term
+defined there is authoritative within this system. Where this Sociotechnical
+Constitution uses a term also defined in the Core Constitution, the Core
+Constitution definition governs.
+
+### Section 17.2 — Inheritance Rule
+
+Every domain constitution loaded into TLC Runtime inherits the Core
+Constitution. Domain constitutions may extend upward. They may not lower
+any baseline defined in the Core Constitution.
+
+This Sociotechnical Constitution is itself bound by the Core Constitution.
+No Article here may be amended in a way that weakens a Core Constitution
+baseline.
+
+### Section 17.3 — Covered Definitions
+
+The following terms are now formally defined in the Core Constitution and
+governed by it everywhere they appear in TLC:
+
+| Term | Core Constitution Article |
+|---|---|
+| Truth-State (PROPOSED / SPECIFIED / IMPLEMENTED / VERIFIED / VALIDATED / DEPLOYED / RETRACTED) | Article I |
+| Evidence / Evidence Hierarchy (E0–E5) | Article II |
+| Verification vs. Validation / V&T Protocol | Article III |
+| Tier-1 Quality / Tier1QualityProfile | Article IV |
+| Definition of Done | Article V |
+| Neurodivergent-First (vs. Neurodivergent-Friendly) | Article VI |
+| High-Clarity Instruction Protocol (HCIP) | Article VII |
+| Narrative-First / NarrativeFirstProtocol | Article VIII |
+| Scope / Scope States | Article IX |
+| Ambiguity (Resolvable vs. Unresolvable) | Article X |
+| First-Class | Article XI |
+| Golden / Golden Artifact | Article XII |
+| Cognitive Load | Article XIII |
+| Trust (System Trust) | Article XIV |
+
+### Section 17.4 — Invariant I17
+
+**I17 — Core Constitution Inheritance**
+
+Any domain constitution that is staged for deployment inside TLC Runtime
+must declare a `coreConstitutionVersion` field in its
+`CoreConstitutionContract` implementation, and that version must match
+a ratified Core Constitution document in `constitutions/core/`.
+
+A domain constitution that does not declare Core Constitution inheritance
+may not enter DEPLOYED status. The pre-commit hook enforces this check.
+
+### Section 17.5 — TypeScript Contract
+
+The TypeScript interfaces for all Core Constitution concepts are defined in
+`src/interfaces/core-constitution.ts`. All domain constitution implementations
+must be compatible with these types.
+
+---
+
 ## AMENDMENT LOG
 
 
@@ -948,6 +1014,7 @@ instruction files may not be linked from any README, onboarding guide, or public
 | 2026-06-17 | All | Initial ratification of Articles I-IX | TLC 2.0 build | First formal version; SOCIOTECHNICAL_CONSTITUTION.md previously empty |
 | 2026-06-17 | X-XV | Added enterprise, production, privacy, AI governance, installability, shareability articles | TLC 2.0 build | Canonical conditions for public distribution and enterprise adoption |
 | 2026-06-17 | XVI | Added Article XVI — Default Directions Standard | TLC 2.0 build | R1–R16 neurodivergent-first instruction rules; I16 invariant; enforcement via validate-instructions.mjs; research basis: Redish 2012, Banda & Grimmett 2008, Forbes et al. 2009, Hartley & Allen 2014, Horder et al. 2014, Rogers et al. 2006 |
+| 2026-06-21 | XVII | Added Article XVII — TLC Core Constitution ratification | TLC 2.0 build | Ratifies constitutions/core/TLC_Core_Constitution_v1.0.md; codifies 14 formal definitions (Truth-State, Evidence, V&T, Tier-1 Quality, Done, Neurodivergent-First, HCIP, Narrative-First, Scope, Ambiguity, First-Class, Golden, Cognitive Load, Trust); adds I17 invariant; TypeScript interfaces in src/interfaces/core-constitution.ts |
 
 ---
 

@@ -1029,5 +1029,23 @@
       "CONSTITUTION-ENGINEERING"
     ],
     "generalizability_proof": true
+  },
+  "CORE-CONSTITUTION": {
+    "id": "CORE-CONSTITUTION",
+    "name": "TLC Core Constitution",
+    "status": "working",
+    "layer": 0,
+    "description": "The normative vocabulary of TLC. Loaded by every deployment before any domain constitution. Defines 14 formal concepts: Truth-State, Evidence, V&T Protocol, Tier-1 Quality, Definition of Done, Neurodivergent-First, HCIP, Narrative-First, Scope, Ambiguity, First-Class, Golden, Cognitive Load, System Trust.",
+    "paper": "constitutions/core/TLC_Core_Constitution_v1.0.md",
+    "typescript_interfaces": "src/interfaces/core-constitution.ts",
+    "central_claim": "Every TLC domain constitution inherits this vocabulary. Baselines cannot be lowered.",
+    "depends_on": [],
+    "inherited_by": [
+      "EIGHT-WONDERS-CONSTITUTION",
+      "INSTRUCTIONAL-INTEGRITY",
+      "TLC-RUNTIME"
+    ],
+    "ratified": "2026-06-21",
+    "truth_state": "SPECIFIED"
   }
 }
