@@ -40,6 +40,9 @@
     "tlc:health": "node scripts/tlc-health.mjs",
     "tlc:audit-retention": "node scripts/tlc-audit-retention.mjs",
     "tlc:setup": "node scripts/tlc-setup.mjs",
+    "evidence:test": "node --test src/core/evidence-chain.test.mjs",
+    "evidence:verify": "node src/core/evidence-chain.mjs verify evidence/signed-demo/governance.jsonl evidence/signed-demo/public-key.pem",
+    "evidence:root": "node src/core/evidence-chain.mjs root evidence/signed-demo/governance.jsonl",
     "tlc": "node scripts/tlc.mjs"
   },
   "keywords": [
