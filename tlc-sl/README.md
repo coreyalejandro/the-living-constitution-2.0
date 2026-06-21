@@ -58,7 +58,7 @@ PASS  INV-001  safety holds over 8 reachable states; 1/2 guards proven necessary
 
 ## The invariants shipped
 
-The full Article VIII set is now expressed in TLC-SL — **21 invariants**, all verified by the
+The full Article VIII set plus INV-060 (Article VII/X, break-glass) is now in TLC-SL — **22 invariants**, all verified by the
 in-process checker (`npm run tlc:sl`). Grouped by constitution section:
 
 | Section | Invariants |
@@ -180,8 +180,8 @@ tlc-sl/
 
 | Field | Value |
 |---|---|
-| **What** | A specification language compiling one invariant definition to runtime enforcement, an in-process exhaustive model check, and a TLA+ export. The full Article VIII set — 21 invariants — is shipped. |
-| **True** | Parser, checker (safety + necessity), JS target, Policy Engine integration, conformance report, and evidence recording all run; the node:test suite passes; 21/21 invariants verified by the in-process checker. Commands: `npm run tlc:sl`, `npm run tlc:sl:test`. |
+| **What** | A specification language compiling one invariant definition to runtime enforcement, an in-process exhaustive model check, and a TLA+ export. 22 invariants — the full Article VIII set plus INV-060 (Article VII/X break-glass) — are shipped. |
+| **True** | Parser, checker (safety + necessity), JS target, Policy Engine integration, conformance report, and evidence recording all run; the node:test suite passes; 22/22 invariants verified by the in-process checker. Commands: `npm run tlc:sl`, `npm run tlc:sl:test`. |
 | **Unverified** | TLA+ not run through TLC in the local sandbox (no Java) — but it IS model-checked by TLC in the governance CI (required gate). No Lean target. Checker is exhaustive only over the declared finite models. |
 | **Not Claimed** | See "What this module does NOT claim." Notably not the first governance DSL. |
 | **Functional Status** | PARTIAL — verified core (checker + runtime) is `working`; TLA+ path is `draft`/`unverified`. |

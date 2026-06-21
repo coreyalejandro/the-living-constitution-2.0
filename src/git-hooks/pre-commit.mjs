@@ -94,8 +94,14 @@ if (process.env.TLC_BYPASS_HOOKS === '1') {
   } catch { /* non-fatal — still allow bypass */ }
   console.warn(`${Y}WARN: TLC pre-commit hooks bypassed via TLC_BYPASS_HOOKS=1${X}`);
   console.warn(`${Y}Break-glass event recorded in evidence/bypass-log.jsonl${X}`);
+  // INV-060 (Article VII / X): an UNJUSTIFIED break-glass may not proceed. The attempt is
+  // recorded above (append-only), then blocked. Previously this only warned — which let an
+  // unjustified bypass through. Provide TLC_BYPASS_REASON to proceed.
   if (!process.env.TLC_BYPASS_REASON) {
-    console.warn(`${Y}WARN: No TLC_BYPASS_REASON set. Set it for Article X compliance.${X}`);
+    console.error(`\n${R}${B}COMMIT BLOCKED — unjustified break-glass (INV-060 / Article VII, X)${X}`);
+    console.error(`${R}A break-glass bypass without a justification may not proceed.${X}`);
+    console.error(`${D}Set TLC_BYPASS_REASON="<justification>" to proceed under break-glass, or resolve the violation instead. The unjustified attempt has been recorded to evidence/bypass-log.jsonl.${X}\n`);
+    process.exit(1);
   }
   process.exit(0);
 }

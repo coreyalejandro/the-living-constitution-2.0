@@ -31,7 +31,7 @@ re-runs them on every change.
 
 | Piece | What it guarantees | Verify |
 |---|---|---|
-| **TLC-SL** (`tlc-sl/`) | Each Article VIII invariant (all 21) has one definition that is both enforced at runtime and exhaustively model-checked; the guard on each is proven load-bearing. Closes the spec↔enforcement drift the constitution's V&T statement flagged. | `npm run tlc:sl` → 21/21; `npm run tlc:sl:test` |
+| **TLC-SL** (`tlc-sl/`) | 22 invariants (the full Article VIII set + INV-060, Article VII/X break-glass) each have one definition that is both enforced at runtime and exhaustively model-checked; the guard on each is proven load-bearing. Closes the spec↔enforcement drift the constitution's V&T statement flagged. | `npm run tlc:sl` → 22/22; `npm run tlc:sl:test` |
 | **Evidence Chain v2** (`src/core/evidence-chain.mjs`) | Every evidence entry is Ed25519-signed and Merkle-committed, so a third party can verify the governance record offline with only the public key. | `npm run evidence:test`; `npm run tlc:sl:verify-evidence` |
 | **Probe-Gate** (`probe-gate/`) | No "gate that cannot fail" can masquerade as a test — operationalizes `evidence/GOVERNANCE-HARNESS/VERIFICATION_AND_TRUTH.md`. | `npm run probe-gate:test` |
 | **Governance CI** (`.github/workflows/governance-ci.yml`) | The whole stack re-runs on every push/PR, plus a no-drift check that generated artifacts still match the specs, plus TLC model-checking of the TLA+ exports. | runs on GitHub Actions |
@@ -52,7 +52,7 @@ re-runs them on every change.
 
 ## Honest status
 
-- Verified locally and in CI: TLC-SL checker (21/21), all test suites (35 tests), evidence-chain
+- Verified locally and in CI: TLC-SL checker (22/22), all test suites (35 tests), evidence-chain
   signing/verification, probe-gate.
 - The **TLC model-check job** runs in CI and is a **required gate**: TLC reported "No error" on
   all emitted modules on its first run (TLC Governance CI run #2), so the emitted TLA+ is now

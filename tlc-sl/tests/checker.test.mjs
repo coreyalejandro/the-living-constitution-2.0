@@ -10,7 +10,7 @@ const specDir = fileURLToPath(new URL('../spec', import.meta.url));
 const models = compilePath(specDir).map((c) => c.model);
 
 test('all shipped invariants satisfy their safety property', () => {
-  assert.equal(models.length, 21);
+  assert.equal(models.length, 22);
   for (const m of models) {
     const r = check(m);
     assert.equal(r.ok, true, `${m.id} should hold: ${JSON.stringify(r)}`);
