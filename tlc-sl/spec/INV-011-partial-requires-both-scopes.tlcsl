@@ -1,0 +1,24 @@
+# INV-011 — Partial requires verified and unverified scope (Article VIII.2, II.4)
+# A module at truth_status "partial" must declare BOTH what is verified and what is not.
+
+invariant "INV-011" {
+  title "Partial requires verified and unverified scope"
+  article "VIII.2 / II.4"
+  level BLOCK
+  rationale "A module with truth_status partial must carry both verified_scope and unverified_scope."
+
+  var status           domain { unverified, partial, working }
+  var verified_scope   domain { yes, no }
+  var unverified_scope domain { yes, no }
+
+  init { status = unverified, verified_scope = no, unverified_scope = no }
+
+  op SET_VERIFIED_SCOPE   { guard true  effect { verified_scope = yes } }
+  op SET_UNVERIFIED_SCOPE { guard true  effect { unverified_scope = yes } }
+  op PROMOTE_PARTIAL {
+    guard verified_scope = yes and unverified_scope = yes
+    effect { status = partial }
+  }
+
+  safety status = partial implies (verified_scope = yes and unverified_scope = yes)
+}

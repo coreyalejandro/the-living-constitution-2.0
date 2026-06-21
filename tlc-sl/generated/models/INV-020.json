@@ -1,0 +1,74 @@
+{
+  "id": "INV-020",
+  "title": "Evidence is append-only",
+  "article": "VIII.3 / V.4",
+  "level": "BLOCK",
+  "rationale": "Evidence logs are append-only; existing entries may not be modified or deleted.",
+  "stateVars": [
+    "log"
+  ],
+  "inputVars": [],
+  "domains": {
+    "log": [
+      "intact",
+      "mutated"
+    ]
+  },
+  "initState": {
+    "log": "intact"
+  },
+  "ops": [
+    {
+      "name": "APPEND",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": []
+    },
+    {
+      "name": "MODIFY",
+      "guard": {
+        "t": "lit",
+        "value": false
+      },
+      "effects": [
+        {
+          "var": "log",
+          "expr": {
+            "t": "lit",
+            "value": "mutated"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DELETE",
+      "guard": {
+        "t": "lit",
+        "value": false
+      },
+      "effects": [
+        {
+          "var": "log",
+          "expr": {
+            "t": "lit",
+            "value": "mutated"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "eq",
+    "op": "=",
+    "l": {
+      "t": "var",
+      "name": "log"
+    },
+    "r": {
+      "t": "lit",
+      "value": "intact"
+    }
+  }
+}

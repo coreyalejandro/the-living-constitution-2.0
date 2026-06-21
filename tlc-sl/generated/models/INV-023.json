@@ -1,0 +1,121 @@
+{
+  "id": "INV-023",
+  "title": "PII requires authorization",
+  "article": "VIII.3 / I",
+  "level": "BLOCK",
+  "rationale": "Output containing PII may only be emitted when PII handling is explicitly authorized.",
+  "stateVars": [
+    "leak"
+  ],
+  "inputVars": [
+    "contains_pii",
+    "authorized"
+  ],
+  "domains": {
+    "leak": [
+      "none",
+      "leaked"
+    ],
+    "contains_pii": [
+      "yes",
+      "no"
+    ],
+    "authorized": [
+      "yes",
+      "no"
+    ]
+  },
+  "initState": {
+    "leak": "none"
+  },
+  "ops": [
+    {
+      "name": "EMIT",
+      "guard": {
+        "t": "not",
+        "e": {
+          "t": "and",
+          "l": {
+            "t": "eq",
+            "op": "=",
+            "l": {
+              "t": "var",
+              "name": "contains_pii"
+            },
+            "r": {
+              "t": "lit",
+              "value": "yes"
+            }
+          },
+          "r": {
+            "t": "eq",
+            "op": "=",
+            "l": {
+              "t": "var",
+              "name": "authorized"
+            },
+            "r": {
+              "t": "lit",
+              "value": "no"
+            }
+          }
+        }
+      },
+      "effects": [
+        {
+          "var": "leak",
+          "expr": {
+            "t": "ite",
+            "c": {
+              "t": "and",
+              "l": {
+                "t": "eq",
+                "op": "=",
+                "l": {
+                  "t": "var",
+                  "name": "contains_pii"
+                },
+                "r": {
+                  "t": "lit",
+                  "value": "yes"
+                }
+              },
+              "r": {
+                "t": "eq",
+                "op": "=",
+                "l": {
+                  "t": "var",
+                  "name": "authorized"
+                },
+                "r": {
+                  "t": "lit",
+                  "value": "no"
+                }
+              }
+            },
+            "a": {
+              "t": "lit",
+              "value": "leaked"
+            },
+            "b": {
+              "t": "var",
+              "name": "leak"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "eq",
+    "op": "=",
+    "l": {
+      "t": "var",
+      "name": "leak"
+    },
+    "r": {
+      "t": "lit",
+      "value": "none"
+    }
+  }
+}

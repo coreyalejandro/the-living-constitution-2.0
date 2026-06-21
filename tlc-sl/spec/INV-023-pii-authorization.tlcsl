@@ -1,0 +1,23 @@
+# INV-023 — PII requires authorization (Constitution Article VIII.3, Article I privacy)
+# Output containing PII may only be emitted when PII handling is authorized.
+# 'contains_pii' and 'authorized' are per-action inputs; 'leak' is the protected state.
+
+invariant "INV-023" {
+  title "PII requires authorization"
+  article "VIII.3 / I"
+  level BLOCK
+  rationale "Output containing PII may only be emitted when PII handling is explicitly authorized."
+
+  var leak domain { none, leaked }
+  input contains_pii domain { yes, no }
+  input authorized   domain { yes, no }
+
+  init { leak = none }
+
+  op EMIT {
+    guard not (contains_pii = yes and authorized = no)
+    effect { leak = if (contains_pii = yes and authorized = no) then leaked else leak }
+  }
+
+  safety leak = none
+}

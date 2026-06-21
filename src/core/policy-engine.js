@@ -1,11 +1,20 @@
 export class PolicyEngine {
-  constructor(contract) {
+  /**
+   * @param contract            the active C-RSP contract
+   * @param options.invariants  optional array of TLC-SL invariant evaluators
+   *   (see tlc-sl/src/enforce.mjs#makeEvaluators). Each item is
+   *   { id, level:'BLOCK'|'WARN'|'LOG', evaluate(action) -> { applies, allowed, reason } }.
+   *   When omitted, the engine behaves exactly as before (fully backward compatible).
+   */
+  constructor(contract, options = {}) {
     this.contract = contract;
+    this.invariants = options.invariants || [];
   }
 
   evaluate(action = {}) {
     const halts = [];
     const warnings = [];
+    const reasons = [];
     const role = action.role || 'Unknown';
     const type = action.type || 'UNKNOWN_ACTION';
 
@@ -24,11 +33,25 @@ export class PolicyEngine {
       warnings.push('AC_BLOCKED_PRESENT');
     }
 
+    // TLC-SL constitutional invariants (compiled from the same source the model
+    // checker verifies). Each invariant decides whether this action is permitted.
+    for (const inv of this.invariants) {
+      let result;
+      try { result = inv.evaluate(action); } catch { result = null; }
+      if (result && result.applies && result.allowed === false) {
+        if (result.reason) reasons.push(result.reason);
+        if (inv.level === 'WARN') warnings.push(inv.id);
+        else if (inv.level === 'LOG') { /* observed only */ }
+        else halts.push(inv.id);
+      }
+    }
+
     const decision = halts.length > 0 ? 'BLOCK' : warnings.length > 0 ? 'WARN' : 'ALLOW';
     return {
       decision,
       halts: [...new Set(halts)],
       warnings: [...new Set(warnings)],
+      reasons,
       message: decision === 'ALLOW'
         ? 'Action allowed by Tier-1 local policy checks.'
         : `Action ${decision.toLowerCase()}ed by runtime policy checks.`,

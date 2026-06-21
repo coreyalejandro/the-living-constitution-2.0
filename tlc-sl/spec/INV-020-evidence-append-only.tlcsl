@@ -1,0 +1,22 @@
+# INV-020 — Evidence is append-only (Constitution Article VIII.3, V.4)
+# Evidence log entries may be appended, but never modified or deleted.
+# MODIFY and DELETE carry guard "false": they are categorically denied. The model
+# checker proves that denying them keeps the log intact; the necessity check proves
+# that permitting either one reachably mutates the log (the guard is load-bearing).
+
+invariant "INV-020" {
+  title "Evidence is append-only"
+  article "VIII.3 / V.4"
+  level BLOCK
+  rationale "Evidence logs are append-only; existing entries may not be modified or deleted."
+
+  var log domain { intact, mutated }
+
+  init { log = intact }
+
+  op APPEND { guard true }
+  op MODIFY { guard false  effect { log = mutated } }
+  op DELETE { guard false  effect { log = mutated } }
+
+  safety log = intact
+}

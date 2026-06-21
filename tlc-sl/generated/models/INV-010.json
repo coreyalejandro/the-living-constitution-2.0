@@ -1,0 +1,112 @@
+{
+  "id": "INV-010",
+  "title": "Working requires verified scope",
+  "article": "VIII.2 / II.4",
+  "level": "BLOCK",
+  "rationale": "A module with truth_status working must have a verified_scope (command, output, date).",
+  "stateVars": [
+    "status",
+    "verified_scope"
+  ],
+  "inputVars": [],
+  "domains": {
+    "status": [
+      "unverified",
+      "partial",
+      "working"
+    ],
+    "verified_scope": [
+      "yes",
+      "no"
+    ]
+  },
+  "initState": {
+    "status": "unverified",
+    "verified_scope": "no"
+  },
+  "ops": [
+    {
+      "name": "SET_VERIFIED_SCOPE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "verified_scope",
+          "expr": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PROMOTE_PARTIAL",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "status",
+          "expr": {
+            "t": "lit",
+            "value": "partial"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PROMOTE_WORKING",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "verified_scope"
+        },
+        "r": {
+          "t": "lit",
+          "value": "yes"
+        }
+      },
+      "effects": [
+        {
+          "var": "status",
+          "expr": {
+            "t": "lit",
+            "value": "working"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "status"
+      },
+      "r": {
+        "t": "lit",
+        "value": "working"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "verified_scope"
+      },
+      "r": {
+        "t": "lit",
+        "value": "yes"
+      }
+    }
+  }
+}

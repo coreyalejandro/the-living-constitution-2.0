@@ -1,0 +1,137 @@
+{
+  "id": "INV-001",
+  "title": "Contract before promotion",
+  "article": "VIII.1 / IV.3",
+  "level": "BLOCK",
+  "rationale": "An active module without a bound C-RSP contract may not be promoted to working.",
+  "stateVars": [
+    "contract",
+    "status"
+  ],
+  "inputVars": [],
+  "domains": {
+    "contract": [
+      "none",
+      "active",
+      "frozen"
+    ],
+    "status": [
+      "unverified",
+      "partial",
+      "working"
+    ]
+  },
+  "initState": {
+    "contract": "none",
+    "status": "unverified"
+  },
+  "ops": [
+    {
+      "name": "BIND_CONTRACT",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "contract",
+          "expr": {
+            "t": "lit",
+            "value": "active"
+          }
+        }
+      ]
+    },
+    {
+      "name": "FREEZE_CONTRACT",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "contract"
+        },
+        "r": {
+          "t": "lit",
+          "value": "active"
+        }
+      },
+      "effects": [
+        {
+          "var": "contract",
+          "expr": {
+            "t": "lit",
+            "value": "frozen"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PROMOTE_PARTIAL",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "status",
+          "expr": {
+            "t": "lit",
+            "value": "partial"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PROMOTE_WORKING",
+      "guard": {
+        "t": "eq",
+        "op": "!=",
+        "l": {
+          "t": "var",
+          "name": "contract"
+        },
+        "r": {
+          "t": "lit",
+          "value": "none"
+        }
+      },
+      "effects": [
+        {
+          "var": "status",
+          "expr": {
+            "t": "lit",
+            "value": "working"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "status"
+      },
+      "r": {
+        "t": "lit",
+        "value": "working"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "!=",
+      "l": {
+        "t": "var",
+        "name": "contract"
+      },
+      "r": {
+        "t": "lit",
+        "value": "none"
+      }
+    }
+  }
+}

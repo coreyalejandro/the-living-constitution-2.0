@@ -1,0 +1,114 @@
+{
+  "generated": "2026-06-21T02:50:15.389Z",
+  "rows": [
+    {
+      "id": "INV-001",
+      "title": "Contract before promotion",
+      "article": "VIII.1 / IV.3",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-001-contract-before-promotion.tlcsl",
+      "ops": [
+        "BIND_CONTRACT",
+        "FREEZE_CONTRACT",
+        "PROMOTE_PARTIAL",
+        "PROMOTE_WORKING"
+      ],
+      "safety_ok": true,
+      "states_explored": 8,
+      "guards_total": 2,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_001.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-010",
+      "title": "Working requires verified scope",
+      "article": "VIII.2 / II.4",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-010-working-requires-verified-scope.tlcsl",
+      "ops": [
+        "SET_VERIFIED_SCOPE",
+        "PROMOTE_PARTIAL",
+        "PROMOTE_WORKING"
+      ],
+      "safety_ok": true,
+      "states_explored": 5,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_010.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-011",
+      "title": "Partial requires verified and unverified scope",
+      "article": "VIII.2 / II.4",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-011-partial-requires-both-scopes.tlcsl",
+      "ops": [
+        "SET_VERIFIED_SCOPE",
+        "SET_UNVERIFIED_SCOPE",
+        "PROMOTE_PARTIAL"
+      ],
+      "safety_ok": true,
+      "states_explored": 5,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_011.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-020",
+      "title": "Evidence is append-only",
+      "article": "VIII.3 / V.4",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-020-evidence-append-only.tlcsl",
+      "ops": [
+        "APPEND",
+        "MODIFY",
+        "DELETE"
+      ],
+      "safety_ok": true,
+      "states_explored": 1,
+      "guards_total": 2,
+      "guards_necessary": 2,
+      "tla_export": "tlc-sl/generated/tla/INV_020.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-023",
+      "title": "PII requires authorization",
+      "article": "VIII.3 / I",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-023-pii-authorization.tlcsl",
+      "ops": [
+        "EMIT"
+      ],
+      "safety_ok": true,
+      "states_explored": 1,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_023.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-040",
+      "title": "AI agents may not merge, deploy, push, write production, or promote",
+      "article": "III.2 / VIII.5",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-040-ai-agent-authority.tlcsl",
+      "ops": [
+        "MERGE",
+        "DEPLOY",
+        "PUSH",
+        "WRITE_PRODUCTION",
+        "PROMOTE"
+      ],
+      "safety_ok": true,
+      "states_explored": 1,
+      "guards_total": 5,
+      "guards_necessary": 5,
+      "tla_export": "tlc-sl/generated/tla/INV_040.tla",
+      "tla_checked_by_tlc": false
+    }
+  ]
+}

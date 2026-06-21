@@ -1,0 +1,20 @@
+# INV-010 — Working requires verified scope (Constitution Article VIII.2, II.4)
+# A module at truth_status "working" must carry a verified_scope.
+
+invariant "INV-010" {
+  title "Working requires verified scope"
+  article "VIII.2 / II.4"
+  level BLOCK
+  rationale "A module with truth_status working must have a verified_scope (command, output, date)."
+
+  var status         domain { unverified, partial, working }
+  var verified_scope domain { yes, no }
+
+  init { status = unverified, verified_scope = no }
+
+  op SET_VERIFIED_SCOPE { guard true                 effect { verified_scope = yes } }
+  op PROMOTE_PARTIAL    { guard true                 effect { status = partial } }
+  op PROMOTE_WORKING    { guard verified_scope = yes  effect { status = working } }
+
+  safety status = working implies verified_scope = yes
+}

@@ -1,0 +1,24 @@
+# INV-040 — AI agent authority limit (Constitution Article III.2, VIII.5)
+# An AI agent role may not trigger a merge, deploy, push, production write, or
+# status promotion. 'role' is a per-action input; 'breach' is the protected state.
+# These are hard limits that no instruction can override (Article III.2).
+
+invariant "INV-040" {
+  title "AI agents may not merge, deploy, push, write production, or promote"
+  article "III.2 / VIII.5"
+  level BLOCK
+  rationale "An AI agent role may not trigger a merge, deploy, push, production write, or status promotion."
+
+  var breach domain { ok, violated }
+  input role domain { human, ai_agent }
+
+  init { breach = ok }
+
+  op MERGE            { guard role = human  effect { breach = if role = ai_agent then violated else breach } }
+  op DEPLOY           { guard role = human  effect { breach = if role = ai_agent then violated else breach } }
+  op PUSH             { guard role = human  effect { breach = if role = ai_agent then violated else breach } }
+  op WRITE_PRODUCTION { guard role = human  effect { breach = if role = ai_agent then violated else breach } }
+  op PROMOTE          { guard role = human  effect { breach = if role = ai_agent then violated else breach } }
+
+  safety breach = ok
+}
