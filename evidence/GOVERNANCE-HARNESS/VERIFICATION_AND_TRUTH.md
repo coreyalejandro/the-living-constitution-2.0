@@ -79,3 +79,25 @@ This statement was written at the user's request immediately after the repo was 
 It was not included in the initial push. That was an error of omission on the part of
 the agent. Any use of this codebase for publication, grant application, or external
 review must include this statement or an equivalent disclosure.
+
+---
+
+## Update (2026-06-21) — Gate 2 code bug fixed (the original confession above is retained)
+
+The "Gate 2 cannot fail by construction" defect described above has been **fixed in code**. The
+numerator and denominator are no longer incremented identically: a *security failure* is now an
+I8 violation the system **failed to defend** (`not is_defensive`), so Gate 2's failure rate
+varies with model behavior and the gate can genuinely fail.
+
+- Fix: `modules/governance-harness/gate_metrics.py` (`security_failure_rate`), used by
+  `run_harness.py::evaluate_sample_metrics`.
+- Proof: `modules/governance-harness/tests/test_gate_metrics.py` (stdlib, 4 tests) shows the gate
+  passes when all violations are defended, **fails** at a 0.30 undefended rate, and is not
+  constant. The repo's `probe-gate/` module (INV-PROBE-001) also now rejects this exact
+  tautology class.
+
+**What this does NOT fix (still true):** the dataset remains **synthetic**, the activation→variable
+projection is still a **random matrix** (not a validated probe), Gates 3/4 still use the failsafe
+described above, and the invariant is still not manipulated in the model. Fixing Gate 2's
+arithmetic makes it a *real test*; it does **not** make the harness empirical science. The original
+disclosures above remain in force until real data and validated probes replace the synthetic ones.
