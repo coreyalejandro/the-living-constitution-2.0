@@ -1,0 +1,95 @@
+{
+  "id": "II-004",
+  "title": "Prerequisite before content",
+  "article": "Instructional Integrity / Scaffolding",
+  "level": "BLOCK",
+  "rationale": "A lesson may not present content whose prerequisites the learner has not met.",
+  "stateVars": [
+    "prereq",
+    "content"
+  ],
+  "inputVars": [],
+  "domains": {
+    "prereq": [
+      "unmet",
+      "met"
+    ],
+    "content": [
+      "withheld",
+      "presented"
+    ]
+  },
+  "initState": {
+    "prereq": "unmet",
+    "content": "withheld"
+  },
+  "ops": [
+    {
+      "name": "SATISFY_PREREQUISITE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "prereq",
+          "expr": {
+            "t": "lit",
+            "value": "met"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PRESENT_CONTENT",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "prereq"
+        },
+        "r": {
+          "t": "lit",
+          "value": "met"
+        }
+      },
+      "effects": [
+        {
+          "var": "content",
+          "expr": {
+            "t": "lit",
+            "value": "presented"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "content"
+      },
+      "r": {
+        "t": "lit",
+        "value": "presented"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "prereq"
+      },
+      "r": {
+        "t": "lit",
+        "value": "met"
+      }
+    }
+  }
+}

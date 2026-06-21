@@ -1,0 +1,95 @@
+{
+  "id": "II-001",
+  "title": "Mastery before advance",
+  "article": "Instructional Integrity / Mastery Learning",
+  "level": "BLOCK",
+  "rationale": "A learner may not advance to the next unit without demonstrating mastery of the current one.",
+  "stateVars": [
+    "mastery",
+    "unit"
+  ],
+  "inputVars": [],
+  "domains": {
+    "mastery": [
+      "not_demonstrated",
+      "demonstrated"
+    ],
+    "unit": [
+      "current",
+      "advanced"
+    ]
+  },
+  "initState": {
+    "mastery": "not_demonstrated",
+    "unit": "current"
+  },
+  "ops": [
+    {
+      "name": "DEMONSTRATE_MASTERY",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "mastery",
+          "expr": {
+            "t": "lit",
+            "value": "demonstrated"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ADVANCE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "mastery"
+        },
+        "r": {
+          "t": "lit",
+          "value": "demonstrated"
+        }
+      },
+      "effects": [
+        {
+          "var": "unit",
+          "expr": {
+            "t": "lit",
+            "value": "advanced"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "unit"
+      },
+      "r": {
+        "t": "lit",
+        "value": "advanced"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "mastery"
+      },
+      "r": {
+        "t": "lit",
+        "value": "demonstrated"
+      }
+    }
+  }
+}

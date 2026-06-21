@@ -1,0 +1,95 @@
+{
+  "id": "II-006",
+  "title": "Activate prior knowledge before new instruction",
+  "article": "Instructional Integrity / Merrill First Principles",
+  "level": "WARN",
+  "rationale": "New instruction should not begin before relevant prior knowledge has been activated.",
+  "stateVars": [
+    "activation",
+    "instruction"
+  ],
+  "inputVars": [],
+  "domains": {
+    "activation": [
+      "none",
+      "done"
+    ],
+    "instruction": [
+      "not_started",
+      "started"
+    ]
+  },
+  "initState": {
+    "activation": "none",
+    "instruction": "not_started"
+  },
+  "ops": [
+    {
+      "name": "ACTIVATE_PRIOR_KNOWLEDGE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "activation",
+          "expr": {
+            "t": "lit",
+            "value": "done"
+          }
+        }
+      ]
+    },
+    {
+      "name": "BEGIN_INSTRUCTION",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "activation"
+        },
+        "r": {
+          "t": "lit",
+          "value": "done"
+        }
+      },
+      "effects": [
+        {
+          "var": "instruction",
+          "expr": {
+            "t": "lit",
+            "value": "started"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "instruction"
+      },
+      "r": {
+        "t": "lit",
+        "value": "started"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "activation"
+      },
+      "r": {
+        "t": "lit",
+        "value": "done"
+      }
+    }
+  }
+}

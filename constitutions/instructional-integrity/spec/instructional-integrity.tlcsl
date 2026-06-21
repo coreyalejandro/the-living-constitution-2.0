@@ -1,0 +1,113 @@
+# The Instructional Integrity Constitution (namespace: II-*)
+#
+# A SECOND constitution, authored in TLC-SL, in a domain with no overlap with the TLC
+# governance constitution (INV-*) or the Eight Wonders relational-economy ontology. It exists
+# to demonstrate that the TLC-SL runtime is constitution-agnostic: the same compiler, checker,
+# and Policy Engine that run the governance invariants run these instructional ones, unchanged.
+#
+# Each invariant is grounded in an instructional-systems-design theory.
+
+# II-001 — Mastery before advance (Mastery Learning; Bloom).
+invariant "II-001" {
+  title "Mastery before advance"
+  article "Instructional Integrity / Mastery Learning"
+  level BLOCK
+  rationale "A learner may not advance to the next unit without demonstrating mastery of the current one."
+
+  var mastery domain { not_demonstrated, demonstrated }
+  var unit    domain { current, advanced }
+  init { mastery = not_demonstrated, unit = current }
+
+  op DEMONSTRATE_MASTERY { guard true                  effect { mastery = demonstrated } }
+  op ADVANCE             { guard mastery = demonstrated  effect { unit = advanced } }
+
+  safety unit = advanced implies mastery = demonstrated
+}
+
+# II-002 — Formative feedback before summative (Gagne events 7-9; formative assessment).
+invariant "II-002" {
+  title "Formative feedback before summative assessment"
+  article "Instructional Integrity / Gagne Events"
+  level BLOCK
+  rationale "A summative assessment may not be administered before the learner has received formative feedback."
+
+  var formative domain { absent, given }
+  var summative domain { not_taken, taken }
+  init { formative = absent, summative = not_taken }
+
+  op GIVE_FORMATIVE { guard true              effect { formative = given } }
+  op TAKE_SUMMATIVE { guard formative = given   effect { summative = taken } }
+
+  safety summative = taken implies formative = given
+}
+
+# II-003 — Cognitive load ceiling (Sweller, Cognitive Load Theory).
+invariant "II-003" {
+  title "Cognitive load ceiling requires segmentation"
+  article "Instructional Integrity / Cognitive Load Theory"
+  level BLOCK
+  rationale "A step whose combined intrinsic and extraneous load exceeds the ceiling may not be presented unless it is segmented."
+
+  var breach domain { ok, violated }
+  input load      domain { within, exceeds }
+  input segmented domain { yes, no }
+  init { breach = ok }
+
+  op PRESENT_STEP {
+    guard not (load = exceeds and segmented = no)
+    effect { breach = if (load = exceeds and segmented = no) then violated else breach }
+  }
+
+  safety breach = ok
+}
+
+# II-004 — Prerequisite before content (scaffolding / dependency ordering).
+invariant "II-004" {
+  title "Prerequisite before content"
+  article "Instructional Integrity / Scaffolding"
+  level BLOCK
+  rationale "A lesson may not present content whose prerequisites the learner has not met."
+
+  var prereq  domain { unmet, met }
+  var content domain { withheld, presented }
+  init { prereq = unmet, content = withheld }
+
+  op SATISFY_PREREQUISITE { guard true          effect { prereq = met } }
+  op PRESENT_CONTENT      { guard prereq = met     effect { content = presented } }
+
+  safety content = presented implies prereq = met
+}
+
+# II-005 — Accessibility required (Universal Design for Learning; ties to Article XVI).
+invariant "II-005" {
+  title "Accessible rendering required before delivery"
+  article "Instructional Integrity / UDL"
+  level BLOCK
+  rationale "Instructional content may not be delivered to a learner without an accessibility-conformant rendering available."
+
+  var a11y     domain { absent, present }
+  var delivery domain { blocked, delivered }
+  init { a11y = absent, delivery = blocked }
+
+  op ADD_ACCESSIBLE_RENDERING { guard true            effect { a11y = present } }
+  op DELIVER                  { guard a11y = present     effect { delivery = delivered } }
+
+  safety delivery = delivered implies a11y = present
+}
+
+# II-006 — Activation before new instruction (Merrill activation principle; Gagne event 3).
+invariant "II-006" {
+  title "Activate prior knowledge before new instruction"
+  article "Instructional Integrity / Merrill First Principles"
+  level WARN
+  rationale "New instruction should not begin before relevant prior knowledge has been activated."
+
+  var activation  domain { none, done }
+  var instruction domain { not_started, started }
+  init { activation = none, instruction = not_started }
+
+  op ACTIVATE_PRIOR_KNOWLEDGE { guard true             effect { activation = done } }
+  op BEGIN_INSTRUCTION        { guard activation = done   effect { instruction = started } }
+
+  safety instruction = started implies activation = done
+}

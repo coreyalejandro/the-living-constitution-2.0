@@ -1,0 +1,95 @@
+{
+  "id": "II-002",
+  "title": "Formative feedback before summative assessment",
+  "article": "Instructional Integrity / Gagne Events",
+  "level": "BLOCK",
+  "rationale": "A summative assessment may not be administered before the learner has received formative feedback.",
+  "stateVars": [
+    "formative",
+    "summative"
+  ],
+  "inputVars": [],
+  "domains": {
+    "formative": [
+      "absent",
+      "given"
+    ],
+    "summative": [
+      "not_taken",
+      "taken"
+    ]
+  },
+  "initState": {
+    "formative": "absent",
+    "summative": "not_taken"
+  },
+  "ops": [
+    {
+      "name": "GIVE_FORMATIVE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "formative",
+          "expr": {
+            "t": "lit",
+            "value": "given"
+          }
+        }
+      ]
+    },
+    {
+      "name": "TAKE_SUMMATIVE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "formative"
+        },
+        "r": {
+          "t": "lit",
+          "value": "given"
+        }
+      },
+      "effects": [
+        {
+          "var": "summative",
+          "expr": {
+            "t": "lit",
+            "value": "taken"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "summative"
+      },
+      "r": {
+        "t": "lit",
+        "value": "taken"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "formative"
+      },
+      "r": {
+        "t": "lit",
+        "value": "given"
+      }
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "id": "II-005",
+  "title": "Accessible rendering required before delivery",
+  "article": "Instructional Integrity / UDL",
+  "level": "BLOCK",
+  "rationale": "Instructional content may not be delivered to a learner without an accessibility-conformant rendering available.",
+  "stateVars": [
+    "a11y",
+    "delivery"
+  ],
+  "inputVars": [],
+  "domains": {
+    "a11y": [
+      "absent",
+      "present"
+    ],
+    "delivery": [
+      "blocked",
+      "delivered"
+    ]
+  },
+  "initState": {
+    "a11y": "absent",
+    "delivery": "blocked"
+  },
+  "ops": [
+    {
+      "name": "ADD_ACCESSIBLE_RENDERING",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "a11y",
+          "expr": {
+            "t": "lit",
+            "value": "present"
+          }
+        }
+      ]
+    },
+    {
+      "name": "DELIVER",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "a11y"
+        },
+        "r": {
+          "t": "lit",
+          "value": "present"
+        }
+      },
+      "effects": [
+        {
+          "var": "delivery",
+          "expr": {
+            "t": "lit",
+            "value": "delivered"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "delivery"
+      },
+      "r": {
+        "t": "lit",
+        "value": "delivered"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "a11y"
+      },
+      "r": {
+        "t": "lit",
+        "value": "present"
+      }
+    }
+  }
+}
