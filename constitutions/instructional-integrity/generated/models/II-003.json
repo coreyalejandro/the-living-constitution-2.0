@@ -1,0 +1,121 @@
+{
+  "id": "II-003",
+  "title": "Cognitive load ceiling requires segmentation",
+  "article": "Instructional Integrity / Cognitive Load Theory",
+  "level": "BLOCK",
+  "rationale": "A step whose combined intrinsic and extraneous load exceeds the ceiling may not be presented unless it is segmented.",
+  "stateVars": [
+    "breach"
+  ],
+  "inputVars": [
+    "load",
+    "segmented"
+  ],
+  "domains": {
+    "breach": [
+      "ok",
+      "violated"
+    ],
+    "load": [
+      "within",
+      "exceeds"
+    ],
+    "segmented": [
+      "yes",
+      "no"
+    ]
+  },
+  "initState": {
+    "breach": "ok"
+  },
+  "ops": [
+    {
+      "name": "PRESENT_STEP",
+      "guard": {
+        "t": "not",
+        "e": {
+          "t": "and",
+          "l": {
+            "t": "eq",
+            "op": "=",
+            "l": {
+              "t": "var",
+              "name": "load"
+            },
+            "r": {
+              "t": "lit",
+              "value": "exceeds"
+            }
+          },
+          "r": {
+            "t": "eq",
+            "op": "=",
+            "l": {
+              "t": "var",
+              "name": "segmented"
+            },
+            "r": {
+              "t": "lit",
+              "value": "no"
+            }
+          }
+        }
+      },
+      "effects": [
+        {
+          "var": "breach",
+          "expr": {
+            "t": "ite",
+            "c": {
+              "t": "and",
+              "l": {
+                "t": "eq",
+                "op": "=",
+                "l": {
+                  "t": "var",
+                  "name": "load"
+                },
+                "r": {
+                  "t": "lit",
+                  "value": "exceeds"
+                }
+              },
+              "r": {
+                "t": "eq",
+                "op": "=",
+                "l": {
+                  "t": "var",
+                  "name": "segmented"
+                },
+                "r": {
+                  "t": "lit",
+                  "value": "no"
+                }
+              }
+            },
+            "a": {
+              "t": "lit",
+              "value": "violated"
+            },
+            "b": {
+              "t": "var",
+              "name": "breach"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "eq",
+    "op": "=",
+    "l": {
+      "t": "var",
+      "name": "breach"
+    },
+    "r": {
+      "t": "lit",
+      "value": "ok"
+    }
+  }
+}

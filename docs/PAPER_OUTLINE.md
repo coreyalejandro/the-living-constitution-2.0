@@ -63,8 +63,14 @@ evidence chain — together with an explicit honesty discipline (truth_status, c
 - Verification: exhaustive BFS over the reachable state space proves the safety property; the
   **guard-necessity** check removes each guard and confirms a violation becomes reachable, proving
   the guard is load-bearing (and honestly reporting guards that are not).
-- Result: the full Article VIII set (21 invariants) compiles and verifies; `conformance/report.md`
-  is the generated spec→enforcement→proof map.
+- Result: the full Article VIII set + INV-060 (22 invariants) compiles and verifies;
+  `conformance/report.md` is the generated spec→enforcement→proof map.
+- **Platform generality (earned, not asserted):** the runtime is constitution-agnostic. A second,
+  domain-disjoint constitution — the **Instructional Integrity** constitution (`II-*`: mastery
+  learning, Gagné, Cognitive Load Theory, scaffolding, UDL, Merrill) — loads and model-checks
+  through the identical runtime with no code change (`constitutions/`, `npm run constitutions:check`
+  → governance 22/22, instructional 6/6, namespace overlap 0). This separates the *runtime* from any
+  *constitution* from any *domain*, so a critique of one layer does not invalidate the others.
 
 ## 4. Independently-verifiable evidence (Evidence Chain v2)
 

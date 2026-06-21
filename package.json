@@ -53,6 +53,8 @@
     "probe-gate:test": "node --test probe-gate/tests/*.test.mjs",
     "probe-gate:check": "node probe-gate/src/cli.mjs",
     "test:integration": "node --test tests/integration/*.test.mjs",
+    "ii:check": "node tlc-sl/src/compile.mjs constitutions/instructional-integrity/spec --target check",
+    "constitutions:check": "node constitutions/check-platform.mjs",
     "tlc": "node scripts/tlc.mjs"
   },
   "keywords": [

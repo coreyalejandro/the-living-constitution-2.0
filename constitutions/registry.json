@@ -1,0 +1,32 @@
+{
+  "platform": "TLC-SL runtime",
+  "description": "TLC is a constitutional runtime that executes multiple, independent epistemic constitutions through one Constitution Interface (TLC-SL). A constitution is a directory of .tlcsl invariants; the runtime (compiler, in-process checker, TLA+ emitter, Policy Engine enforcer) is constitution-agnostic and is not modified to load a new one.",
+  "interface": {
+    "name": "TLC-SL Constitution Interface",
+    "source": "tlc-sl/src/ (compile.mjs, parser.mjs, model.mjs, checker.mjs, interp.mjs, enforce.mjs, targets/)",
+    "contract": "each invariant declares id, level (BLOCK|WARN|LOG), finite-domain state + per-action inputs, guarded transitions, and a safety predicate; it compiles to runtime enforcement, an exhaustive model check, and a TLA+ export"
+  },
+  "namespaces": {
+    "INV-*": "TLC governance constitution (sociotechnical runtime governance)",
+    "II-*": "Instructional Integrity constitution (instructional systems design)",
+    "W-*": "RECOMMENDED future rename for the Eight Wonders relational-economy ontology (currently labelled I1_..I8_ in the governance-harness probes, which collides with the governance I1-I8 numbering)"
+  },
+  "constitutions": [
+    {
+      "id": "tlc-governance",
+      "title": "The TLC Governance Constitution",
+      "namespace": "INV-*",
+      "spec": "tlc-sl/spec",
+      "domain": "sociotechnical runtime governance (Constitution Article VIII + Article VII/X break-glass)",
+      "invariants": 22
+    },
+    {
+      "id": "instructional-integrity",
+      "title": "The Instructional Integrity Constitution",
+      "namespace": "II-*",
+      "spec": "constitutions/instructional-integrity/spec",
+      "domain": "instructional systems design (mastery learning, Gagne, Cognitive Load Theory, scaffolding, UDL, Merrill)",
+      "invariants": 6
+    }
+  ]
+}

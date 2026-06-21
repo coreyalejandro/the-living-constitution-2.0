@@ -36,15 +36,19 @@ jobs:
       - name: Cross-layer governance integration tests
         run: node --test tests/integration/*.test.mjs
 
+      - name: Platform check — multiple constitutions through one runtime
+        run: node constitutions/check-platform.mjs
+
       - name: Verify the signed TLC-SL evidence against its committed public key
         run: node src/core/evidence-chain.mjs verify evidence/TLC-SL/verification.signed.jsonl evidence/TLC-SL/evidence-public-key.pem
 
       - name: No-drift — regenerate targets and fail if they differ from what's committed
         run: |
           node tlc-sl/src/compile.mjs --target all --quiet
-          if ! git diff --quiet -- tlc-sl/generated; then
-            echo "::error::Generated TLC-SL targets are out of date. Run 'npm run tlc:sl:compile' and commit."
-            git --no-pager diff --stat -- tlc-sl/generated
+          node tlc-sl/src/compile.mjs constitutions/instructional-integrity/spec --target all --out constitutions/instructional-integrity --quiet
+          if ! git diff --quiet -- tlc-sl/generated constitutions/instructional-integrity/generated; then
+            echo "::error::Generated constitution targets are out of date. Run 'npm run tlc:sl:compile' (and the instructional --out compile) and commit."
+            git --no-pager diff --stat -- tlc-sl/generated constitutions/instructional-integrity/generated
             exit 1
           fi
           echo "Generated targets match the specs."
