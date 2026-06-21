@@ -1,0 +1,95 @@
+{
+  "id": "INV-002",
+  "title": "Contract activation requires schema validation",
+  "article": "VIII.1",
+  "level": "BLOCK",
+  "rationale": "A C-RSP contract may not be marked Active until all required fields pass schema validation.",
+  "stateVars": [
+    "schema",
+    "contract"
+  ],
+  "inputVars": [],
+  "domains": {
+    "schema": [
+      "invalid",
+      "valid"
+    ],
+    "contract": [
+      "draft",
+      "active"
+    ]
+  },
+  "initState": {
+    "schema": "invalid",
+    "contract": "draft"
+  },
+  "ops": [
+    {
+      "name": "VALIDATE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "schema",
+          "expr": {
+            "t": "lit",
+            "value": "valid"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ACTIVATE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "schema"
+        },
+        "r": {
+          "t": "lit",
+          "value": "valid"
+        }
+      },
+      "effects": [
+        {
+          "var": "contract",
+          "expr": {
+            "t": "lit",
+            "value": "active"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "contract"
+      },
+      "r": {
+        "t": "lit",
+        "value": "active"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "schema"
+      },
+      "r": {
+        "t": "lit",
+        "value": "valid"
+      }
+    }
+  }
+}

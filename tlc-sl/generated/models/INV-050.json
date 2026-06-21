@@ -1,0 +1,95 @@
+{
+  "id": "INV-050",
+  "title": "Working promotion requires a visual understanding layer",
+  "article": "VIII.6 / VI.3",
+  "level": "BLOCK",
+  "rationale": "A governance_core or public_portfolio module promoted to working without a visual understanding layer triggers a promotion block.",
+  "stateVars": [
+    "visual",
+    "status"
+  ],
+  "inputVars": [],
+  "domains": {
+    "visual": [
+      "absent",
+      "present"
+    ],
+    "status": [
+      "notworking",
+      "working"
+    ]
+  },
+  "initState": {
+    "visual": "absent",
+    "status": "notworking"
+  },
+  "ops": [
+    {
+      "name": "ADD_VISUAL",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "visual",
+          "expr": {
+            "t": "lit",
+            "value": "present"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PROMOTE_WORKING",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "visual"
+        },
+        "r": {
+          "t": "lit",
+          "value": "present"
+        }
+      },
+      "effects": [
+        {
+          "var": "status",
+          "expr": {
+            "t": "lit",
+            "value": "working"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "status"
+      },
+      "r": {
+        "t": "lit",
+        "value": "working"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "visual"
+      },
+      "r": {
+        "t": "lit",
+        "value": "present"
+      }
+    }
+  }
+}

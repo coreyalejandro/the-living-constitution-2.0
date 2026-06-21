@@ -1,0 +1,85 @@
+# Article VIII.3 / VIII.4 — Evidence and V&T invariants
+# (INV-021, INV-022, INV-030, INV-031, INV-032)
+
+invariant "INV-021" {
+  title "Every halt event produces an evidence entry"
+  article "VIII.3"
+  level BLOCK
+  rationale "Every halt event must produce a corresponding evidence log entry (evidence is recorded before the halt is raised)."
+
+  var logged domain { no, yes }
+  var halted domain { no, yes }
+  init { logged = no, halted = no }
+
+  op LOG_HALT_EVIDENCE { guard true        effect { logged = yes } }
+  op RAISE_HALT        { guard logged = yes  effect { halted = yes } }
+
+  safety halted = yes implies logged = yes
+}
+
+invariant "INV-022" {
+  title "Every break-glass override is logged"
+  article "VIII.3"
+  level BLOCK
+  rationale "Every break-glass override must be logged with the approving role and reason (logged before the override takes effect)."
+
+  var logged     domain { no, yes }
+  var overridden domain { no, yes }
+  init { logged = no, overridden = no }
+
+  op LOG_OVERRIDE { guard true        effect { logged = yes } }
+  op OVERRIDE     { guard logged = yes  effect { overridden = yes } }
+
+  safety overridden = yes implies logged = yes
+}
+
+invariant "INV-030" {
+  title "AC completion requires a V&T statement"
+  article "VIII.4 / V.1"
+  level BLOCK
+  rationale "An acceptance criterion may not be marked complete without a V&T statement (what, true, unverified)."
+
+  var vnt domain { absent, present }
+  var ac  domain { open, complete }
+  init { vnt = absent, ac = open }
+
+  op WRITE_VNT { guard true            effect { vnt = present } }
+  op COMPLETE  { guard vnt = present     effect { ac = complete } }
+
+  safety ac = complete implies vnt = present
+}
+
+invariant "INV-031" {
+  title "Empty unverified on an unrun suite is a violation"
+  article "VIII.4 / V.2"
+  level BLOCK
+  rationale "A V&T statement with an empty unverified field on an unrun test suite is a violation."
+
+  var breach domain { ok, violated }
+  input suite_run  domain { yes, no }
+  input unverified domain { empty, filled }
+  init { breach = ok }
+
+  op PUBLISH_VNT {
+    guard not (suite_run = no and unverified = empty)
+    effect { breach = if (suite_run = no and unverified = empty) then violated else breach }
+  }
+
+  safety breach = ok
+}
+
+invariant "INV-032" {
+  title "V&T governance_state matches artifact lifecycle"
+  article "VIII.4"
+  level WARN
+  rationale "V&T governance_state must match the lifecycle state of the artifact it describes (advanced and regressed atomically)."
+
+  var gov  domain { draft, active }
+  var life domain { draft, active }
+  init { gov = draft, life = draft }
+
+  op ADVANCE { guard true  effect { gov = active, life = active } }
+  op REGRESS { guard true  effect { gov = draft, life = draft } }
+
+  safety gov = life
+}

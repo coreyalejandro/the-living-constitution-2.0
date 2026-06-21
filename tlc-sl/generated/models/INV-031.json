@@ -1,0 +1,121 @@
+{
+  "id": "INV-031",
+  "title": "Empty unverified on an unrun suite is a violation",
+  "article": "VIII.4 / V.2",
+  "level": "BLOCK",
+  "rationale": "A V&T statement with an empty unverified field on an unrun test suite is a violation.",
+  "stateVars": [
+    "breach"
+  ],
+  "inputVars": [
+    "suite_run",
+    "unverified"
+  ],
+  "domains": {
+    "breach": [
+      "ok",
+      "violated"
+    ],
+    "suite_run": [
+      "yes",
+      "no"
+    ],
+    "unverified": [
+      "empty",
+      "filled"
+    ]
+  },
+  "initState": {
+    "breach": "ok"
+  },
+  "ops": [
+    {
+      "name": "PUBLISH_VNT",
+      "guard": {
+        "t": "not",
+        "e": {
+          "t": "and",
+          "l": {
+            "t": "eq",
+            "op": "=",
+            "l": {
+              "t": "var",
+              "name": "suite_run"
+            },
+            "r": {
+              "t": "lit",
+              "value": "no"
+            }
+          },
+          "r": {
+            "t": "eq",
+            "op": "=",
+            "l": {
+              "t": "var",
+              "name": "unverified"
+            },
+            "r": {
+              "t": "lit",
+              "value": "empty"
+            }
+          }
+        }
+      },
+      "effects": [
+        {
+          "var": "breach",
+          "expr": {
+            "t": "ite",
+            "c": {
+              "t": "and",
+              "l": {
+                "t": "eq",
+                "op": "=",
+                "l": {
+                  "t": "var",
+                  "name": "suite_run"
+                },
+                "r": {
+                  "t": "lit",
+                  "value": "no"
+                }
+              },
+              "r": {
+                "t": "eq",
+                "op": "=",
+                "l": {
+                  "t": "var",
+                  "name": "unverified"
+                },
+                "r": {
+                  "t": "lit",
+                  "value": "empty"
+                }
+              }
+            },
+            "a": {
+              "t": "lit",
+              "value": "violated"
+            },
+            "b": {
+              "t": "var",
+              "name": "breach"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "eq",
+    "op": "=",
+    "l": {
+      "t": "var",
+      "name": "breach"
+    },
+    "r": {
+      "t": "lit",
+      "value": "ok"
+    }
+  }
+}

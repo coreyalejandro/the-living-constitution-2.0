@@ -1,0 +1,83 @@
+{
+  "id": "INV-041",
+  "title": "Unauthorized break-glass is blocked",
+  "article": "VIII.5",
+  "level": "BLOCK",
+  "rationale": "A break-glass override by an unauthorized role is blocked and logged as a security event.",
+  "stateVars": [
+    "breach"
+  ],
+  "inputVars": [
+    "role"
+  ],
+  "domains": {
+    "breach": [
+      "ok",
+      "violated"
+    ],
+    "role": [
+      "authorized",
+      "unauthorized"
+    ]
+  },
+  "initState": {
+    "breach": "ok"
+  },
+  "ops": [
+    {
+      "name": "OVERRIDE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "role"
+        },
+        "r": {
+          "t": "lit",
+          "value": "authorized"
+        }
+      },
+      "effects": [
+        {
+          "var": "breach",
+          "expr": {
+            "t": "ite",
+            "c": {
+              "t": "eq",
+              "op": "=",
+              "l": {
+                "t": "var",
+                "name": "role"
+              },
+              "r": {
+                "t": "lit",
+                "value": "unauthorized"
+              }
+            },
+            "a": {
+              "t": "lit",
+              "value": "violated"
+            },
+            "b": {
+              "t": "var",
+              "name": "breach"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "eq",
+    "op": "=",
+    "l": {
+      "t": "var",
+      "name": "breach"
+    },
+    "r": {
+      "t": "lit",
+      "value": "ok"
+    }
+  }
+}

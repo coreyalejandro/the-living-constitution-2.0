@@ -1,0 +1,95 @@
+{
+  "id": "INV-003",
+  "title": "Step completion requires human approval",
+  "article": "VIII.1 / IV.4",
+  "level": "BLOCK",
+  "rationale": "A contract step may not be marked complete without a human approval record in the evidence log.",
+  "stateVars": [
+    "approval",
+    "step"
+  ],
+  "inputVars": [],
+  "domains": {
+    "approval": [
+      "absent",
+      "present"
+    ],
+    "step": [
+      "open",
+      "complete"
+    ]
+  },
+  "initState": {
+    "approval": "absent",
+    "step": "open"
+  },
+  "ops": [
+    {
+      "name": "APPROVE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "approval",
+          "expr": {
+            "t": "lit",
+            "value": "present"
+          }
+        }
+      ]
+    },
+    {
+      "name": "COMPLETE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "approval"
+        },
+        "r": {
+          "t": "lit",
+          "value": "present"
+        }
+      },
+      "effects": [
+        {
+          "var": "step",
+          "expr": {
+            "t": "lit",
+            "value": "complete"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "step"
+      },
+      "r": {
+        "t": "lit",
+        "value": "complete"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "approval"
+      },
+      "r": {
+        "t": "lit",
+        "value": "present"
+      }
+    }
+  }
+}

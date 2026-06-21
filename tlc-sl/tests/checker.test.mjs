@@ -9,8 +9,8 @@ import { parse } from '../src/parser.mjs';
 const specDir = fileURLToPath(new URL('../spec', import.meta.url));
 const models = compilePath(specDir).map((c) => c.model);
 
-test('all six shipped invariants satisfy their safety property', () => {
-  assert.equal(models.length, 6);
+test('all shipped invariants satisfy their safety property', () => {
+  assert.equal(models.length, 21);
   for (const m of models) {
     const r = check(m);
     assert.equal(r.ok, true, `${m.id} should hold: ${JSON.stringify(r)}`);

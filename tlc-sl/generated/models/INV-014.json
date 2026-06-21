@@ -1,0 +1,135 @@
+{
+  "id": "INV-014",
+  "title": "Quarantined modules appear in no public route",
+  "article": "VIII.2 / I.2",
+  "level": "BLOCK",
+  "rationale": "A module with truth_status quarantined may not appear in any public route.",
+  "stateVars": [
+    "qstate",
+    "route"
+  ],
+  "inputVars": [],
+  "domains": {
+    "qstate": [
+      "normal",
+      "quarantined"
+    ],
+    "route": [
+      "private",
+      "public"
+    ]
+  },
+  "initState": {
+    "qstate": "normal",
+    "route": "private"
+  },
+  "ops": [
+    {
+      "name": "QUARANTINE",
+      "guard": {
+        "t": "eq",
+        "op": "!=",
+        "l": {
+          "t": "var",
+          "name": "route"
+        },
+        "r": {
+          "t": "lit",
+          "value": "public"
+        }
+      },
+      "effects": [
+        {
+          "var": "qstate",
+          "expr": {
+            "t": "lit",
+            "value": "quarantined"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UNQUARANTINE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "qstate",
+          "expr": {
+            "t": "lit",
+            "value": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PUBLISH",
+      "guard": {
+        "t": "eq",
+        "op": "!=",
+        "l": {
+          "t": "var",
+          "name": "qstate"
+        },
+        "r": {
+          "t": "lit",
+          "value": "quarantined"
+        }
+      },
+      "effects": [
+        {
+          "var": "route",
+          "expr": {
+            "t": "lit",
+            "value": "public"
+          }
+        }
+      ]
+    },
+    {
+      "name": "UNPUBLISH",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "route",
+          "expr": {
+            "t": "lit",
+            "value": "private"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "qstate"
+      },
+      "r": {
+        "t": "lit",
+        "value": "quarantined"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "!=",
+      "l": {
+        "t": "var",
+        "name": "route"
+      },
+      "r": {
+        "t": "lit",
+        "value": "public"
+      }
+    }
+  }
+}

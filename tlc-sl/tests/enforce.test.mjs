@@ -37,7 +37,9 @@ test('evaluateAll aggregates a BLOCK across invariants', () => {
 });
 
 test('evaluateAll allows a fully-compliant action', () => {
-  const action = { type: 'PROMOTE_WORKING', contract: 'active', status: 'partial', verified_scope: 'yes' };
+  // A promotion is compliant only when it satisfies every invariant that gates
+  // PROMOTE_WORKING: INV-001 (bound contract), INV-010 (verified scope), INV-050 (visual layer).
+  const action = { type: 'PROMOTE_WORKING', contract: 'active', status: 'partial', verified_scope: 'yes', visual: 'present' };
   const r = evaluateAll(evaluators, action);
   assert.equal(r.decision, 'ALLOW');
   assert.deepEqual(r.halts, []);

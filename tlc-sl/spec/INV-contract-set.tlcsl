@@ -1,0 +1,65 @@
+# Article VIII.1 — Contract invariants (INV-002, INV-003, INV-004, INV-005)
+
+invariant "INV-002" {
+  title "Contract activation requires schema validation"
+  article "VIII.1"
+  level BLOCK
+  rationale "A C-RSP contract may not be marked Active until all required fields pass schema validation."
+
+  var schema   domain { invalid, valid }
+  var contract domain { draft, active }
+  init { schema = invalid, contract = draft }
+
+  op VALIDATE { guard true            effect { schema = valid } }
+  op ACTIVATE { guard schema = valid   effect { contract = active } }
+
+  safety contract = active implies schema = valid
+}
+
+invariant "INV-003" {
+  title "Step completion requires human approval"
+  article "VIII.1 / IV.4"
+  level BLOCK
+  rationale "A contract step may not be marked complete without a human approval record in the evidence log."
+
+  var approval domain { absent, present }
+  var step     domain { open, complete }
+  init { approval = absent, step = open }
+
+  op APPROVE  { guard true              effect { approval = present } }
+  op COMPLETE { guard approval = present  effect { step = complete } }
+
+  safety step = complete implies approval = present
+}
+
+invariant "INV-004" {
+  title "Frozen contract admits no new acceptance criteria"
+  article "VIII.1 / IV.2"
+  level BLOCK
+  rationale "A contract in Frozen status may not have new acceptance criteria added."
+
+  var contract domain { active, frozen }
+  var breach   domain { ok, violated }
+  init { contract = active, breach = ok }
+
+  op FREEZE { guard true            effect { contract = frozen } }
+  op ADD_AC { guard contract != frozen  effect { breach = if contract = frozen then violated else breach } }
+
+  safety breach = ok
+}
+
+invariant "INV-005" {
+  title "Superseded contract references its replacement"
+  article "VIII.1"
+  level WARN
+  rationale "A superseded contract must reference its replacement contract ID."
+
+  var status domain { active, superseded }
+  var ref    domain { absent, present }
+  init { status = active, ref = absent }
+
+  op SET_REPLACEMENT_REF { guard true          effect { ref = present } }
+  op SUPERSEDE           { guard ref = present   effect { status = superseded } }
+
+  safety status = superseded implies ref = present
+}

@@ -56,16 +56,24 @@ invariant "INV-001" {
 PASS  INV-001  safety holds over 8 reachable states; 1/2 guards proven necessary
 ```
 
-## The six invariants shipped in v0.1
+## The invariants shipped
 
-| ID | Article | What it enforces |
-|---|---|---|
-| INV-001 | VIII.1 / IV.3 | No promotion to `working` without a bound contract |
-| INV-010 | VIII.2 / II.4 | `working` requires a `verified_scope` |
-| INV-011 | VIII.2 / II.4 | `partial` requires both verified and unverified scope |
-| INV-020 | VIII.3 / V.4 | Evidence is append-only (modify/delete categorically denied) |
-| INV-023 | VIII.3 / I | PII may be emitted only when authorized |
-| INV-040 | III.2 / VIII.5 | AI agents may not merge, deploy, push, write production, or promote |
+The full Article VIII set is now expressed in TLC-SL — **21 invariants**, all verified by the
+in-process checker (`npm run tlc:sl`). Grouped by constitution section:
+
+| Section | Invariants |
+|---|---|
+| VIII.1 Contract | INV-001 (contract before promotion), INV-002 (active needs schema-valid), INV-003 (step needs human approval), INV-004 (frozen admits no new AC), INV-005 (superseded references replacement — WARN) |
+| VIII.2 Classification | INV-010 (`working` needs verified_scope), INV-011 (`partial` needs both scopes), INV-012 (public surface needs public_display_status), INV-013 (`partial` may not display `working`), INV-014 (quarantined in no public route) |
+| VIII.3 Evidence | INV-020 (append-only), INV-021 (halt produces evidence), INV-022 (break-glass is logged), INV-023 (PII needs authorization) |
+| VIII.4 V&T | INV-030 (AC complete needs V&T), INV-031 (empty `unverified` on unrun suite is a violation), INV-032 (governance_state matches lifecycle — WARN) |
+| VIII.5 Role/authority | INV-040 (AI agents may not merge/deploy/push/write-prod/promote), INV-041 (unauthorized break-glass blocked), INV-042 (dual-approval needs two approvals) |
+| VIII.6 Visual | INV-050 (`working` promotion needs a visual understanding layer) |
+
+Spec sources: `spec/INV-001*.tlcsl` … plus the grouped sets `spec/INV-contract-set.tlcsl`,
+`spec/INV-classification-set.tlcsl`, `spec/INV-evidence-vnt-set.tlcsl`,
+`spec/INV-authority-visual-set.tlcsl`. The full mapping (invariant → spec → check result) is in
+`conformance/report.md`.
 
 ## Verification status — held to the complete-claim rule
 
@@ -150,7 +158,7 @@ tlc-sl/
   CRSP_TLC_SL_CONTRACT.md   the C-RSP build contract (written before code; Invariant I1)
   grammar.md                the language grammar and semantics
   README.md                 this file
-  spec/*.tlcsl              the six invariants
+  spec/*.tlcsl              the invariants (21, the full Article VIII set)
   src/
     lexer.mjs parser.mjs    front end
     model.mjs               builds the transition system
@@ -172,8 +180,8 @@ tlc-sl/
 
 | Field | Value |
 |---|---|
-| **What** | A specification language compiling one invariant definition to runtime enforcement, an in-process exhaustive model check, and a TLA+ export. Six invariants shipped. |
-| **True** | Parser, checker (safety + necessity), JS target, Policy Engine integration, conformance report, and evidence recording all run; 19/19 tests pass; 6/6 invariants verified by the in-process checker. Commands: `npm run tlc:sl`, `npm run tlc:sl:test`. |
+| **What** | A specification language compiling one invariant definition to runtime enforcement, an in-process exhaustive model check, and a TLA+ export. The full Article VIII set — 21 invariants — is shipped. |
+| **True** | Parser, checker (safety + necessity), JS target, Policy Engine integration, conformance report, and evidence recording all run; the node:test suite passes; 21/21 invariants verified by the in-process checker. Commands: `npm run tlc:sl`, `npm run tlc:sl:test`. |
 | **Unverified** | TLA+ output not run through TLC (no Java/tla2tools here). No Lean target. Checker is exhaustive only over the declared finite models. |
 | **Not Claimed** | See "What this module does NOT claim." Notably not the first governance DSL. |
 | **Functional Status** | PARTIAL — verified core (checker + runtime) is `working`; TLA+ path is `draft`/`unverified`. |
