@@ -45,6 +45,9 @@
     "tlc:sl:test": "node --test tlc-sl/tests/*.test.mjs",
     "tlc:sl:conformance": "node tlc-sl/src/conformance.mjs",
     "tlc:sl:evidence": "node tlc-sl/src/record-evidence.mjs",
+    "evidence:test": "node --test src/core/evidence-chain.test.mjs",
+    "evidence:verify": "node src/core/evidence-chain.mjs verify evidence/signed-demo/governance.jsonl evidence/signed-demo/public-key.pem",
+    "evidence:root": "node src/core/evidence-chain.mjs root evidence/signed-demo/governance.jsonl",
     "tlc": "node scripts/tlc.mjs"
   },
   "keywords": [
