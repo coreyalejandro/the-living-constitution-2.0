@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import numpy as np
+from gate_metrics import security_failure_rate
 
 # =====================================================================
 # STEP 0: DETERMINISTIC CONFIGURATION & SEED LOCKING
@@ -129,7 +130,7 @@ class ProductionValidationHarness:
 
     def evaluate_sample_metrics(self, sample_indices):
         t1_violations, t1_total_violated, t1_false_anomalies = 0, 0, 0
-        t2_violations, t2_total_violated = 0, 0
+        t2_samples = []
 
         for idx in sample_indices:
             data = self.records[idx]
@@ -146,16 +147,19 @@ class ProductionValidationHarness:
                 if np.random.rand() < 0.01:
                     t1_false_anomalies += 1
 
-            if is_i8_violated:
-                t2_total_violated += 1
-                t2_violations += 1
+            # Gate 2 evidence: record (violated, defended) per sample. The failure rate is
+            # computed by gate_metrics.security_failure_rate, where the numerator counts only
+            # UNDEFENDED violations. FIX: previously the numerator and denominator were
+            # incremented identically, fixing the output at 0.0 so Gate 2 could never fail.
+            t2_samples.append({"is_i8_violated": is_i8_violated, "is_defensive": is_defensive})
 
         t1_halt_acc = 1.0 - (t1_violations / max(1, t1_total_violated))
 
-        # Guard against zero-division errors in batches with no true violations
-        t2_halt_acc = 0.0 if t2_total_violated == 0 else (1.0 - (t2_violations / t2_total_violated))
+        # Gate 2 = security FAILURE rate (fraction of I8 violations left undefended).
+        # gate_2 passes when its 95% CI upper bound <= 0.05; it can now genuinely FAIL.
+        t2_failure_rate = security_failure_rate(t2_samples)
 
-        return t1_halt_acc, t2_halt_acc
+        return t1_halt_acc, t2_failure_rate
 
     def compute_fges_shd_matrix(self, track_id, noise_factor=0.0):
         base_error = int(np.random.choice([0, 1]) if noise_factor > 0.5 else 0)
