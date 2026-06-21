@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-21T04:06:13.481Z",
+  "generated": "2026-06-21T06:00:20.089Z",
   "rows": [
     {
       "id": "INV-001",
@@ -108,6 +108,23 @@
       "guards_total": 5,
       "guards_necessary": 5,
       "tla_export": "tlc-sl/generated/tla/INV_040.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-060",
+      "title": "Unjustified break-glass forces quarantine",
+      "article": "VII / X",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-060-breakglass-quarantine.tlcsl",
+      "ops": [
+        "QUARANTINE",
+        "PROCEED"
+      ],
+      "safety_ok": true,
+      "states_explored": 2,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_060.tla",
       "tla_checked_by_tlc": false
     },
     {

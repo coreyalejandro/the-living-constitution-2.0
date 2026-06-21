@@ -1,0 +1,28 @@
+# INV-060 — Unjustified break-glass forces quarantine (Constitution Article VII / X)
+# Closes the gap the external review flagged: the pre-commit hook only WARNED on an
+# unjustified break-glass bypass, while Article VII says quarantine is automatic.
+# This invariant makes the rule explicit and enforceable: an unjustified break-glass
+# override may not proceed unless the module is first quarantined.
+
+invariant "INV-060" {
+  title "Unjustified break-glass forces quarantine"
+  article "VII / X"
+  level BLOCK
+  rationale "A break-glass override without a recorded justification may not proceed unless the affected module is quarantined; an unjustified, un-quarantined bypass is a violation."
+
+  var breach     domain { ok, violated }
+  var quarantine domain { inactive, active }
+  input break_glass domain { yes, no }
+  input justified   domain { yes, no }
+
+  init { breach = ok, quarantine = inactive }
+
+  op QUARANTINE { guard true effect { quarantine = active } }
+
+  op PROCEED {
+    guard not (break_glass = yes and justified = no and quarantine = inactive)
+    effect { breach = if (break_glass = yes and justified = no and quarantine = inactive) then violated else breach }
+  }
+
+  safety breach = ok
+}

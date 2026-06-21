@@ -262,7 +262,7 @@ concrete, and a CI workflow re-runs them on every change. Full map: `docs/VERIFI
 | **Governance CI** (`.github/workflows/governance-ci.yml`) | The whole stack + a no-drift check + TLC model-checking re-run on every push/PR. | GitHub Actions |
 
 ```bash
-npm run tlc:sl                 # 21/21 invariants model-checked
+npm run tlc:sl                 # 22/22 invariants model-checked
 npm run tlc:sl:test            # + evidence:test + probe-gate:test  → 35 tests
 npm run tlc:sl:verify-evidence # verify the signed governance evidence
 ```
