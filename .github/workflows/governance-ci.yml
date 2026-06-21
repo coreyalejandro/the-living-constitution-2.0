@@ -1,0 +1,83 @@
+name: TLC Governance CI
+
+# Governance as infrastructure: every push/PR re-runs the verification stack —
+# TLC-SL invariant model-checking, the test suites, evidence-chain verification,
+# and a no-drift check that the generated artifacts still match the specs.
+# Zero runtime dependencies: nothing here needs `npm install`.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Verify (invariants, tests, evidence, no-drift)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: TLC-SL — model-check all invariants (in-process exhaustive checker)
+        run: node tlc-sl/src/compile.mjs --target check
+
+      - name: TLC-SL test suite
+        run: node --test tlc-sl/tests/*.test.mjs
+
+      - name: Evidence-chain test suite (Ed25519 + Merkle)
+        run: node --test src/core/evidence-chain.test.mjs
+
+      - name: Probe-gate test suite (INV-PROBE-001)
+        run: node --test probe-gate/tests/*.test.mjs
+
+      - name: Verify the signed TLC-SL evidence against its committed public key
+        run: node src/core/evidence-chain.mjs verify evidence/TLC-SL/verification.signed.jsonl evidence/TLC-SL/evidence-public-key.pem
+
+      - name: No-drift — regenerate targets and fail if they differ from what's committed
+        run: |
+          node tlc-sl/src/compile.mjs --target all --quiet
+          if ! git diff --quiet -- tlc-sl/generated; then
+            echo "::error::Generated TLC-SL targets are out of date. Run 'npm run tlc:sl:compile' and commit."
+            git --no-pager diff --stat -- tlc-sl/generated
+            exit 1
+          fi
+          echo "Generated targets match the specs."
+
+  tlc-model-check:
+    name: TLA+ model-check with TLC (informational)
+    runs-on: ubuntu-latest
+    # Informational until confirmed green on a first run, then flip to a required gate.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Regenerate TLA+ modules from the specs
+        run: node tlc-sl/src/compile.mjs --target tla --quiet
+
+      - name: Download the TLC model checker
+        run: curl -fsSL -o tla2tools.jar https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+
+      - name: Run TLC on every generated TLA+ module
+        run: |
+          set -e
+          fail=0
+          for tla in tlc-sl/generated/tla/*.tla; do
+            cfg="${tla%.tla}.cfg"
+            echo "=== TLC: $tla ==="
+            # -deadlock: our properties are safety invariants, not deadlock-freedom.
+            if ! java -cp tla2tools.jar tlc2.TLC -deadlock -config "$cfg" "$tla"; then
+              echo "::warning::TLC reported an issue for $tla"
+              fail=1
+            fi
+          done
+          exit $fail
