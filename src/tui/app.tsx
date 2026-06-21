@@ -193,11 +193,14 @@ function ModulesPane() {
         const st = m.truth_status || m.status || 'unverified';
         const icon = st === 'working' ? '●' : st === 'partial' ? '◐' : st === 'quarantined' ? '✖' : '○';
         const color = st === 'working' ? T.good : st === 'partial' ? T.bad : st === 'quarantined' ? T.critical : T.dim;
+        const id      = (m.id || m.name || '?').slice(0, 38).padEnd(38);
+        const stLabel = `${icon} ${st}`.slice(0, 16).padEnd(16);
+        const surface = (m.surface || '').slice(0, 16);
         return (
           <Box key={m.id || m.name}>
-            <Text color={T.accent}>{`  ${(m.id || m.name || '?').padEnd(36)}`}</Text>
-            <Text color={color}>{icon} {st.padEnd(14)}</Text>
-            <Text color={T.dim}>{m.surface || ''}</Text>
+            <Text color={T.accent}>{`  ${id}`}</Text>
+            <Text color={color}>{stLabel}</Text>
+            <Text color={T.dim}>{surface}</Text>
           </Box>
         );
       })}
@@ -701,7 +704,7 @@ function App() {
   }, [push, exit]);
 
   // ── render ──────────────────────────────────────────────────────────────────
-  const rows = (process.stdout.rows || 30) - 6; // reserve rows for chrome
+  const cols = process.stdout.columns || 80;
 
   const mainPane = () => {
     switch (tab) {
@@ -714,6 +717,9 @@ function App() {
     }
   };
 
+  // Only show the output log when there is something to show
+  const hasOutput = output.length > 0 || loading;
+
   return (
     <Box flexDirection="column" width="100%">
 
@@ -723,27 +729,29 @@ function App() {
       {/* Nav */}
       <NavBar active={tab} onSelect={setTab} />
 
-      {/* Main pane: always shows last N output lines above the tab content */}
-      <Box flexDirection="column" height={Math.max(8, rows - 8)} overflow="hidden">
-        {output.slice(-Math.max(8, rows - 12)).map(l => <OLine key={l.id} l={l} />)}
-        {loading && (
-          <Box paddingLeft={2}>
-            <Text color={T.accent}><Spinner type="dots" /></Text>
-            <Text color={T.muted}> working…</Text>
+      {/* Output log — only rendered when non-empty */}
+      {hasOutput && (
+        <>
+          <Box flexDirection="column">
+            {output.slice(-12).map(l => <OLine key={l.id} l={l} />)}
+            {loading && (
+              <Box paddingLeft={2}>
+                <Text color={T.accent}><Spinner type="dots" /></Text>
+                <Text color={T.muted}> working…</Text>
+              </Box>
+            )}
           </Box>
-        )}
-      </Box>
+          <Text color={T.border}>{'─'.repeat(cols)}</Text>
+        </>
+      )}
 
-      {/* Tab pane divider */}
-      <Text color={T.border}>{'─'.repeat(process.stdout.columns || 80)}</Text>
-      <Box flexDirection="column" height={Math.max(6, Math.floor(rows / 2))} overflow="hidden">
+      {/* Tab content fills remaining space */}
+      <Box flexDirection="column" flexGrow={1}>
         {mainPane()}
       </Box>
 
-      {/* Prompt divider */}
-      <Text color={T.border}>{'─'.repeat(process.stdout.columns || 80)}</Text>
-
       {/* Prompt */}
+      <Text color={T.border}>{'─'.repeat(cols)}</Text>
       <Box paddingLeft={1}>
         <Text color={T.muted}>{session ? `(${session}) ` : ''}</Text>
         <Text color={T.primary} bold>tlc ❯ </Text>

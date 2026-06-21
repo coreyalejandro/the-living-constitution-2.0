@@ -6,6 +6,7 @@
   "type": "module",
   "main": "src/core/contract-manager.js",
   "bin": {
+    "tlc": "./scripts/tlc.mjs",
     "tlc-cli": "./src/cli/tlc-cli.js"
   },
   "scripts": {
