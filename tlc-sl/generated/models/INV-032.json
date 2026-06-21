@@ -1,0 +1,86 @@
+{
+  "id": "INV-032",
+  "title": "V&T governance_state matches artifact lifecycle",
+  "article": "VIII.4",
+  "level": "WARN",
+  "rationale": "V&T governance_state must match the lifecycle state of the artifact it describes (advanced and regressed atomically).",
+  "stateVars": [
+    "gov",
+    "life"
+  ],
+  "inputVars": [],
+  "domains": {
+    "gov": [
+      "draft",
+      "active"
+    ],
+    "life": [
+      "draft",
+      "active"
+    ]
+  },
+  "initState": {
+    "gov": "draft",
+    "life": "draft"
+  },
+  "ops": [
+    {
+      "name": "ADVANCE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "gov",
+          "expr": {
+            "t": "lit",
+            "value": "active"
+          }
+        },
+        {
+          "var": "life",
+          "expr": {
+            "t": "lit",
+            "value": "active"
+          }
+        }
+      ]
+    },
+    {
+      "name": "REGRESS",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "gov",
+          "expr": {
+            "t": "lit",
+            "value": "draft"
+          }
+        },
+        {
+          "var": "life",
+          "expr": {
+            "t": "lit",
+            "value": "draft"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "eq",
+    "op": "=",
+    "l": {
+      "t": "var",
+      "name": "gov"
+    },
+    "r": {
+      "t": "var",
+      "name": "life"
+    }
+  }
+}

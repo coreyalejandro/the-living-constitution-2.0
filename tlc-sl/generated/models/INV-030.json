@@ -1,0 +1,95 @@
+{
+  "id": "INV-030",
+  "title": "AC completion requires a V&T statement",
+  "article": "VIII.4 / V.1",
+  "level": "BLOCK",
+  "rationale": "An acceptance criterion may not be marked complete without a V&T statement (what, true, unverified).",
+  "stateVars": [
+    "vnt",
+    "ac"
+  ],
+  "inputVars": [],
+  "domains": {
+    "vnt": [
+      "absent",
+      "present"
+    ],
+    "ac": [
+      "open",
+      "complete"
+    ]
+  },
+  "initState": {
+    "vnt": "absent",
+    "ac": "open"
+  },
+  "ops": [
+    {
+      "name": "WRITE_VNT",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "vnt",
+          "expr": {
+            "t": "lit",
+            "value": "present"
+          }
+        }
+      ]
+    },
+    {
+      "name": "COMPLETE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "vnt"
+        },
+        "r": {
+          "t": "lit",
+          "value": "present"
+        }
+      },
+      "effects": [
+        {
+          "var": "ac",
+          "expr": {
+            "t": "lit",
+            "value": "complete"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "ac"
+      },
+      "r": {
+        "t": "lit",
+        "value": "complete"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "vnt"
+      },
+      "r": {
+        "t": "lit",
+        "value": "present"
+      }
+    }
+  }
+}

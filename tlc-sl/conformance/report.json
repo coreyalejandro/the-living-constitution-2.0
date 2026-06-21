@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-21T02:50:15.389Z",
+  "generated": "2026-06-21T04:06:13.481Z",
   "rows": [
     {
       "id": "INV-001",
@@ -108,6 +108,264 @@
       "guards_total": 5,
       "guards_necessary": 5,
       "tla_export": "tlc-sl/generated/tla/INV_040.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-041",
+      "title": "Unauthorized break-glass is blocked",
+      "article": "VIII.5",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-authority-visual-set.tlcsl",
+      "ops": [
+        "OVERRIDE"
+      ],
+      "safety_ok": true,
+      "states_explored": 1,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_041.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-042",
+      "title": "Dual-approval break-glass requires two approvals",
+      "article": "VIII.5",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-authority-visual-set.tlcsl",
+      "ops": [
+        "APPROVE_FIRST",
+        "APPROVE_SECOND",
+        "EXECUTE"
+      ],
+      "safety_ok": true,
+      "states_explored": 4,
+      "guards_total": 3,
+      "guards_necessary": 2,
+      "tla_export": "tlc-sl/generated/tla/INV_042.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-050",
+      "title": "Working promotion requires a visual understanding layer",
+      "article": "VIII.6 / VI.3",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-authority-visual-set.tlcsl",
+      "ops": [
+        "ADD_VISUAL",
+        "PROMOTE_WORKING"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_050.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-012",
+      "title": "Public surface requires a public_display_status",
+      "article": "VIII.2",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-classification-set.tlcsl",
+      "ops": [
+        "SET_PDS",
+        "PUBLISH"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_012.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-013",
+      "title": "Partial may not display as working",
+      "article": "VIII.2 / II.5",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-classification-set.tlcsl",
+      "ops": [
+        "SET_TRUTH_OTHER",
+        "SET_TRUTH_PARTIAL",
+        "SET_PDS_WORKING",
+        "SET_PDS_DEMO"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 2,
+      "guards_necessary": 2,
+      "tla_export": "tlc-sl/generated/tla/INV_013.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-014",
+      "title": "Quarantined modules appear in no public route",
+      "article": "VIII.2 / I.2",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-classification-set.tlcsl",
+      "ops": [
+        "QUARANTINE",
+        "UNQUARANTINE",
+        "PUBLISH",
+        "UNPUBLISH"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 2,
+      "guards_necessary": 2,
+      "tla_export": "tlc-sl/generated/tla/INV_014.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-002",
+      "title": "Contract activation requires schema validation",
+      "article": "VIII.1",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-contract-set.tlcsl",
+      "ops": [
+        "VALIDATE",
+        "ACTIVATE"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_002.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-003",
+      "title": "Step completion requires human approval",
+      "article": "VIII.1 / IV.4",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-contract-set.tlcsl",
+      "ops": [
+        "APPROVE",
+        "COMPLETE"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_003.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-004",
+      "title": "Frozen contract admits no new acceptance criteria",
+      "article": "VIII.1 / IV.2",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-contract-set.tlcsl",
+      "ops": [
+        "FREEZE",
+        "ADD_AC"
+      ],
+      "safety_ok": true,
+      "states_explored": 2,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_004.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-005",
+      "title": "Superseded contract references its replacement",
+      "article": "VIII.1",
+      "level": "WARN",
+      "spec": "tlc-sl/spec/INV-contract-set.tlcsl",
+      "ops": [
+        "SET_REPLACEMENT_REF",
+        "SUPERSEDE"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_005.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-021",
+      "title": "Every halt event produces an evidence entry",
+      "article": "VIII.3",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-evidence-vnt-set.tlcsl",
+      "ops": [
+        "LOG_HALT_EVIDENCE",
+        "RAISE_HALT"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_021.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-022",
+      "title": "Every break-glass override is logged",
+      "article": "VIII.3",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-evidence-vnt-set.tlcsl",
+      "ops": [
+        "LOG_OVERRIDE",
+        "OVERRIDE"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_022.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-030",
+      "title": "AC completion requires a V&T statement",
+      "article": "VIII.4 / V.1",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-evidence-vnt-set.tlcsl",
+      "ops": [
+        "WRITE_VNT",
+        "COMPLETE"
+      ],
+      "safety_ok": true,
+      "states_explored": 3,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_030.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-031",
+      "title": "Empty unverified on an unrun suite is a violation",
+      "article": "VIII.4 / V.2",
+      "level": "BLOCK",
+      "spec": "tlc-sl/spec/INV-evidence-vnt-set.tlcsl",
+      "ops": [
+        "PUBLISH_VNT"
+      ],
+      "safety_ok": true,
+      "states_explored": 1,
+      "guards_total": 1,
+      "guards_necessary": 1,
+      "tla_export": "tlc-sl/generated/tla/INV_031.tla",
+      "tla_checked_by_tlc": false
+    },
+    {
+      "id": "INV-032",
+      "title": "V&T governance_state matches artifact lifecycle",
+      "article": "VIII.4",
+      "level": "WARN",
+      "spec": "tlc-sl/spec/INV-evidence-vnt-set.tlcsl",
+      "ops": [
+        "ADVANCE",
+        "REGRESS"
+      ],
+      "safety_ok": true,
+      "states_explored": 2,
+      "guards_total": 0,
+      "guards_necessary": 0,
+      "tla_export": "tlc-sl/generated/tla/INV_032.tla",
       "tla_checked_by_tlc": false
     }
   ]

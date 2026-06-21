@@ -1,0 +1,95 @@
+{
+  "id": "INV-005",
+  "title": "Superseded contract references its replacement",
+  "article": "VIII.1",
+  "level": "WARN",
+  "rationale": "A superseded contract must reference its replacement contract ID.",
+  "stateVars": [
+    "status",
+    "ref"
+  ],
+  "inputVars": [],
+  "domains": {
+    "status": [
+      "active",
+      "superseded"
+    ],
+    "ref": [
+      "absent",
+      "present"
+    ]
+  },
+  "initState": {
+    "status": "active",
+    "ref": "absent"
+  },
+  "ops": [
+    {
+      "name": "SET_REPLACEMENT_REF",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "ref",
+          "expr": {
+            "t": "lit",
+            "value": "present"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SUPERSEDE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "ref"
+        },
+        "r": {
+          "t": "lit",
+          "value": "present"
+        }
+      },
+      "effects": [
+        {
+          "var": "status",
+          "expr": {
+            "t": "lit",
+            "value": "superseded"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "status"
+      },
+      "r": {
+        "t": "lit",
+        "value": "superseded"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "ref"
+      },
+      "r": {
+        "t": "lit",
+        "value": "present"
+      }
+    }
+  }
+}

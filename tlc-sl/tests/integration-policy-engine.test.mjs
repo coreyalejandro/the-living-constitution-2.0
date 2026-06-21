@@ -43,7 +43,7 @@ test('with TLC-SL invariants, a compliant promotion is allowed', () => {
   const engine = new PolicyEngine(contract, { invariants });
   const r = engine.evaluate({
     type: 'PROMOTE_WORKING', role: 'Developer',
-    contract: 'active', status: 'partial', verified_scope: 'yes',
+    contract: 'active', status: 'partial', verified_scope: 'yes', visual: 'present',
   });
   assert.equal(r.decision, 'ALLOW');
 });

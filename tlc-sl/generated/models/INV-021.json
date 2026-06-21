@@ -1,0 +1,95 @@
+{
+  "id": "INV-021",
+  "title": "Every halt event produces an evidence entry",
+  "article": "VIII.3",
+  "level": "BLOCK",
+  "rationale": "Every halt event must produce a corresponding evidence log entry (evidence is recorded before the halt is raised).",
+  "stateVars": [
+    "logged",
+    "halted"
+  ],
+  "inputVars": [],
+  "domains": {
+    "logged": [
+      "no",
+      "yes"
+    ],
+    "halted": [
+      "no",
+      "yes"
+    ]
+  },
+  "initState": {
+    "logged": "no",
+    "halted": "no"
+  },
+  "ops": [
+    {
+      "name": "LOG_HALT_EVIDENCE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "logged",
+          "expr": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RAISE_HALT",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "logged"
+        },
+        "r": {
+          "t": "lit",
+          "value": "yes"
+        }
+      },
+      "effects": [
+        {
+          "var": "halted",
+          "expr": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "halted"
+      },
+      "r": {
+        "t": "lit",
+        "value": "yes"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "logged"
+      },
+      "r": {
+        "t": "lit",
+        "value": "yes"
+      }
+    }
+  }
+}

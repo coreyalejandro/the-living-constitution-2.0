@@ -1,0 +1,53 @@
+# Article VIII.2 — Classification invariants (INV-012, INV-013, INV-014)
+
+invariant "INV-012" {
+  title "Public surface requires a public_display_status"
+  article "VIII.2"
+  level BLOCK
+  rationale "A module at public_portfolio or exhibit surface must have public_display_status set."
+
+  var pds     domain { unset, set }
+  var surface domain { private, public }
+  init { pds = unset, surface = private }
+
+  op SET_PDS { guard true        effect { pds = set } }
+  op PUBLISH { guard pds = set     effect { surface = public } }
+
+  safety surface = public implies pds = set
+}
+
+invariant "INV-013" {
+  title "Partial may not display as working"
+  article "VIII.2 / II.5"
+  level BLOCK
+  rationale "A module with truth_status partial must not have public_display_status working."
+
+  var truth domain { partial, other }
+  var pds   domain { demo, working }
+  init { truth = partial, pds = demo }
+
+  op SET_TRUTH_OTHER   { guard true            effect { truth = other } }
+  op SET_TRUTH_PARTIAL { guard pds != working    effect { truth = partial } }
+  op SET_PDS_WORKING   { guard truth != partial  effect { pds = working } }
+  op SET_PDS_DEMO      { guard true            effect { pds = demo } }
+
+  safety truth = partial implies pds != working
+}
+
+invariant "INV-014" {
+  title "Quarantined modules appear in no public route"
+  article "VIII.2 / I.2"
+  level BLOCK
+  rationale "A module with truth_status quarantined may not appear in any public route."
+
+  var qstate domain { normal, quarantined }
+  var route  domain { private, public }
+  init { qstate = normal, route = private }
+
+  op QUARANTINE   { guard route != public      effect { qstate = quarantined } }
+  op UNQUARANTINE { guard true                effect { qstate = normal } }
+  op PUBLISH      { guard qstate != quarantined  effect { route = public } }
+  op UNPUBLISH    { guard true                effect { route = private } }
+
+  safety qstate = quarantined implies route != public
+}

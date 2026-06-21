@@ -1,0 +1,53 @@
+# Article VIII.5 / VIII.6 — Role/authority and visual-layer invariants
+# (INV-041, INV-042, INV-050)
+
+invariant "INV-041" {
+  title "Unauthorized break-glass is blocked"
+  article "VIII.5"
+  level BLOCK
+  rationale "A break-glass override by an unauthorized role is blocked and logged as a security event."
+
+  var breach domain { ok, violated }
+  input role domain { authorized, unauthorized }
+  init { breach = ok }
+
+  op OVERRIDE {
+    guard role = authorized
+    effect { breach = if role = unauthorized then violated else breach }
+  }
+
+  safety breach = ok
+}
+
+invariant "INV-042" {
+  title "Dual-approval break-glass requires two approvals"
+  article "VIII.5"
+  level BLOCK
+  rationale "A dual-approval break-glass on a high-risk service requires two distinct authorized approvals (modeled here as a count reaching two)."
+
+  var approvals domain { zero, one, two }
+  var executed  domain { no, yes }
+  init { approvals = zero, executed = no }
+
+  op APPROVE_FIRST  { guard approvals = zero  effect { approvals = one } }
+  op APPROVE_SECOND { guard approvals = one   effect { approvals = two } }
+  op EXECUTE        { guard approvals = two   effect { executed = yes } }
+
+  safety executed = yes implies approvals = two
+}
+
+invariant "INV-050" {
+  title "Working promotion requires a visual understanding layer"
+  article "VIII.6 / VI.3"
+  level BLOCK
+  rationale "A governance_core or public_portfolio module promoted to working without a visual understanding layer triggers a promotion block."
+
+  var visual domain { absent, present }
+  var status domain { notworking, working }
+  init { visual = absent, status = notworking }
+
+  op ADD_VISUAL      { guard true            effect { visual = present } }
+  op PROMOTE_WORKING { guard visual = present   effect { status = working } }
+
+  safety status = working implies visual = present
+}

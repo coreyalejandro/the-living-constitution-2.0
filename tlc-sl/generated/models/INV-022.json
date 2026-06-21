@@ -1,0 +1,95 @@
+{
+  "id": "INV-022",
+  "title": "Every break-glass override is logged",
+  "article": "VIII.3",
+  "level": "BLOCK",
+  "rationale": "Every break-glass override must be logged with the approving role and reason (logged before the override takes effect).",
+  "stateVars": [
+    "logged",
+    "overridden"
+  ],
+  "inputVars": [],
+  "domains": {
+    "logged": [
+      "no",
+      "yes"
+    ],
+    "overridden": [
+      "no",
+      "yes"
+    ]
+  },
+  "initState": {
+    "logged": "no",
+    "overridden": "no"
+  },
+  "ops": [
+    {
+      "name": "LOG_OVERRIDE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "logged",
+          "expr": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "OVERRIDE",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "logged"
+        },
+        "r": {
+          "t": "lit",
+          "value": "yes"
+        }
+      },
+      "effects": [
+        {
+          "var": "overridden",
+          "expr": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "overridden"
+      },
+      "r": {
+        "t": "lit",
+        "value": "yes"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "logged"
+      },
+      "r": {
+        "t": "lit",
+        "value": "yes"
+      }
+    }
+  }
+}

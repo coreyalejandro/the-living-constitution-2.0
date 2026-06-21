@@ -1,0 +1,95 @@
+{
+  "id": "INV-012",
+  "title": "Public surface requires a public_display_status",
+  "article": "VIII.2",
+  "level": "BLOCK",
+  "rationale": "A module at public_portfolio or exhibit surface must have public_display_status set.",
+  "stateVars": [
+    "pds",
+    "surface"
+  ],
+  "inputVars": [],
+  "domains": {
+    "pds": [
+      "unset",
+      "set"
+    ],
+    "surface": [
+      "private",
+      "public"
+    ]
+  },
+  "initState": {
+    "pds": "unset",
+    "surface": "private"
+  },
+  "ops": [
+    {
+      "name": "SET_PDS",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "pds",
+          "expr": {
+            "t": "lit",
+            "value": "set"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PUBLISH",
+      "guard": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "pds"
+        },
+        "r": {
+          "t": "lit",
+          "value": "set"
+        }
+      },
+      "effects": [
+        {
+          "var": "surface",
+          "expr": {
+            "t": "lit",
+            "value": "public"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "surface"
+      },
+      "r": {
+        "t": "lit",
+        "value": "public"
+      }
+    },
+    "r": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "pds"
+      },
+      "r": {
+        "t": "lit",
+        "value": "set"
+      }
+    }
+  }
+}
