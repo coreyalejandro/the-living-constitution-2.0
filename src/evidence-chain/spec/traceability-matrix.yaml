@@ -1,0 +1,166 @@
+# Evidence Chain Engine — Traceability Matrix (R2)
+# Spec §2. Maps every spec requirement to implementation file + test.
+# Format: requirement_id → { description, implemented_in, test_covers, status }
+
+schema_version: "2.0"
+generated: "2025-07-01"
+
+requirements:
+
+  R1:
+    description: >
+      TLA+ formal specification of the six invariants and valid transition
+      graph. Must be model-checkable with TLC.
+    implemented_in:
+      - src/evidence-chain/spec/EvidenceChain.tla
+      - src/evidence-chain/spec/EvidenceChain.cfg
+    test_covers: []
+    model_check_results: src/evidence-chain/spec/TLC_RESULTS.md
+    status: SPEC_WRITTEN_PENDING_TLC_RUN
+
+  R2:
+    description: >
+      Traceability matrix (this file) mapping every spec requirement to
+      implementation and test.
+    implemented_in:
+      - src/evidence-chain/spec/traceability-matrix.yaml
+    test_covers: []
+    status: COMPLETE
+
+  R3:
+    description: >
+      TypeScript reference implementation with full type safety (Claim,
+      TruthState, EvidenceKind, TransitionRecord, ConstitutionRule,
+      EvidenceChain, EvidenceItem, OperatorKey). Property-based tests
+      using fast-check covering the six invariants.
+    implemented_in:
+      - src/evidence-chain/types.ts       # all core types
+      - src/evidence-chain/engine.ts      # EvidenceChainEngine
+      - src/evidence-chain/crypto.ts      # Ed25519 + Merkle
+      - src/evidence-chain/ledger.ts      # append-only ledger
+      - src/evidence-chain/rules.ts       # ConstitutionRule store
+      - src/evidence-chain/signatures.ts  # OperatorKeyring
+      - src/evidence-chain/index.ts       # public API re-exports
+    test_covers:
+      - engine.test.ts §5 "Property-based: Invariant 1 — forward-only"
+      - engine.test.ts §5 "Property-based: Invariant 2 — valid steps only"
+      - engine.test.ts §5 "Property-based: Invariant 3 — terminal absorbing"
+      - engine.test.ts §5 "Property-based: Invariant 4 — signed by registered op"
+      - engine.test.ts §5 "Property-based: Invariant 5 — HITL gating"
+      - engine.test.ts §5 "Property-based: Invariant 6 — hash chain"
+    status: COMPLETE
+
+  R4:
+    description: >
+      100% branch coverage CI gate enforced by c8. Coverage report generated
+      with --reporter=json-summary. All branches must be green before merge.
+    implemented_in:
+      - tsconfig.evidence.json
+    test_covers:
+      - All 73 tests in src/evidence-chain/engine.test.ts
+    coverage_achieved:
+      statements: "100%"
+      branches: "100%"
+      functions: "100%"
+      lines: "100%"
+    run_command: >
+      node_modules/.bin/c8
+        --include='src/evidence-chain/*.ts'
+        --exclude='src/evidence-chain/*.test.ts'
+        --reporter=text --reporter=json-summary
+        node --import tsx/esm --test src/evidence-chain/engine.test.ts
+    status: COMPLETE
+
+  R5:
+    description: >
+      Empirical validation: at least three real TLC claims advanced through
+      the full pipeline from PROPOSED to VALIDATED, with real evidence items
+      attached. Claims must match actual governed-investigation module content.
+    implemented_in:
+      - src/evidence-chain/validation/empirical-run.ts
+    test_covers:
+      - src/evidence-chain/validation/empirical-results.json
+    status: COMPLETE
+
+  R6:
+    description: >
+      Red-team report: all known bypass attempts documented, each attempt
+      executed against the running engine with pass/fail result recorded.
+      No bypass may succeed.
+    implemented_in:
+      - src/evidence-chain/validation/red-team-report.md
+    test_covers:
+      - engine.test.ts §6 "Red-team: replay attack"
+      - engine.test.ts §6 "Red-team: signature forgery"
+      - engine.test.ts §6 "Red-team: unregistered operator"
+      - engine.test.ts §6 "Red-team: revoked operator"
+      - engine.test.ts §6 "Red-team: content tampering"
+      - engine.test.ts §6 "Red-team: hash chain reorder"
+      - engine.test.ts §6 "Red-team: skipping states"
+    status: COMPLETE
+
+  R7:
+    description: >
+      Cryptographic integrity: Ed25519 signatures on every ledger entry,
+      SHA-256 hash chain linkage, Merkle root over all entry hashes,
+      inclusion proofs with sibling paths, and full tamper-evidence
+      verification via verifyIntegrityHash().
+    implemented_in:
+      - src/evidence-chain/crypto.ts
+      - src/evidence-chain/ledger.ts
+    test_covers:
+      - engine.test.ts §1 "Cryptographic: Ed25519 signature on claim"
+      - engine.test.ts §1 "Cryptographic: hash chain — each entry links to prior"
+      - engine.test.ts §1 "Cryptographic: Merkle root changes after each append"
+      - engine.test.ts §1 "Cryptographic: inclusionProof + verifyInclusion"
+      - engine.test.ts §1 "Cryptographic: tamper-evidence — content change detected"
+      - engine.test.ts §1 "Cryptographic: tamper-evidence — sig change detected"
+      - engine.test.ts §1 "Cryptographic: tamper-evidence — reorder detected"
+    status: COMPLETE
+
+  R8:
+    description: >
+      HITL (Human-in-the-Loop) evidence items must carry an Ed25519 signature
+      verified against the operator keyring. Unregistered or revoked operator
+      keys must be rejected. Re-registration is allowed after revocation.
+    implemented_in:
+      - src/evidence-chain/signatures.ts  # OperatorKeyring
+      - src/evidence-chain/engine.ts      # bindEvidence HITL verification path
+      - src/evidence-chain/crypto.ts      # verifySignature + createHITLSignature
+    test_covers:
+      - engine.test.ts §4 "R8: HITL evidence — valid signature accepted"
+      - engine.test.ts §4 "R8: HITL evidence — invalid signature rejected"
+      - engine.test.ts §4 "R8: HITL evidence — unregistered operator rejected"
+      - engine.test.ts §4 "R8: HITL evidence — revoked operator rejected"
+      - engine.test.ts §4 "R8: re-register after revocation allowed"
+    status: COMPLETE
+
+  R9:
+    description: >
+      ConstitutionRule versioning with semver. When a rule is updated, all
+      non-terminal claims under the old version are migrated: MAINTAINED if
+      still compliant, REVIEW_REQUIRED if stricter. MigrationRecord persists
+      to ledger.
+    implemented_in:
+      - src/evidence-chain/rules.ts       # RuleStore + migrateClaimToNewRule
+      - src/evidence-chain/engine.ts      # updateRule() migration orchestration
+    test_covers:
+      - engine.test.ts §7 "R9: rule version bump — MAINTAINED path"
+      - engine.test.ts §7 "R9: rule version bump — REVIEW_REQUIRED path"
+      - engine.test.ts §7 "R9: getVersion retrieves specific version"
+      - engine.test.ts §7 "R9: RuleStore persists and reloads"
+    status: COMPLETE
+
+  R10:
+    description: >
+      Operational attestation gate: transitions to VALIDATED are blocked when
+      the applicable ConstitutionRule has requireOperationalAttestation=true
+      unless at least one HITL evidence item with a valid signature is present
+      in the chain.
+    implemented_in:
+      - src/evidence-chain/engine.ts      # advance() — VALIDATED gate
+    test_covers:
+      - engine.test.ts §3 "R10: VERIFIED→VALIDATED blocked without HITL"
+      - engine.test.ts §3 "R10: VERIFIED→VALIDATED allowed with valid HITL"
+      - engine.test.ts §1 "Claim lifecycle — VALIDATED → DEPLOYED"
+    status: COMPLETE

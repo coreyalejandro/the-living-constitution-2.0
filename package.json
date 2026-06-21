@@ -14,7 +14,7 @@
     "status": "node src/cli/tlc-cli.js status",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:unit": "jest tests/unit",
-    "test:integration": "jest tests/integration",
+    "test:integration": "node --test tests/integration/*.test.mjs",
     "test:compliance": "jest tests/compliance",
     "schema:validate": "ajv validate -s schemas/contract-schema.json -d contracts/active/BUILD_CONTRACT.json",
     "lint": "eslint src/ --ext .js,.jsx",
@@ -52,7 +52,6 @@
     "evidence:root": "node src/core/evidence-chain.mjs root evidence/signed-demo/governance.jsonl",
     "probe-gate:test": "node --test probe-gate/tests/*.test.mjs",
     "probe-gate:check": "node probe-gate/src/cli.mjs",
-    "test:integration": "node --test tests/integration/*.test.mjs",
     "ii:check": "node tlc-sl/src/compile.mjs constitutions/instructional-integrity/spec --target check",
     "constitutions:check": "node constitutions/check-platform.mjs",
     "tlc": "node scripts/tlc.mjs"
@@ -79,8 +78,13 @@
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "@types/node": "^26.0.0",
+    "c8": "^11.0.0",
     "eslint": "^9.0.0",
-    "jest": "^29.7.0"
+    "fast-check": "^4.8.0",
+    "jest": "^29.7.0",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
   },
   "jest": {
     "testEnvironment": "node",

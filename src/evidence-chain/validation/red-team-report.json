@@ -1,0 +1,60 @@
+{
+  "run_at": "2026-06-21T19:19:06.084Z",
+  "attacks": [
+    {
+      "id": "A1",
+      "name": "State skip PROPOSED→VALIDATED",
+      "result": "BLOCKED",
+      "error": "Invalid transition: PROPOSED → VALIDATED. Allowed: SPECIFIED, RETRACTED."
+    },
+    {
+      "id": "A2",
+      "name": "Backward transition VERIFIED→SPECIFIED",
+      "result": "BLOCKED",
+      "error": "Invalid transition: VERIFIED → SPECIFIED. Allowed: VALIDATED, RETRACTED."
+    },
+    {
+      "id": "A3",
+      "name": "Transition from terminal DEPLOYED",
+      "result": "BLOCKED",
+      "error": "Claim is in terminal state 'DEPLOYED' — no further transitions."
+    },
+    {
+      "id": "A4",
+      "name": "Unregistered operator HITL",
+      "result": "BLOCKED",
+      "error": "Operator 'attacker' not registered."
+    },
+    {
+      "id": "A5",
+      "name": "Content tampering — alter node field in ledger",
+      "result": "BLOCKED",
+      "error": "entry_hash mismatch — content altered"
+    },
+    {
+      "id": "A6",
+      "name": "Signature forgery — replace rec.sig with forged bytes",
+      "result": "BLOCKED",
+      "error": "signature verification failed"
+    },
+    {
+      "id": "A7",
+      "name": "Hash chain reorder — swap entries 0 and 1",
+      "result": "BLOCKED",
+      "error": "prev_hash mismatch at entry 1"
+    },
+    {
+      "id": "A8",
+      "name": "Revoked operator advance",
+      "result": "BLOCKED",
+      "error": "Operator 'rop' is revoked — transition rejected (R8)."
+    },
+    {
+      "id": "A9",
+      "name": "VALIDATED without HITL attestation",
+      "result": "BLOCKED",
+      "error": "Transition blocked by rule 'attest-rule@1.0.0': missing required evidence kinds or operational attestation."
+    }
+  ],
+  "allBlocked": true
+}

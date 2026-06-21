@@ -403,6 +403,43 @@ for (const sf of stagedFiles) {
   }
 }
 
+// --- Evidence Chain Engine: 100% branch coverage + red-team gate ---
+// This runs the full test suite + red-team validation. Blocks if either fails.
+const EVIDENCE_TEST = join(TLC_ROOT, 'src', 'evidence-chain', 'engine.test.ts');
+const RED_TEAM_RUN  = join(TLC_ROOT, 'src', 'evidence-chain', 'validation', 'red-team-run.ts');
+if (existsSync(EVIDENCE_TEST)) {
+  // 1. 100% branch coverage gate
+  try {
+    execSync(
+      `node_modules/.bin/c8 --include='src/evidence-chain/*.ts' --exclude='src/evidence-chain/*.test.ts' ` +
+      `--branches=100 --statements=100 --functions=100 --lines=100 ` +
+      `--reporter=text node --import tsx/esm --test ${EVIDENCE_TEST}`,
+      { cwd: TLC_ROOT, stdio: 'pipe' }
+    );
+    console.log(`${G}[tlc-hook] ✓ Evidence chain: 100% branch coverage${X}`);
+  } catch (coverageErr) {
+    halt(
+      'EVIDENCE CHAIN COVERAGE GATE FAILED — branch coverage dropped below 100%.',
+      `Run: node_modules/.bin/c8 --reporter=text node --import tsx/esm --test src/evidence-chain/engine.test.ts`
+    );
+  }
+  // 2. Red-team gate: all 9 attack vectors must remain BLOCKED
+  if (existsSync(RED_TEAM_RUN)) {
+    try {
+      execSync(
+        `node --import tsx/esm ${RED_TEAM_RUN}`,
+        { cwd: TLC_ROOT, stdio: 'pipe' }
+      );
+      console.log(`${G}[tlc-hook] ✓ Evidence chain: red-team — all attack vectors BLOCKED${X}`);
+    } catch (redTeamErr) {
+      halt(
+        'EVIDENCE CHAIN RED-TEAM GATE FAILED — a bypass attack succeeded.',
+        `Run: node --import tsx/esm src/evidence-chain/validation/red-team-run.ts`
+      );
+    }
+  }
+}
+
 // --- All checks passed ---
 console.log(`${G}[tlc-hook] ✓ Pre-commit checks passed — Module: ${MODULE_ID} (${mod?.truth_status ?? 'unknown'})${X}`);
 process.exit(0);
