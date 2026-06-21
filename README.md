@@ -249,6 +249,26 @@ maps to a file in this repository.
 
 ---
 
+## The verification stack
+
+Governance here is **verified, not asserted**. Four open, zero-dependency pieces make that
+concrete, and a CI workflow re-runs them on every change. Full map: `docs/VERIFICATION_STACK.md`.
+
+| Piece | What it guarantees | Verify |
+|---|---|---|
+| **TLC-SL** (`tlc-sl/`) | One definition per Article VIII invariant (all 21) compiles to runtime enforcement **and** an exhaustive model check **and** a TLA+ export — no spec↔enforcement drift. | `npm run tlc:sl` |
+| **Evidence Chain v2** (`src/core/evidence-chain.mjs`) | Every evidence entry is Ed25519-signed + Merkle-committed → verifiable offline with only the public key. | `npm run evidence:test` |
+| **Probe-Gate** (`probe-gate/`) | No "gate that cannot fail" can pose as a test (operationalizes `evidence/GOVERNANCE-HARNESS/VERIFICATION_AND_TRUTH.md`). | `npm run probe-gate:test` |
+| **Governance CI** (`.github/workflows/governance-ci.yml`) | The whole stack + a no-drift check + TLC model-checking re-run on every push/PR. | GitHub Actions |
+
+```bash
+npm run tlc:sl                 # 21/21 invariants model-checked
+npm run tlc:sl:test            # + evidence:test + probe-gate:test  → 35 tests
+npm run tlc:sl:verify-evidence # verify the signed governance evidence
+```
+
+---
+
 ## Files to know
 
 ```
