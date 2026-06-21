@@ -47,10 +47,10 @@ jobs:
           echo "Generated targets match the specs."
 
   tlc-model-check:
-    name: TLA+ model-check with TLC (informational)
+    name: TLA+ model-check with TLC
     runs-on: ubuntu-latest
-    # Informational until confirmed green on a first run, then flip to a required gate.
-    continue-on-error: true
+    # Required gate: TLC confirmed "No error" on all emitted modules on the first run
+    # (TLC Governance CI run #2, sha 6d51120). A TLC violation now fails the build.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

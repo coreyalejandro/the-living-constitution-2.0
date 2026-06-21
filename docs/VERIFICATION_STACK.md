@@ -54,8 +54,9 @@ re-runs them on every change.
 
 - Verified locally and in CI: TLC-SL checker (21/21), all test suites (35 tests), evidence-chain
   signing/verification, probe-gate.
-- The **TLC model-check job** is wired and runs in CI; it is marked informational until a first
-  green run confirms the emitted TLA+ is clean under TLC, after which it should become a required
-  gate. The in-process exhaustive checker remains the authoritative proof in the meantime.
+- The **TLC model-check job** runs in CI and is a **required gate**: TLC reported "No error" on
+  all emitted modules on its first run (TLC Governance CI run #2), so the emitted TLA+ is now
+  externally model-checked, not merely emitted. The in-process exhaustive checker remains the
+  fast, dependency-free proof; TLC is the independent corroboration.
 - No Lean 4 target yet. Probe-Gate checks discrimination, not construct validity. Evidence Chain v2
   proves a key signed the chain, not yet *whose* key (identity binding is the next step).
