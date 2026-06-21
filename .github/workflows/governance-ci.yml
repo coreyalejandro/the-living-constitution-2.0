@@ -33,6 +33,9 @@ jobs:
       - name: Probe-gate test suite (INV-PROBE-001)
         run: node --test probe-gate/tests/*.test.mjs
 
+      - name: Cross-layer governance integration tests
+        run: node --test tests/integration/*.test.mjs
+
       - name: Verify the signed TLC-SL evidence against its committed public key
         run: node src/core/evidence-chain.mjs verify evidence/TLC-SL/verification.signed.jsonl evidence/TLC-SL/evidence-public-key.pem
 
