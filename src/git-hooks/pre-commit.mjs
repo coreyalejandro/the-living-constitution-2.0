@@ -308,6 +308,101 @@ if (stagedMd.length > 0) {
   }
 }
 
+// --- TALSP v4.2: Truth-State Gate ---
+// Any staged file that carries a Truth-State: VERIFIED or Truth-State: VALIDATED
+// claim MUST be backed by a corresponding evidence artifact.
+// Blocks inflation (e.g. labeling PROPOSED work as VERIFIED).
+//
+// Evidence artifact rule:
+//   VERIFIED  → evidence/<module-id>/ must contain ≥1 file, OR the commit
+//               message contains [TRUTH-STATE-ADVANCE] with reason.
+//   VALIDATED → same, AND evidence must contain a file matching
+//               /validated|pilot|study|n=\d+/i (empirical result signal).
+//
+// Exception: files inside frameworks/, instruments/, governance/, or
+// templates/ may carry SPECIFIED without requiring evidence (design docs).
+// Only VERIFIED and VALIDATED are gated.
+
+const OVERSTATEMENT_RE = /^\s*[-*]?\s*\*{0,2}Truth[- ]?State\*{0,2}\s*[:：]\s*(VERIFIED|VALIDATED)\s*$/im;
+const VALIDATED_RE     = /^\s*[-*]?\s*\*{0,2}Truth[- ]?State\*{0,2}\s*[:：]\s*VALIDATED\s*$/im;
+
+// Read commit message for [TRUTH-STATE-ADVANCE] bypass
+let commitMsgForTS = '';
+const editmsgPathTS = join(TLC_ROOT, '.git', 'COMMIT_EDITMSG');
+if (existsSync(editmsgPathTS)) {
+  try { commitMsgForTS = readFileSync(editmsgPathTS, 'utf8'); } catch {}
+}
+const tsAdvance = /\[TRUTH-STATE-ADVANCE\]/i.test(commitMsgForTS);
+
+for (const sf of stagedFiles) {
+  const absF = resolve(process.cwd(), sf);
+  if (!/\.(md|markdown|ts|mjs|js)$/i.test(sf)) continue;
+  if (!existsSync(absF)) continue;
+
+  let fileContent = '';
+  try { fileContent = readFileSync(absF, 'utf8'); } catch { continue; }
+
+  // Strip fenced code blocks and inline code before checking
+  const strippedContent = fileContent
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`\n]+`/g, '');
+
+  if (!OVERSTATEMENT_RE.test(strippedContent)) continue;
+
+  // This file claims VERIFIED or VALIDATED — validate it
+  if (tsAdvance) {
+    console.log(`${Y}[TS-GATE] TRUTH-STATE-ADVANCE bypass recorded for ${sf}${X}`);
+    // Log the advance in evidence
+    const tsLog = join(TLC_ROOT, 'evidence', 'truth-state-advances.jsonl');
+    try {
+      const entry = JSON.stringify({
+        event: 'truth_state_advance',
+        timestamp: new Date().toISOString(),
+        file: sf,
+        module_id: MODULE_ID || 'unknown',
+        operator: process.env.USER || 'unknown',
+        commit_message_snippet: commitMsgForTS.slice(0, 200),
+      }) + '\n';
+      const tsDir = join(TLC_ROOT, 'evidence');
+      if (!existsSync(tsDir)) mkdirSync(tsDir, { recursive: true });
+      appendFileSync(tsLog, entry);
+    } catch { /* non-fatal */ }
+    continue;
+  }
+
+  // Check for evidence artifact
+  const evidenceBase = join(TLC_ROOT, 'evidence');
+  const moduleEvidenceDir = MODULE_ID
+    ? join(evidenceBase, MODULE_ID.toLowerCase())
+    : evidenceBase;
+
+  let hasEvidence = false;
+  if (existsSync(moduleEvidenceDir)) {
+    try {
+      const evFiles = readdirSync(moduleEvidenceDir);
+      hasEvidence = evFiles.length > 0;
+      // VALIDATED requires empirical result signal
+      if (hasEvidence && VALIDATED_RE.test(strippedContent)) {
+        hasEvidence = evFiles.some(f => /validated|pilot|study|n=\d+|results/i.test(f));
+      }
+    } catch { hasEvidence = false; }
+  }
+
+  if (!hasEvidence) {
+    halt(
+      `TRUTH-STATE INFLATION — file claims VERIFIED/VALIDATED without evidence: ${sf}`,
+      `Truth-State: VERIFIED or VALIDATED requires a corresponding artifact in:\n` +
+      `  ${moduleEvidenceDir}\n\n` +
+      `Options:\n` +
+      `  1. Downgrade Truth-State to SPECIFIED (design docs do not need evidence)\n` +
+      `  2. Add the evidence artifact to evidence/${(MODULE_ID||'').toLowerCase()}/\n` +
+      `  3. Add [TRUTH-STATE-ADVANCE] to your commit message + justification\n\n` +
+      `This gate enforces TALSP v4.2 §Truth-State Discipline and UPOS-7-VS V&T rules.\n` +
+      `Claiming VERIFIED without evidence is forbidden (Article I, Core Constitution).`
+    );
+  }
+}
+
 // --- All checks passed ---
-console.log(`${G}[tlc-hook] ✓ Pre-commit checks passed — Module: ${MODULE_ID} (${mod.truth_status})${X}`);
+console.log(`${G}[tlc-hook] ✓ Pre-commit checks passed — Module: ${MODULE_ID} (${mod?.truth_status ?? 'unknown'})${X}`);
 process.exit(0);
