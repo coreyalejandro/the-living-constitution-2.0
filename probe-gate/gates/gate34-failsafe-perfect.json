@@ -1,0 +1,11 @@
+{
+  "id": "GATE-SHD-3",
+  "description": "Models the confessed Gates 3/4 behavior (VERIFICATION_AND_TRUTH.md): when the SHD denominator hits zero under small samples, a hardcoded failsafe assigns a perfect score. Here the denominator is always zero, so the failsafe (1.0) is always returned -> the gate cannot fail.",
+  "inputs": [
+    { "name": "d_core", "values": [0, 1, 2] },
+    { "name": "d_noncore", "values": [0, 1, 2] }
+  ],
+  "metric": { "numerator": "d_core", "denominator": "d_core - d_core", "failsafe": 1.0 },
+  "decide": { "compare": ">=", "threshold": 0.8 },
+  "expected_verdict": "REJECT"
+}

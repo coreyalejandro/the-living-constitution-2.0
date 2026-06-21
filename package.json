@@ -48,6 +48,8 @@
     "evidence:test": "node --test src/core/evidence-chain.test.mjs",
     "evidence:verify": "node src/core/evidence-chain.mjs verify evidence/signed-demo/governance.jsonl evidence/signed-demo/public-key.pem",
     "evidence:root": "node src/core/evidence-chain.mjs root evidence/signed-demo/governance.jsonl",
+    "probe-gate:test": "node --test probe-gate/tests/*.test.mjs",
+    "probe-gate:check": "node probe-gate/src/cli.mjs",
     "tlc": "node scripts/tlc.mjs"
   },
   "keywords": [

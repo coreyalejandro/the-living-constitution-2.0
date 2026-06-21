@@ -1,0 +1,10 @@
+{
+  "id": "GATE-I8-2",
+  "description": "Models the confessed Gate 2 bug (VERIFICATION_AND_TRUTH.md): the code increments t2_violations and t2_total_violated identically, so the ratio is constant regardless of model behavior. Here numerator and denominator are the same expression.",
+  "inputs": [
+    { "name": "violated", "values": [1, 2, 5, 10] }
+  ],
+  "metric": { "numerator": "violated", "denominator": "violated", "failsafe": 1 },
+  "decide": { "compare": "<=", "threshold": 0.1 },
+  "expected_verdict": "REJECT"
+}
