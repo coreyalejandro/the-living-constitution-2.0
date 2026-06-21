@@ -82,9 +82,9 @@ is not verified in this build:
 
 | Target | What it produces | Status in this build |
 |---|---|---|
-| **In-process checker** (`--target check`) | Exhaustive BFS proving safety + guard-necessity over each finite state space | **VERIFIED** — run here; all 6 hold; see test suite |
+| **In-process checker** (`--target check`) | Exhaustive BFS proving safety + guard-necessity over each finite state space | **VERIFIED** — run here; all 21 hold; see test suite |
 | **JavaScript** (`--target js`) | Runtime enforcement wired into the Policy Engine | **VERIFIED** — integration tests pass; blocks actions the legacy engine missed |
-| **TLA+** (`--target tla`) | A `.tla` module + `.cfg` for the TLC model checker | **EMITTED, NOT CHECKED** — TLC needs Java + `tla2tools.jar`, absent here. Output is `unverified`. |
+| **TLA+** (`--target tla`) | A `.tla` module + `.cfg` for the TLC model checker | **VERIFIED IN CI** — TLC reports "No error" on all modules in the governance CI (a required gate). Not run in the local sandbox (no Java there). |
 | **Lean 4** | Proof artifacts | **NOT BUILT** in v0.1 |
 
 The guard-necessity ("mutation") check is worth calling out: for each guarded operation, the
@@ -135,7 +135,8 @@ contribution is the integration and the honesty, not the invention of governance
 ## What this module does NOT claim
 
 - Not the first or only formal language for AI governance (see above).
-- The TLA+ output has not been run through TLC in this build.
+- The TLA+ output is not run through TLC in the local sandbox (no Java here); it IS model-checked
+  by TLC in the governance CI, where it is a required gate.
 - No Lean 4 target exists yet.
 - The in-process checker is exhaustive only over the small finite-domain models the invariants
   declare; it is not a general-purpose model checker for unbounded systems.
@@ -143,10 +144,9 @@ contribution is the integration and the honesty, not the invention of governance
 
 ## Roadmap (recommended next pull requests)
 
-1. **Run TLC in CI** — add a job that runs `tla2tools.jar` against the emitted `.tla` modules
-   and records the result to evidence, upgrading the TLA+ row from emitted to verified.
-2. **Author the remaining Article VIII invariants** (INV-002..005, 012–014, 021–022, 030–032,
-   041–042, 050) in TLC-SL.
+1. ~~**Run TLC in CI**~~ — DONE: `.github/workflows/governance-ci.yml` runs TLC on every emitted
+   `.tla` module as a required gate (confirmed "No error").
+2. ~~**Author the remaining Article VIII invariants**~~ — DONE: all 21 are now in TLC-SL.
 3. **Lean 4 target** for the invariants whose properties warrant a proof rather than a check.
 4. **Generate the pre-commit checks** from the same models, so the commit hook and the Policy
    Engine share one source too.
@@ -182,7 +182,7 @@ tlc-sl/
 |---|---|
 | **What** | A specification language compiling one invariant definition to runtime enforcement, an in-process exhaustive model check, and a TLA+ export. The full Article VIII set — 21 invariants — is shipped. |
 | **True** | Parser, checker (safety + necessity), JS target, Policy Engine integration, conformance report, and evidence recording all run; the node:test suite passes; 21/21 invariants verified by the in-process checker. Commands: `npm run tlc:sl`, `npm run tlc:sl:test`. |
-| **Unverified** | TLA+ output not run through TLC (no Java/tla2tools here). No Lean target. Checker is exhaustive only over the declared finite models. |
+| **Unverified** | TLA+ not run through TLC in the local sandbox (no Java) — but it IS model-checked by TLC in the governance CI (required gate). No Lean target. Checker is exhaustive only over the declared finite models. |
 | **Not Claimed** | See "What this module does NOT claim." Notably not the first governance DSL. |
 | **Functional Status** | PARTIAL — verified core (checker + runtime) is `working`; TLA+ path is `draft`/`unverified`. |
 | **Governance State** | Bound to `CRSP-TLC-SL-001`. Agent-produced; requires a human acceptance gate before any truth_status upgrade. |
