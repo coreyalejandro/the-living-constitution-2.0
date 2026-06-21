@@ -886,6 +886,78 @@
         "remaining Article VIII invariants not yet authored in TLC-SL"
       ],
       "notes": "Agent-produced under CRSP-TLC-SL-001; requires human acceptance gate before any truth_status upgrade. One invariant definition compiles to runtime enforcement (wired into src/core/policy-engine.js, backward compatible), an in-process exhaustive safety + guard-necessity check (run here), and a TLA+ export (emitted, NOT TLC-run). Closes the spec-to-enforcement drift the constitution V&T statement flagged as unverified. Not the first governance DSL (see tlc-sl/README.md prior-art section). Zero runtime dependencies."
+    },
+    {
+      "id": "EVIDENCE-CHAIN-V2",
+      "label": "Evidence Chain v2 (Ed25519 + Merkle)",
+      "path": "src/core/evidence-chain.mjs",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "components": [
+        "ed25519-signing",
+        "prev-hash-chain",
+        "merkle-root",
+        "inclusion-proofs",
+        "verifier-cli"
+      ],
+      "contract_id": "CRSP-EVIDENCE-CHAIN-001",
+      "verified_date": "2026-06-21",
+      "implementation_status": "partial",
+      "public_display_status": "demo",
+      "research_lane": "ai_safety_governance",
+      "product_lane": "governance_runtime",
+      "verified_scope": {
+        "component": "sign/verify/Merkle + verifier CLI",
+        "verification": "npm run evidence:test => 9/9 pass; signed TLC-SL evidence (29 entries) verifies; governance CI green",
+        "covers": [
+          "ed25519-signing",
+          "prev-hash-chain",
+          "merkle-root",
+          "inclusion-proofs",
+          "verifier-cli"
+        ]
+      },
+      "unverified_scope": [
+        "no identity binding / PKI / key rotation (proves a key signed, not whose)",
+        "no visual understanding layer (INV-050 bars working)",
+        "existing audit.mjs logs not retrofitted to signed form"
+      ],
+      "notes": "Additive over src/core/audit.mjs. Agent-produced under CRSP-EVIDENCE-CHAIN-001; requires human acceptance gate before truth_status upgrade. Registered to close the I1 gap for code shipped on main."
+    },
+    {
+      "id": "PROBE-GATE",
+      "label": "Probe-Gate (INV-PROBE-001)",
+      "path": "probe-gate/",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "components": [
+        "analyzer",
+        "arithmetic-evaluator",
+        "cli",
+        "gate-fixtures"
+      ],
+      "contract_id": "CRSP-PROBE-GATE-001",
+      "verified_date": "2026-06-21",
+      "implementation_status": "partial",
+      "public_display_status": "demo",
+      "research_lane": "ai_safety_governance",
+      "product_lane": "governance_runtime",
+      "verified_scope": {
+        "component": "gate discrimination analyzer + CLI",
+        "verification": "npm run probe-gate:test => 7/7 pass; rejects the two confessed-bad fixtures, accepts the genuine gate; governance CI green",
+        "covers": [
+          "analyzer",
+          "arithmetic-evaluator",
+          "cli",
+          "gate-fixtures"
+        ]
+      },
+      "unverified_scope": [
+        "necessary not sufficient: does NOT prove a probe measures the right construct",
+        "governance-harness synthetic-data problem untouched",
+        "no visual understanding layer (INV-050 bars working)"
+      ],
+      "notes": "Operationalizes evidence/GOVERNANCE-HARNESS/VERIFICATION_AND_TRUTH.md. Agent-produced under CRSP-PROBE-GATE-001; requires human acceptance gate before truth_status upgrade. Registered to close the I1 gap for code shipped on main."
     }
   ]
 }
