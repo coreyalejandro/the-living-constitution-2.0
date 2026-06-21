@@ -113,7 +113,7 @@
         "tlc-golden-prd",
         "tlc-model-refactor-plan"
       ],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": "2026-05-13",
       "implementation_status": "draft",
       "public_display_status": "draft",
@@ -149,7 +149,7 @@
       "surface": "governance_core",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Contains adjudicated, admissibility, analysis, app dirs. Not yet inspected."
     },
@@ -167,7 +167,7 @@
         "validation-utils",
         "docker-nginx-config"
       ],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": "2026-05-13",
       "implementation_status": "partial",
       "public_display_status": "draft",
@@ -204,7 +204,7 @@
       "surface": "private_lab",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Has frontend/, backend/, data/, env.example. Multi-agent debate infra candidate."
     },
@@ -215,7 +215,7 @@
       "surface": "private_lab",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Not yet inspected."
     },
@@ -226,7 +226,7 @@
       "surface": "private_lab",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Has dist/, documentation/, META_PROMPT_PRINTOUT.md. Not yet inspected."
     },
@@ -237,7 +237,7 @@
       "surface": "private_lab",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Not yet inspected."
     },
@@ -248,7 +248,7 @@
       "surface": "documentation",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Documentation satellite for the PROACTIVE framework. Contains structured sections 01_FOUNDATIONS through 09_SAFETY_CASE. Not the canonical Python package \u2014 see PROACTIVE-28441830 for the implemented, test-verified module. Not inspected this session beyond top-level listing."
     },
@@ -275,7 +275,7 @@
         "cli",
         "gitlab-duo-agent"
       ],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": "2026-05-13",
       "implementation_status": "working",
       "public_display_status": "draft",
@@ -313,7 +313,7 @@
       "surface": "private_lab",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Has AGENTS.md. Not yet inspected."
     },
@@ -324,7 +324,7 @@
       "surface": "documentation",
       "truth_status": "unverified",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Contains REASONS, UPOS-7-VS, principles docs. Governance methodology documentation."
     },
@@ -336,7 +336,7 @@
       "truth_status": "unverified",
       "public_display_status": "coming_soon",
       "components": [],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Has app/, components/, data/. Next.js app structure."
     },
@@ -407,7 +407,7 @@
       "surface": "exhibit",
       "truth_status": "planned",
       "public_display_status": "coming_soon",
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": null,
       "notes": "Planned exhibit. Contract Window interactive demo for public portfolio. Not yet built."
     },
@@ -427,7 +427,7 @@
         "research-proposals",
         "paper-draft"
       ],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": "2026-05-13",
       "implementation_status": "partial",
       "public_display_status": "draft",
@@ -473,7 +473,7 @@
         "packages/google-executor",
         "packages/agent-sdk"
       ],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": "2026-05-13",
       "implementation_status": "partial",
       "public_display_status": "draft",
@@ -527,7 +527,7 @@
         "contexts/ConsentContext.tsx",
         "__tests__ (8 test files)"
       ],
-      "contract_id": null,
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS",
       "verified_date": "2026-05-13",
       "implementation_status": "partial",
       "public_display_status": "demo",
@@ -658,7 +658,8 @@
           "format": "csv"
         }
       ],
-      "notes": "N-of-1 observational study. Researcher is sole participant. Mixed design: retrospective capture for Course 1 Lessons 1\u20133 (completed before study began), prospective logging from Course 1 Lesson 4 forward. 6 courses, 38 total lessons. validate_repo.py PASS at initial commit. Workbook exists in Google Drive but not yet placed in workbook/ directory \u2014 validate_workbook.py returns PARTIAL (expected). No prospective data collected yet. Local-first. No deployment. No generalizability claimed. Governed as TLC 2.0 module_library + documentation + evidence-producing study system."
+      "notes": "N-of-1 observational study. Researcher is sole participant. Mixed design: retrospective capture for Course 1 Lessons 1\u20133 (completed before study began), prospective logging from Course 1 Lesson 4 forward. 6 courses, 38 total lessons. validate_repo.py PASS at initial commit. Workbook exists in Google Drive but not yet placed in workbook/ directory \u2014 validate_workbook.py returns PARTIAL (expected). No prospective data collected yet. Local-first. No deployment. No generalizability claimed. Governed as TLC 2.0 module_library + documentation + evidence-producing study system.",
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS"
     },
     {
       "id": "TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE",
@@ -709,7 +710,8 @@
         "portfolio-gate",
         "reviewer-gate"
       ],
-      "notes": "First version of the TLC reusable research repo template. Derived from HIDRS instance pattern. Includes the I8 Visual Understanding Layer invariant as a hard nonnegotiable enforced by validate_repo.py. Six Python scripts, five JSON schemas, six markdown templates, nine docs, and six Mermaid/pictograph visual files. Creation script copies and substitutes placeholders, inits git, runs validator. HIDRS at hidrs-instructional-dependency-study is the reference instance."
+      "notes": "First version of the TLC reusable research repo template. Derived from HIDRS instance pattern. Includes the I8 Visual Understanding Layer invariant as a hard nonnegotiable enforced by validate_repo.py. Six Python scripts, five JSON schemas, six markdown templates, nine docs, and six Mermaid/pictograph visual files. Creation script copies and substitutes placeholders, inits git, runs validator. HIDRS at hidrs-instructional-dependency-study is the reference instance.",
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS"
     },
     {
       "id": "GOVERNANCE-HARNESS",
@@ -767,7 +769,8 @@
         "SFT completion without NaN",
         "governance-harness probe scores on checkpoint",
         "chat_web UI public URL"
-      ]
+      ],
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS"
     },
     {
       "id": "AUTORESEARCH",
@@ -790,7 +793,8 @@
         "Extended results.tsv with governance probe scores",
         "FLAGGED status on governance regression",
         "BLOCKED status on pre-commit rejection"
-      ]
+      ],
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS"
     },
     {
       "id": "GOVERNED-INVESTIGATION",
@@ -808,7 +812,8 @@
         "simulation/hitl_harness.py Table 5 reproduction",
         "council review of paper claims",
         "venue submission receipt"
-      ]
+      ],
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS"
     },
     {
       "id": "CCD",
@@ -825,7 +830,8 @@
         "ANNOTATOR Kappa >= 0.75",
         "All 4 falsification conditions automatable",
         "ccd-detector pip package"
-      ]
+      ],
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS"
     },
     {
       "id": "NARRATIVE-CONDITIONED-INTERFACES",
@@ -844,7 +850,8 @@
         "Pilot study (N=24) completed with all 4 gate checks passed",
         "Reviewer sign-off before public sharing",
         "arXiv submission receipt"
-      ]
+      ],
+      "contract_id": "CRSP-PLACEHOLDER-BINDINGS"
     },
     {
       "id": "TLC-SL",
