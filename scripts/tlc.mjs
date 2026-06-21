@@ -188,6 +188,7 @@ function drawHelp() {
     ['/done <MODULE>',   'End the current session and record what happened'],
     ['/new <NAME>',      'Create a new module (guided)'],
     ['/dashboard',       'Show the full module dashboard'],
+    ['/spec',            'Compile + model-check constitutional invariants (TLC-SL)'],
     ['/validate <FILE>', 'Run Article XVI validator on a markdown file'],
     ['/probe',           'Run live invariant probe (Qwen2.5-7B — synthetic weights)'],
     ['/council <QUESTION>', 'Convene llm-council deliberation on a governance question'],
@@ -319,6 +320,22 @@ async function dispatch(line) {
             l.includes('[R')       ? C.warn(l)    :
             l.includes('Fix:')     ? C.muted(l)   :
                                      C.text(l);
+          console.log('  ' + colored);
+        }
+        console.log('');
+        break;
+      }
+
+      case 'spec': {
+        console.log(C.muted('  Compiling and checking constitutional invariants (TLC-SL)...'));
+        const { ok, out } = await runScript('tlc-spec.mjs');
+        const lines = out.split('\n');
+        for (const l of lines) {
+          const colored =
+            l.includes('[PASS]') ? C.good(l) :
+            l.includes('[FAIL]') ? C.critical(l) :
+            l.includes('verified') ? C.label(l) :
+                                     C.muted(l);
           console.log('  ' + colored);
         }
         console.log('');

@@ -40,6 +40,11 @@
     "tlc:health": "node scripts/tlc-health.mjs",
     "tlc:audit-retention": "node scripts/tlc-audit-retention.mjs",
     "tlc:setup": "node scripts/tlc-setup.mjs",
+    "tlc:sl": "node tlc-sl/src/compile.mjs --target check",
+    "tlc:sl:compile": "node tlc-sl/src/compile.mjs --target all",
+    "tlc:sl:test": "node --test tlc-sl/tests/*.test.mjs",
+    "tlc:sl:conformance": "node tlc-sl/src/conformance.mjs",
+    "tlc:sl:evidence": "node tlc-sl/src/record-evidence.mjs",
     "tlc": "node scripts/tlc.mjs"
   },
   "keywords": [

@@ -845,6 +845,47 @@
         "Reviewer sign-off before public sharing",
         "arXiv submission receipt"
       ]
+    },
+    {
+      "id": "TLC-SL",
+      "label": "TLC-SL - Constitution as Code",
+      "path": "tlc-sl/",
+      "surface": "governance_core",
+      "truth_status": "partial",
+      "components": [
+        "lexer-parser",
+        "model-checker",
+        "js-target",
+        "tla-target",
+        "policy-engine-integration",
+        "conformance-report",
+        "evidence-recorder"
+      ],
+      "contract_id": "CRSP-TLC-SL-001",
+      "verified_date": "2026-06-20",
+      "implementation_status": "partial",
+      "public_display_status": "demo",
+      "research_lane": "ai_safety_governance",
+      "product_lane": "governance_runtime",
+      "verified_scope": {
+        "component": "TLC-SL compiler + in-process checker + Policy Engine integration",
+        "verification": "node tlc-sl/src/compile.mjs --target check => 6/6 invariants safety-verified; node --test tlc-sl/tests/*.test.mjs => 19/19 pass; evidence/TLC-SL/verification.jsonl verifyChain ok",
+        "covers": [
+          "lexer-parser",
+          "model-checker",
+          "js-target",
+          "policy-engine-integration",
+          "conformance-report",
+          "evidence-recorder"
+        ]
+      },
+      "unverified_scope": [
+        "TLA+ export not run through TLC model checker (Java + tla2tools.jar absent in build env)",
+        "Lean 4 target not built (out of scope v0.1)",
+        "checker exhaustive only over declared finite-domain models; not a general unbounded model checker",
+        "remaining Article VIII invariants not yet authored in TLC-SL"
+      ],
+      "notes": "Agent-produced under CRSP-TLC-SL-001; requires human acceptance gate before any truth_status upgrade. One invariant definition compiles to runtime enforcement (wired into src/core/policy-engine.js, backward compatible), an in-process exhaustive safety + guard-necessity check (run here), and a TLA+ export (emitted, NOT TLC-run). Closes the spec-to-enforcement drift the constitution V&T statement flagged as unverified. Not the first governance DSL (see tlc-sl/README.md prior-art section). Zero runtime dependencies."
     }
   ]
 }
