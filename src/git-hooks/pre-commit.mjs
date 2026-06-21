@@ -19,7 +19,8 @@
  */
 
 import { readFileSync, existsSync, appendFileSync, mkdirSync, readdirSync } from 'fs';
-import { join, resolve, dirname, homedir } from 'path';
+import { join, resolve, dirname } from 'path';
+import { homedir } from 'os';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 import { appendAuditEntry } from '../core/audit.mjs';
