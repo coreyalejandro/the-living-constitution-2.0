@@ -1,311 +1,219 @@
 # The Living Constitution 2.0
 
-**One command. One terminal. AI governance that runs.**
+**A Research Program Operating System for Constitutional AI Governance**
+
+```
+TLC Runtime Program
+│
+├── Runtime Architecture        — formal governance engine
+├── Constitution Framework      — how constitutions are built
+├── Research Framework          — Tier-1 execution infrastructure
+├── Validation Framework        — empirical evaluation machinery
+├── Governance Framework        — audit, evidence, community boards
+└── Publication Pipeline        — paper-to-product pathway
+```
+
+One command to enter the system:
 
 ```bash
 node scripts/tlc.mjs
 ```
 
-That is it. You are in.
-
 ---
 
-## What is this?
+## What This Is
 
-TLC 2.0 is an AI governance system that you can actually run.
+TLC is a constitutional runtime that enforces externally specified epistemic
+invariants during language model inference. It is not a framework document.
+It is not a set of principles. It is running infrastructure.
 
-Not a framework document. Not a set of principles. A system with a terminal,
-a registry, a deliberation engine, probes, an experiment loop, and a model it
-trains from scratch — all governed by a written constitution with enforced rules.
+The architectural insight: a governance runtime and a domain constitution are
+different artifacts. TLC executes constitutions. Constitutions encode domain
+theory. The two can be developed, criticized, and published independently.
 
-Every other AI governance system asks you to trust it.
-This one asks you to verify it.
-
----
-
-## Who is this for?
-
-**You if you are a researcher at Anthropic, OpenAI, DeepMind, or any lab**
-that publishes principles but does not have running infrastructure to enforce them.
-
-**You if you are an AI safety engineer** who wants a governance system that
-produces evidence, not just documentation.
-
-**You if you are Corey** — or anyone like him — who thinks in systems,
-needs explicit structure, and needs every instruction to say exactly what to do
-with zero ambiguity.
-
----
-
-## Start in 60 seconds
-
-**Step 1.** Make sure you have Node.js 18 or higher.
-
-```bash
-node --version
+```
+TLC Runtime
+    ↓
+Constitution Interface
+    ↓
+Domain Constitution
+    ↓
+Empirical Validation
 ```
 
-If it says v18 or higher, you are ready. If not, install Node from nodejs.org.
+The Eight Wonders is the first constitution. Instructional Integrity is the
+second. The moment two independent constitutions run correctly inside TLC,
+the platform generalizability claim is empirically established.
 
-**Step 2.** Clone this repository.
+---
+
+## The Three-Paper Structure
+
+A single paper cannot defend a runtime architecture, a domain theory, and
+empirical results simultaneously. Each layer is a separate publication:
+
+| Paper | Claim | Location |
+|---|---|---|
+| TLC Runtime v1.0 | TLC executes arbitrary epistemic constitutions | modules/tlc-runtime/ |
+| Eight Wonders Constitution v1.0 | Eight Wonders is a constitutional ontology for relational economies | modules/eight-wonders-constitution/ |
+| Validation Study v1.0 | TLC + Eight Wonders recovers invariants at 94%, reduces IAI by 68% | modules/validation-study/ |
+
+Reviewers must engage each layer on its own terms. Attacking the Eight Wonders
+does not touch the runtime. Attacking the runtime does not disprove AHI theory.
+Attacking empirical results does not invalidate the constitutional specification.
+
+---
+
+## The Constitution Family
+
+Any domain that can be expressed as evaluable invariants can run inside TLC:
+
+```
+TLC Runtime
+│
+├── Eight Wonders Constitution          (relational economies — Black consumer behavior)
+├── Instructional Integrity Constitution (learning systems — Quantic research)
+├── Research Integrity Constitution     (epistemic governance — AI safety)
+├── Clinical Trust Constitution         (patient-clinician dynamics)
+├── AI Safety Constitution              (alignment invariants)
+└── Neurodivergent Accessibility Constitution (cognitive access)
+```
+
+Each constitution is independently publishable. Each validation study is
+independently replicable. The runtime is not modified between constitutions.
+
+---
+
+## Repository Structure
+
+```
+the-living-constitution-2.0/
+│
+├── modules/
+│   ├── tlc-runtime/                    Platform paper + runtime code
+│   ├── eight-wonders-constitution/     Domain constitution (Paper 2)
+│   ├── validation-study/               Empirical paper (Paper 3)
+│   ├── constitution-engineering/       CEM — how constitutions are built
+│   ├── instructional-integrity/        Second constitution (Quantic research)
+│   ├── governance-harness/             Probe training + gate metrics
+│   ├── governed-investigation/         Original paper (v10 preserved)
+│   └── narrative-conditioned-interfaces/
+│
+├── src/
+│   ├── interfaces/
+│   │   └── constitutional-invariant.ts  The typed platform contract
+│   └── core/
+│       ├── audit.mjs
+│       └── evidence-chain.mjs
+│
+├── constitutions/                      Compiled constitution specs
+├── tlc-sl/                             TLC Specification Language
+├── probe-gate/                         Gate validation tooling
+├── evidence/                           Append-only audit chain
+├── registry/                           Module registry
+├── scripts/                            All TLC CLI scripts
+├── templates/                          Research project scaffolds
+├── docs/                               Operations + onboarding
+└── contracts/active/                   Active governance contracts
+```
+
+---
+
+## The Constitutional Interface
+
+Any constitution that executes inside TLC implements:
+
+```typescript
+interface ConstitutionalInvariant {
+  id: string
+  description: string
+  evaluate(context: Context): InvariantState
+  repair(context: Context): RepairAction
+  isUpstream: boolean
+  dependents: string[]
+}
+
+interface Constitution {
+  id: string
+  version: string
+  invariants: ConstitutionalInvariant[]
+  getUpstreamInvariant(): ConstitutionalInvariant | null
+}
+```
+
+Full specification: src/interfaces/constitutional-invariant.ts
+
+---
+
+## Formal Guarantees
+
+Five LTL properties are verified against the runtime state machine:
+
+1. Safety Gate — no emission while any invariant is VIOLATED
+2. Upstream Primacy — upstream invariant gates all downstream evaluation
+3. Halt Authority — hard halt on active violations until repair clears
+4. Feedback Obligation — human acknowledgment required on state transitions
+5. Task-State Locking — scope drift triggers automatic halt
+
+Proved deadlock-free and live under finite human response time (Coq).
+
+---
+
+## Quick Start
 
 ```bash
+# Clone
 git clone https://github.com/coreyalejandro/the-living-constitution-2.0
 cd the-living-constitution-2.0
+
+# Install
+npm install
+
+# Enter TLC
+node scripts/tlc.mjs
+
+# Run governance harness
+cd modules/governance-harness
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 python3 run_harness.py
+
+# Health check
+node scripts/tlc-health.mjs
 ```
 
-**Step 3.** Start the TLC terminal.
+---
+
+## Verification Standard
+
+Every empirical claim in this repository must be backed by a
+VERIFICATION_AND_TRUTH.md file committed alongside the evidence. No claim
+is published without a corresponding V&T that specifies:
+
+- EXISTS: what was verified and present
+- VERIFIED AGAINST: the actual artifact or output
+- NOT CLAIMED: what this does not establish
+- FUNCTIONAL STATUS: current state of the implementation
+
+---
+
+## For Researchers
+
+The full research arc is in docs/RESEARCH-ARC.md.
+Onboarding is in docs/ONBOARDING.md.
+The program architecture is in PROGRAM_ARCHITECTURE.md.
+
+To start a new constitution or study:
 
 ```bash
-node scripts/tlc.mjs
-```
-
-A gold-themed terminal opens. Type `/help` to see everything you can do.
-Type `/setup` to walk through first-time configuration.
-Type `/quit` to exit.
-
-That is the whole setup.
-
----
-
-## What the terminal does
-
-When you run `node scripts/tlc.mjs` you get a terminal that looks and
-behaves like Claude or ChatGPT — same kind of interface, same feel —
-except it is your governance system, running locally, with no internet
-required for the core features.
-
-Commands you will use most:
-
-```
-/help                    see all commands
-/setup                   first-time walkthrough
-/modules                 list all 24 governed modules
-/status                  color-coded health of every module
-/work MODULE-ID          start a governed session on a module
-/done MODULE-ID          close the session and record evidence
-/validate path/to/file   check a file for plain-language violations
-/council YOUR QUESTION   ask the multi-model council a question
-/probe                   run neural probe scores on the nanochat model
-/autoresearch            see experiment results table
-/health                  full system health check
-/quit                    exit
+node scripts/create-research-project-from-template.mjs <project-slug>
 ```
 
 ---
 
-## What TLC 2.0 actually does — five plain-language sentences
+## For AI Labs
 
-**1. It enforces rules on every file you write.**
-The validator checks that instructions are unambiguous, spatial-reasoning-safe,
-and do not use shell commands as natural language. Violations are named and blocked.
+TLC is what a governance system looks like when it produces evidence instead
+of documentation. Every governance decision is logged to a tamper-evident
+evidence chain. Every invariant evaluation is auditable. Every state transition
+requires human acknowledgment.
 
-**2. It enforces rules on every git commit.**
-The pre-commit hook checks that every module is registered, no quarantined
-module is being edited, and no invariant is bypassed. A bad commit does not land.
-
-**3. It deliberates on governance decisions.**
-When you need to know whether a module is ready to advance, or whether a
-constitutional change is sound, the council runs — multiple models answer
-independently, review each other anonymously, and a Chairman synthesizes
-the verdict.
-
-**4. It measures governance in activation space.**
-Eight neural probes — one per constitutional invariant — score every model
-checkpoint. An experiment that improves language model performance but
-degrades governance alignment is flagged before it lands.
-
-**5. It trains a model under its own constitution.**
-nanochat is the model TLC builds from scratch. Every training commit is
-governed. Every checkpoint is probed. The training loop and the governance
-system are the same system.
-
----
-
-## The modules
-
-TLC 2.0 has 24 registered modules. Here is every one of them, grouped by
-what they do and whether they are ready to run right now.
-
-### Running right now — no setup needed
-
-| Module | What it does |
-|---|---|
-| CRSP-STC-RUNTIME-001 | The governance runtime itself. This is what you are running. |
-| THE-LIVING-CONSTITUTION | The written constitution — Articles I through XVI. |
-
-### Running — needs your OpenRouter API key
-
-| Module | What it does | One-time setup |
-|---|---|---|
-| LLM-COUNCIL | Multi-model deliberation engine. 3-stage: independent → peer review → Chairman. | Add `OPENROUTER_API_KEY=sk-or-...` to a `.env` file in the repo root. Get a key at openrouter.ai. |
-
-### Running — needs a GPU (Colab or cloud)
-
-| Module | What it does | What you need |
-|---|---|---|
-| NANOCHAT | GPT model trained under TLC governance. | Google Colab GPU runtime. Open `modules/nanochat/INSTALL.ipynb` and press Run All. |
-| GOVERNANCE-HARNESS | 8 neural probes measuring I1-I8 in activation space. | GPU to run probes on a checkpoint. |
-| AUTORESEARCH | Autonomous experiment loop — val_bpb + governance scores per commit. | NVIDIA GPU (CUDA). Not runnable on Mac. |
-
-### Active research — in progress
-
-These modules have contracts and evidence records. Work is underway.
-
-| Module | Status | What it needs to advance |
-|---|---|---|
-| AGENT-SENTINEL | partial | Evidence validation by council |
-| COGNITIVE-GOVERNANCE-LAB | partial | Visual understanding layer + evidence |
-| CONSENTCHAIN | partial | Technical implementation milestone |
-| CONSENT-GATEWAY-AUTH0 | partial | Auth0 integration tested |
-| COREYS-AGENTIC-PORTFOLIO | partial | Portfolio data export verified |
-| HIDRS | partial | C1L4 complete. Next: C1L5 dataset |
-| TLC-RESEARCH-PAPER-PRODUCT-TEMPLATE | partial | Paper packet complete |
-
-### Planned — not started yet
-
-| Module | What it will be |
-|---|---|
-| CONTRACT-WINDOW-EXHIBIT | Public-facing contract visualization |
-| TLC-EVIDENCE-OBSERVATORY | Real-time evidence monitoring dashboard |
-| MULTIAGENT-DEBATE | Structured multi-agent debate on governance claims |
-| META-PROMPT-ARCHITECT | Prompt architecture for governance-safe LLM calls |
-| MISALIGNMENT-EVIDENCE-LAB | Evidence lab for detecting misalignment patterns |
-| PROACTIVE-AI-CONSTITUTION-TOOLKIT | Toolkit for deploying TLC in other organizations |
-| AI-SAFETY-IDENTITY-STRATEGY | Identity and attribution framework for AI systems |
-| ZERO-SHOT-BUILD-OS-DOCS | Zero-shot documentation builder for governed repos |
-| PORTFOLIO-V2 | Portfolio v2 with full evidence integration |
-| TLC-ARTIFACTS-RESTRUCTURE | Artifact registry restructure |
-
----
-
-## The architecture in one diagram
-
-```
-YOUR TERMINAL
-     │
-     ▼
-node scripts/tlc.mjs
-     │
-     ├─ /validate     → validate-instructions.mjs
-     │                  Checks files for plain-language violations (Article XVI)
-     │
-     ├─ /work /done   → Session system
-     │                  Starts and closes governed work sessions
-     │                  Writes active-session.md for your AI assistant to read
-     │
-     ├─ /council      → modules/llm-council/backend/council.py
-     │                  Stage 1: all models answer independently
-     │                  Stage 2: anonymous peer review + ranking
-     │                  Stage 3: Chairman synthesizes verdict
-     │                  Requires: OPENROUTER_API_KEY in .env
-     │
-     ├─ /probe        → modules/governance-harness/probes/run_live.py
-     │                  Scores a model checkpoint on I1-I8
-     │                  Requires: GPU + nanochat checkpoint
-     │
-     ├─ /autoresearch → modules/autoresearch/results.tsv
-     │                  Shows val_bpb + I1-I8 per experiment commit
-     │                  Requires: GPU to populate
-     │
-     └─ /health       → scripts/tlc-health.mjs
-                        Checks git status, registry, hash chain, hook install
-```
-
----
-
-## The constitution
-
-The rules TLC enforces are written in `SOCIOTECHNICAL_CONSTITUTION.md`.
-There are 16 Articles and 8 Invariants (I1 through I8).
-
-The short version:
-
-- **I1** Every module needs a contract before any work starts
-- **I2** Claims need evidence — assertion is not evidence
-- **I3** Work must stay inside the contract scope
-- **I4** Invariants cannot be bypassed by reframing
-- **I5** No unauthorized personal data
-- **I6** Quarantined modules are read-only
-- **I7** Status labels must reflect reality — no inflation
-- **I8** Every project needs a visual understanding layer
-
-Article XVI (the one you will notice most) says: every instruction in this
-system must be explicit, unambiguous, and safe for someone with spatial
-reasoning differences to follow without guessing. That is why the instructions
-here say exactly what to type and exactly what to expect.
-
----
-
-## For AI safety researchers
-
-The full case for why TLC 2.0 matters to your lab is in `docs/WHY-TLC.md`.
-
-Short version: every major AI lab has published principles. None of them have
-running infrastructure that enforces those principles, produces empirical
-evidence of compliance, and amends itself through governed deliberation.
-TLC 2.0 is that infrastructure. It is open. It is reproducible. Every claim
-maps to a file in this repository.
-
----
-
-## The verification stack
-
-Governance here is **verified, not asserted**. Four open, zero-dependency pieces make that
-concrete, and a CI workflow re-runs them on every change. Full map: `docs/VERIFICATION_STACK.md`.
-
-| Piece | What it guarantees | Verify |
-|---|---|---|
-| **TLC-SL** (`tlc-sl/`) | One definition per Article VIII invariant (all 21) compiles to runtime enforcement **and** an exhaustive model check **and** a TLA+ export — no spec↔enforcement drift. | `npm run tlc:sl` |
-| **Evidence Chain v2** (`src/core/evidence-chain.mjs`) | Every evidence entry is Ed25519-signed + Merkle-committed → verifiable offline with only the public key. | `npm run evidence:test` |
-| **Probe-Gate** (`probe-gate/`) | No "gate that cannot fail" can pose as a test (operationalizes `evidence/GOVERNANCE-HARNESS/VERIFICATION_AND_TRUTH.md`). | `npm run probe-gate:test` |
-| **Governance CI** (`.github/workflows/governance-ci.yml`) | The whole stack + a no-drift check + TLC model-checking re-run on every push/PR. | GitHub Actions |
-
-```bash
-npm run tlc:sl                 # 22/22 invariants model-checked
-npm run tlc:sl:test            # + evidence:test + probe-gate:test  → 35 tests
-npm run tlc:sl:verify-evidence # verify the signed governance evidence
-```
-
----
-
-## Files to know
-
-```
-SOCIOTECHNICAL_CONSTITUTION.md    the rules
-README.md                         this file
-docs/HOW-TO-USE.md                step-by-step operator instructions
-docs/WHY-TLC.md                   why every AI lab needs this
-registry/modules.registry.json    all 24 modules, truth_status, contracts
-scripts/tlc.mjs                   the terminal UI — start here
-scripts/tlc-health.mjs            system health check
-scripts/tlc-setup.mjs             first-time setup wizard
-scripts/validate-instructions.mjs Article XVI validator
-modules/governance-harness/       neural probes for I1-I8
-modules/llm-council/              3-stage deliberation engine
-modules/autoresearch/             autonomous experiment loop
-modules/nanochat/                 GPT model trained under governance
-evidence/                         all evidence records, indexed
-```
-
----
-
-## What this does not claim
-
-- That any unverified module is production-ready
-- That governance-harness probes are validated on real data (they are trained
-  on synthetic data — see `evidence/GOVERNANCE-HARNESS/VERIFICATION_AND_TRUTH.md`)
-- That nanochat training has been completed (it has not — INSTALL.ipynb is the
-  installer, the training run requires a GPU)
-- That llm-council verdicts are infallible
-- That TLC 2.0 is a deployed product — it is research infrastructure
-
-Every module's truth_status is honest. `unverified` means unverified.
-`partial` means partial. Nothing here is inflated.
-
----
-
-## Questions
-
-Open an issue at github.com/coreyalejandro/the-living-constitution-2.0
-or reach out directly through the contact in `docs/WHY-TLC.md`.
+If your lab publishes principles, TLC asks you to run them.

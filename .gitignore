@@ -10,3 +10,5 @@ node_modules/
 # OpenMemory
 openmemory.md
 .env
+.vercel
+.env*.local
