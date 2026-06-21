@@ -1,0 +1,11 @@
+{
+  "id": "GATE-ACCURACY",
+  "description": "A genuine discriminating gate: accuracy = correct / total, PASS if >= 0.8. It can both pass and fail across its input domain and is sensitive to the input, so it is a real test.",
+  "params": { "total": 5 },
+  "inputs": [
+    { "name": "correct", "values": [0, 1, 2, 3, 4, 5] }
+  ],
+  "metric": { "numerator": "correct", "denominator": "total", "failsafe": 0 },
+  "decide": { "compare": ">=", "threshold": 0.8 },
+  "expected_verdict": "ACCEPT"
+}

@@ -40,6 +40,8 @@
     "tlc:health": "node scripts/tlc-health.mjs",
     "tlc:audit-retention": "node scripts/tlc-audit-retention.mjs",
     "tlc:setup": "node scripts/tlc-setup.mjs",
+    "probe-gate:test": "node --test probe-gate/tests/*.test.mjs",
+    "probe-gate:check": "node probe-gate/src/cli.mjs",
     "tlc": "node scripts/tlc.mjs"
   },
   "keywords": [
