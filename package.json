@@ -14,7 +14,7 @@
     "validate": "node src/cli/tlc-cli.js validate",
     "status": "node src/cli/tlc-cli.js status",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:unit": "jest tests/unit",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit",
     "test:integration": "node --test tests/integration/*.test.mjs",
     "test:compliance": "jest tests/compliance",
     "schema:validate": "ajv validate -s schemas/contract-schema.json -d contracts/active/BUILD_CONTRACT.json",
@@ -100,6 +100,7 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.js"
-    ]
+    ],
+    "transform": {}
   }
 }
