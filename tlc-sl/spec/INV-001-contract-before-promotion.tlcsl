@@ -1,0 +1,22 @@
+# INV-001 — Contract before promotion (Constitution Article VIII.1, IV.3)
+# A module may only reach truth_status "working" if it has a bound contract.
+# "bound" means the contract is not "none" (active or frozen both count as bound).
+
+invariant "INV-001" {
+  title "Contract before promotion"
+  article "VIII.1 / IV.3"
+  level BLOCK
+  rationale "An active module without a bound C-RSP contract may not be promoted to working."
+
+  var contract domain { none, active, frozen }
+  var status   domain { unverified, partial, working }
+
+  init { contract = none, status = unverified }
+
+  op BIND_CONTRACT   { guard true              effect { contract = active } }
+  op FREEZE_CONTRACT { guard contract = active  effect { contract = frozen } }
+  op PROMOTE_PARTIAL { guard true              effect { status = partial } }
+  op PROMOTE_WORKING { guard contract != none   effect { status = working } }
+
+  safety status = working implies contract != none
+}

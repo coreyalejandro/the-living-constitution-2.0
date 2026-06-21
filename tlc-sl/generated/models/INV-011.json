@@ -1,0 +1,148 @@
+{
+  "id": "INV-011",
+  "title": "Partial requires verified and unverified scope",
+  "article": "VIII.2 / II.4",
+  "level": "BLOCK",
+  "rationale": "A module with truth_status partial must carry both verified_scope and unverified_scope.",
+  "stateVars": [
+    "status",
+    "verified_scope",
+    "unverified_scope"
+  ],
+  "inputVars": [],
+  "domains": {
+    "status": [
+      "unverified",
+      "partial",
+      "working"
+    ],
+    "verified_scope": [
+      "yes",
+      "no"
+    ],
+    "unverified_scope": [
+      "yes",
+      "no"
+    ]
+  },
+  "initState": {
+    "status": "unverified",
+    "verified_scope": "no",
+    "unverified_scope": "no"
+  },
+  "ops": [
+    {
+      "name": "SET_VERIFIED_SCOPE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "verified_scope",
+          "expr": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SET_UNVERIFIED_SCOPE",
+      "guard": {
+        "t": "lit",
+        "value": true
+      },
+      "effects": [
+        {
+          "var": "unverified_scope",
+          "expr": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PROMOTE_PARTIAL",
+      "guard": {
+        "t": "and",
+        "l": {
+          "t": "eq",
+          "op": "=",
+          "l": {
+            "t": "var",
+            "name": "verified_scope"
+          },
+          "r": {
+            "t": "lit",
+            "value": "yes"
+          }
+        },
+        "r": {
+          "t": "eq",
+          "op": "=",
+          "l": {
+            "t": "var",
+            "name": "unverified_scope"
+          },
+          "r": {
+            "t": "lit",
+            "value": "yes"
+          }
+        }
+      },
+      "effects": [
+        {
+          "var": "status",
+          "expr": {
+            "t": "lit",
+            "value": "partial"
+          }
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "t": "implies",
+    "l": {
+      "t": "eq",
+      "op": "=",
+      "l": {
+        "t": "var",
+        "name": "status"
+      },
+      "r": {
+        "t": "lit",
+        "value": "partial"
+      }
+    },
+    "r": {
+      "t": "and",
+      "l": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "verified_scope"
+        },
+        "r": {
+          "t": "lit",
+          "value": "yes"
+        }
+      },
+      "r": {
+        "t": "eq",
+        "op": "=",
+        "l": {
+          "t": "var",
+          "name": "unverified_scope"
+        },
+        "r": {
+          "t": "lit",
+          "value": "yes"
+        }
+      }
+    }
+  }
+}
