@@ -1,9 +1,12 @@
 # BUCKET 1 FIX — Step-by-Step Instructions
 
+## What this guide does
+
+This guide trains the nanochat module on a free GPU using Google Colab, saves the resulting checkpoint to your Google Drive, and records the result in TLC 2.0. When you finish, three modules (nanochat, governance-harness, autoresearch) will have real evidence and can advance from unverified to partial or working.
+
 **What this fixes:** The 3 modules that need a GPU (nanochat, governance-harness, autoresearch)
 **What you will have when done:** A trained nanochat checkpoint + probe scores on I1-I8
 **Total time:** About 30 minutes of waiting, 10 minutes of your attention
-**Difficulty:** You only press buttons. No typing required until Step 8.
 
 ---
 
@@ -11,263 +14,186 @@
 
 ## BEFORE YOU START — Read this once
 
-There are 14 steps.
+You cannot break your computer by following these steps.
+A lot of text may appear on screen. Seeing text you do not understand is normal.
+You can stop at any time. Stopping does not cause any harm.
+You can take breaks. The steps will wait for you.
+
+There are 38 steps.
 Do them in order.
 Do not skip any step.
 Each step has exactly one action.
-When a step says STOP and WAIT, do nothing until you see the exact text described.
+When a step says STOP AND WAIT, do nothing until you see the exact text described.
 
 ---
 
-## STEP 1 — Open your web browser
+1. Open the browser you normally use. Safari, Chrome, and Firefox all work.
+   **What you will see:** A browser window opens.
 
-Open the browser you normally use (Safari, Chrome, Firefox — any of them).
+2. Click the address bar. The address bar is the long rectangle that shows the current web address.
+   **What you will see:** The address bar becomes highlighted.
 
----
+3. Type exactly this into the address bar:
 
-## STEP 2 — Go to this exact web address
+   ```
+   https://colab.research.google.com
+   ```
 
-Click your browser address bar at the top of the screen.
-Type exactly this and press Enter:
+   **What you will see:** The address appears in the address bar as you type.
 
-    https://colab.research.google.com
+4. Press Enter.
+   **What you will see:** The Google Colab homepage loads.
 
-Wait until the page fully loads. You will see a Google Colab homepage.
+5. If you see a button labeled "Sign in": click it and sign in using `your Google account email address`.
+   If you do not see a button labeled "Sign in": skip to step 6.
+   **What you will see:** You are signed in and the Colab homepage is visible.
 
----
+6. Press the Command key and the Space key at the same time.
+   **What you will see:** The Spotlight search bar appears.
 
-## STEP 3 — Sign in to Google
+7. Type the word `Finder` into the Spotlight search bar.
+   **What you will see:** A result labeled "Finder" appears in the search results.
 
-If you see a blue button that says "Sign in", click it.
-Sign in using the Google account that matches this email:
+8. Press Enter.
+   **What you will see:** A new Finder window opens.
 
-    corey@coreyalejandro.com
+9. In Finder, navigate to this exact folder:
 
-If you are already signed in, skip to Step 4.
+   ```
+   /Users/coreyalejandro/Projects/the-living-constitution-2.0/modules/nanochat/
+   ```
 
----
+   **What you will see:** The folder contents appear. You see a file named `INSTALL.ipynb`.
 
-## STEP 4 — Open the notebook file
+10. Drag the file named `INSTALL.ipynb` from the Finder window into the Colab tab labeled "Google Colab" and release it.
+    **What you will see:** The file moves into the tab labeled "Google Colab".
 
-Do not close the Colab tab.
-Open a new Finder window.
-Navigate to this exact folder:
+11. STOP AND WAIT until numbered cells appear on the Colab page.
+    **What you will see:** Numbered cells appear. Each cell has a play button on its edge.
 
-    /Users/coreyalejandro/Projects/the-living-constitution-2.0/modules/nanochat/
+12. Find the button in the Colab toolbar that controls the runtime connection.
+    If the button is labeled "Connect": click it. Then wait 10 seconds.
+    If the button is labeled "Reconnect": click it. Then wait 10 seconds.
+    If the button shows "RAM" and "Disk" bars: skip to step 13.
+    **What you will see:** The button changes to show "RAM" and "Disk" bars.
 
-You will see a file named:
+13. Click the menu item labeled "Runtime" in the Colab menu bar.
+    **What you will see:** A dropdown menu opens showing Runtime options.
 
-    INSTALL.ipynb
+14. Click the menu item labeled "Change runtime type".
+    **What you will see:** A dialog box titled "Change runtime type" opens.
 
-Drag that file from Finder into the Colab browser tab.
-Drop it anywhere on the Colab page.
+15. Click the dropdown menu labeled "Hardware accelerator".
+    **What you will see:** A list of accelerator options appears.
 
-STOP AND WAIT until the notebook finishes loading.
-You will know it is loaded when you see numbered cells appear on the page.
+16. Click the option labeled "T4 GPU".
+    **What you will see:** The option labeled "T4 GPU" is highlighted.
 
----
+17. Click the button labeled "Save".
+    **What you will see:** The dialog closes. The Colab toolbar shows "RAM" and "Disk" bars within 5 seconds.
 
-## STEP 5 — Connect to a GPU runtime
+18. Click the button labeled "Files" in the Colab sidebar.
+    **What you will see:** A Files panel opens showing the Colab filesystem.
 
-Look at the top-right corner of the Colab page.
-You will see a button. It may say one of these things:
-- "Connect"
-- "Reconnect"
-- A green checkmark with "RAM" and "Disk" bars
+19. Look in the Files panel for a folder named `drive`.
+    If you see a folder named `drive`: skip to step 24.
+    If you do not see a folder named `drive`: continue to step 20.
 
-If it says "Connect" or "Reconnect":
-    Click that button.
-    Wait 10 seconds.
-    You will see RAM and Disk bars appear.
+20. Click the button labeled "Mount Drive" in the Files panel. This button shows a Google Drive logo.
+    **What you will see:** A permission dialog appears.
 
-If you already see RAM and Disk bars:
-    Skip to Step 6.
+21. Click the button labeled "Connect to Google Drive".
+    **What you will see:** A dialog appears asking you to confirm your Google account.
 
----
+22. Click the email address `your Google account email address` in the account selection dialog.
+    **What you will see:** An authorization screen appears.
 
-## STEP 6 — Switch to a GPU (T4 is free)
+23. Click the button labeled "Allow".
+    STOP AND WAIT until a folder named `drive` appears in the Files panel.
+    **What you will see:** A folder named `drive` appears in the Files panel.
 
-Look at the top menu bar of Colab.
-Click the word "Runtime".
-A dropdown menu will appear.
-Click "Change runtime type".
-A small window will pop up.
-Look for the field that says "Hardware accelerator".
-Click the dropdown next to it.
-Select "T4 GPU".
-Click the blue "Save" button.
-The window will close.
+24. Click the menu item labeled "Runtime" in the Colab menu bar.
+    **What you will see:** The Runtime dropdown opens.
 
-STOP AND WAIT 5 seconds.
-Then look at the top-right again — you should see RAM and Disk bars.
+25. Click the menu item labeled "Run all".
+    If a dialog appears labeled "Warning: This notebook was not authored by Google": click the button labeled "Run anyway".
+    **What you will see:** Cells begin running one at a time. Each running cell shows a spinning indicator.
 
----
+26. STOP AND WAIT. Do not click anything else. Do not close the tab. Do not close your laptop lid.
+    This will take between 15 and 45 minutes.
+    **What you will see when done:** Every cell shows a green checkmark. No cell shows a spinning indicator.
 
-## STEP 7 — Check that Google Drive is connected
+27. Click the folder named `drive` in the Files panel.
+    **What you will see:** The contents of the `drive` folder appear.
 
-This step ensures your trained model gets saved permanently.
-Without this, the model disappears when Colab closes.
+28. Click the folder named `MyDrive`.
+    **What you will see:** The contents of the `MyDrive` folder appear.
 
-Look at the left side of the Colab page.
-You will see a column of icons.
-Click the folder icon (it looks like a folder).
-You will see a panel open on the left.
-Look for a folder called "drive".
+29. Click the folder named `nanochat_models`.
+    **What you will see:** One or more files ending in `.pt` or `.bin` appear. Write down the exact name of the most recent file.
+    Example: `ckpt_step_5000.pt`
 
-If you see a folder called "drive":
-    Google Drive is already connected. Skip to Step 8.
+30. Control-click on the checkpoint file you identified in step 29.
+    **What you will see:** A context menu appears listing file actions.
 
-If you do NOT see a folder called "drive":
-    Look at the top of that left panel.
-    Click the icon that looks like a folder with a Google Drive logo.
-    A popup will appear asking permission.
-    Click "Connect to Google Drive".
-    Another popup will appear asking you to confirm your account.
-    Click your email address (corey@coreyalejandro.com).
-    Click "Allow".
-    STOP AND WAIT until the "drive" folder appears in the left panel.
+31. Click the menu item labeled "Copy path".
+    **What you will see:** The menu closes. The full path is now in your clipboard. It looks like: `/content/drive/MyDrive/nanochat_models/ckpt_step_5000.pt`
 
----
+32. Press the Command key and the Space key at the same time.
+    **What you will see:** The Spotlight search bar appears.
 
-## STEP 8 — Run the entire notebook
+33. Type the word `Terminal` into the Spotlight search bar.
+    **What you will see:** A result labeled "Terminal" appears.
 
-Look at the top menu bar.
-Click the word "Runtime".
-A dropdown menu will appear.
-Click "Run all".
+34. Press Enter.
+    **What you will see:** A Terminal window opens.
 
-A popup may appear that says "Warning: This notebook was not authored by Google."
-Click "Run anyway".
+35. Type this command into Terminal, replacing the example path with the path you copied in step 31, then press Enter:
 
-STOP AND WAIT.
-Do not click anything else.
-Do not close the tab.
-Do not close your laptop lid (this will pause the run).
-
-You will see cells running one at a time, each showing a spinning circle on the left.
-This will take between 15 and 45 minutes depending on the model size selected.
-You will know it is done when ALL spinning circles have stopped
-AND the last cell shows a green checkmark.
-
----
-
-## STEP 9 — Find the checkpoint file
-
-When Step 8 is complete:
-Look at the left panel (the folder panel from Step 7).
-Click on "drive".
-Click on "MyDrive".
-Click on "nanochat_models".
-
-You will see one or more files with names ending in .pt or .bin
-Those are your trained model checkpoints.
-Write down (on paper or in a note) the exact name of the most recent file.
-
-Example of what a checkpoint name looks like:
-    ckpt_step_5000.pt
-
----
-
-## STEP 10 — Copy the checkpoint path
-
-Right-click on the checkpoint file in the left panel.
-Click "Copy path".
-The full path has been copied to your clipboard.
-It will look something like:
-    /content/drive/MyDrive/nanochat_models/ckpt_step_5000.pt
-
----
-
-## STEP 11 — Open your terminal
-
-On your Mac, press these two keys at the same time:
-    Command + Space
-
-Type the word:
-    Terminal
-
-Press Enter.
-A black or white terminal window will open.
-
----
-
-## STEP 12 — Save the checkpoint location to TLC
-
-Type exactly this into the terminal and press Enter.
-Replace the path in quotes with the path you copied in Step 10:
-
+    ```
     echo "NANOCHAT_CHECKPOINT=/content/drive/MyDrive/nanochat_models/ckpt_step_5000.pt" >> /Users/coreyalejandro/Projects/the-living-constitution-2.0/.env
+    ```
 
-Note: Use the actual filename you wrote down in Step 9.
-The path must match exactly — spelling, capitalization, everything.
+    **What you will see:** The Terminal prompt returns. No other output is expected.
 
----
+36. Type this command into Terminal, then press Enter:
 
-## STEP 13 — Update the module status in TLC
-
-Type exactly this into the terminal and press Enter:
-
+    ```
     cd /Users/coreyalejandro/Projects/the-living-constitution-2.0
+    ```
 
-Then type this and press Enter:
+    **What you will see:** The Terminal prompt changes to show the project folder name.
 
-    node scripts/tlc.mjs
+37. Type this command into Terminal, then press Enter:
 
-You will see the TLC terminal start up.
-Type this at the prompt and press Enter:
+    ```
+    git add .env modules/nanochat/ && git commit -m "NANOCHAT: checkpoint trained, AC-001 complete" && git push origin main
+    ```
 
-    /modules
+    STOP AND WAIT until you see a line that contains `main -> main`.
+    **What you will see:** A line that says `main -> main`. The push is complete.
 
-Look at the line that says NANOCHAT.
-It currently says "unverified".
+38. Type this command into Terminal, then press Enter:
 
-Type this at the prompt and press Enter:
+    ```
+    tlc
+    ```
 
-    /done
-
-Follow the prompts. When asked for the module name, type:
-
-    NANOCHAT
-
-When asked for notes, type:
-
-    Checkpoint trained in Colab. Saved to Google Drive. AC-001 complete.
-
-Press Enter.
-
----
-
-## STEP 14 — Commit the result
-
-Type this at the TLC prompt and press Enter:
-
-    /exit
-
-Now type these commands one at a time in the terminal, pressing Enter after each:
-
-    cd /Users/coreyalejandro/Projects/the-living-constitution-2.0
-
-    git add .env modules/nanochat/
-
-    git commit -m "NANOCHAT: checkpoint trained, AC-001 complete"
-
-    git push origin main
-
-When you see a line that says "main -> main" the push is complete.
+    **What you will see:** The TLC terminal interface starts. You see a prompt labeled `tlc ❯`.
 
 ---
 
 ## YOU ARE DONE WITH BUCKET 1
 
-When Step 14 is complete:
+When step 38 is complete:
 - nanochat has a trained checkpoint
 - The checkpoint is saved permanently in your Google Drive
 - TLC 2.0 registry is updated
 - The change is on GitHub
 
-The next step after this (Bucket 2 — LLM Council with OpenRouter) is already
-unlocked. Your OpenRouter key was saved in a previous session.
-To activate the council, start TLC and type /council.
+The next step (Bucket 2 — LLM Council with OpenRouter) is now unlocked.
+Your OpenRouter key was saved in a previous session.
+To activate the council, start TLC and type `/council`.
 
 </default-directions>
 
@@ -275,37 +201,126 @@ To activate the council, start TLC and type /council.
 
 ## IF SOMETHING GOES WRONG
 
-Do not try to fix it yourself. Come back to this terminal (Hermes)
-and say exactly what you saw on screen. Copy the exact error message.
-That is all you need to do. I will diagnose it from there.
+Do not try to fix it yourself. Come back to this terminal (Hermes) and copy the exact error message you see on screen. That is all you need to do. I will diagnose it from there.
 
-The most common problems and what they look like:
-
-PROBLEM: Colab says "Runtime disconnected"
-WHAT TO DO: Click Runtime → Run all again. Do not close the tab.
+PROBLEM: Colab shows "Runtime disconnected"
+WHAT TO DO: Click the "Runtime" menu, then click "Run all" again. Do not close the tab.
 
 PROBLEM: A cell shows a red error message
 WHAT TO DO: Screenshot it or copy the text. Bring it back here.
 
-PROBLEM: "drive" folder never appears in Step 7
-WHAT TO DO: Refresh the Colab page (Command + R) and try Step 7 again.
+PROBLEM: The folder named `drive` never appears after step 23
+WHAT TO DO: Press Command+R to refresh the Colab page. Then repeat steps 18 through 23.
 
-PROBLEM: No .pt or .bin files in Step 9
-WHAT TO DO: Go back to Step 8. The run may not have completed.
-Look for the last cell and check if it has a green checkmark or a red X.
+PROBLEM: No files ending in `.pt` or `.bin` appear in step 29
+WHAT TO DO: Go back to step 26. The run may not have completed. Check whether every cell shows a green checkmark or a red error mark.
 
 ---
 
 ## WHAT EACH PIECE IS — PLAIN LANGUAGE
 
-nanochat is a small language model that you will own completely.
-You train it. You control it. No API key needed after training.
-It is the model that TLC 2.0 uses to run local governance decisions
-without sending anything to Anthropic, OpenAI, or anyone else.
+nanochat is a small language model that you will own completely. You train it. You control it. No API key needed after training. It is the model that TLC 2.0 uses to run local governance decisions without sending anything to Anthropic, OpenAI, or anyone else.
 
-The governance-harness probes (I1-I8) run against this checkpoint.
-Once you have the checkpoint, those probes can run and produce real scores.
-Those real scores are the evidence that makes those modules no longer unverified.
+The governance-harness probes (I1-I8) run against this checkpoint. Once you have the checkpoint, those probes can run and produce real scores. Those real scores are the evidence that makes those modules no longer unverified.
 
-That is the chain: train nanochat → run probes → get scores → update truth_status.
-All three unverified modules advance with one Colab session.
+That is the chain: train nanochat → run probes → get scores → update truth_status. All three unverified modules advance with one Colab session.
+
+---
+
+## WORD LIST
+
+**address bar**
+The long rectangle in a browser that shows the current web address. You click it to type a new address.
+
+**cell**
+One block of code inside a Colab notebook. Each cell can be run independently. A running cell shows a spinning indicator. A finished cell shows a green checkmark.
+
+**checkpoint**
+A saved copy of a trained model's learned weights. Checkpoint files end in .pt or .bin.
+
+**ckpt_step_5000.pt**
+An example checkpoint filename. Your actual file will have a similar name ending in .pt or .bin. The number records the training step when the file was saved.
+
+**clipboard**
+A holding area that stores the last thing you copied. Pressing Command+V pastes from the clipboard.
+
+**Colab**
+Google Colaboratory. A free web-based service for running Python notebooks. No installation required.
+
+**commit**
+A saved record of changes made to a project at a specific point in time.
+
+**context menu**
+A small menu that appears when you control-click on something. It shows actions available for that item.
+
+**directory**
+A named storage location on your computer that can hold files and other directories. Also called a folder.
+
+**drive**
+The name of the folder that appears in the Colab Files panel when Google Drive is connected.
+
+**Files panel**
+A panel in the Colab sidebar that shows the files and folders available in the current Colab session.
+
+**Finder**
+The macOS application that lets you view and open files and folders on your computer.
+
+**folder**
+A named storage location on your computer. Also called a directory.
+
+**version control**
+A system that records and stores changes made to project files. The commands in steps 36 and 37 use this system.
+
+**GPU**
+Graphics Processing Unit. A chip designed for fast parallel computation. Required for training neural networks in a practical amount of time.
+
+**Google Drive**
+Google's cloud storage service. Files saved here are kept even after a Colab session ends.
+
+**INSTALL.ipynb**
+The Colab notebook file included with the nanochat module. Running all its cells trains the nanochat checkpoint.
+
+**module**
+One project or component registered in TLC 2.0. Each module has a truth_status value.
+
+**MyDrive**
+The primary folder inside Google Drive. It appears inside the drive folder when Google Drive is connected in Colab.
+
+**nanochat_models**
+The folder inside MyDrive where the nanochat training script saves checkpoint files.
+
+**notebook**
+A file ending in .ipynb that contains runnable code blocks and text. Used in Colab.
+
+**path**
+The full address of a file or folder on a computer. Example: /Users/coreyalejandro/Projects/...
+
+**probe**
+A trained scoring tool that measures a specific property of the nanochat model using its internal activations.
+
+**push**
+The action of sending saved commits to GitHub so they are stored remotely.
+
+**repository**
+A tracked collection of project files. Often shortened to repo.
+
+**runtime**
+The computing environment that runs your Colab notebook. Includes CPU, GPU (if selected), and temporary file storage.
+
+**Spotlight**
+The macOS search tool. Press Command+Space to open it.
+
+**T4 GPU**
+A free GPU available in Google Colab. Sufficient to train nanochat in 15 to 45 minutes.
+
+**Terminal**
+The macOS application that lets you type commands directly to your computer.
+
+**TLC**
+A management system that tracks and verifies AI research modules. Abbreviated from a project name.
+
+**truth_status**
+The classification assigned to a TLC module: working, partial, draft, unverified, or planned.
+
+**unverified**
+A truth_status value meaning the module has not yet been tested or confirmed to meet its requirements.
