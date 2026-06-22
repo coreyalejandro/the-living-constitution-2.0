@@ -4,13 +4,14 @@
 **Truth surface:** false
 **Machine enforced:** false
 **Version:** 2.0
-**Status:** Authoritative
+**Status:** Narrative
 **Last Updated:** 2026-06-21
 **Integrated:** TALSP Template v4.2 (Research Program OS)
 
-This document is the authoritative description of the TLC Research Program
+This document is a narrative blueprint of the TLC Research Program
 Operating System. It maps every layer to its module, framework, paper,
-instruments, and current Truth-State.
+instruments, and current stated Truth-State. It is descriptive, not
+itself a binding or machine-enforced authority artifact.
 
 TLC is not a paper. TLC is not a framework specific to consumer behavior.
 TLC is a Constitutional Investigation Runtime — a domain-agnostic platform
