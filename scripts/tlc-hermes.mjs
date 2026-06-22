@@ -212,7 +212,6 @@ async function main() {
 
   const hermesArgs = [
     skillName ? `-s ${skillName}` : '',
-    `--title "${sessionTitle}"`,
     modelOverride ? `-m ${modelOverride}` : '',
   ].filter(Boolean).join(' ');
 
@@ -231,7 +230,7 @@ async function main() {
     log(`Install Hermes: curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`);
     log('');
     log(`Once installed, launch your session with:`);
-    log(`  ${CYAN}hermes ${hermesArgs}${RESET}`);
+    log(`  ${CYAN}hermes chat ${hermesArgs}${RESET}`);
     log('');
     log(`Or paste this context into any AI chat:`);
     log(`  ${DIM}cat ${join(AI_CONTEXT_DIR, 'active-session.md')}${RESET}`);
@@ -242,20 +241,19 @@ async function main() {
   if (noLaunch) {
     log(`${DIM}--no-launch: skipping Hermes launch.${RESET}`);
     log(`When ready, run:`);
-    log(`  ${CYAN}hermes ${hermesArgs}${RESET}`);
+    log(`  ${CYAN}hermes chat ${hermesArgs}${RESET}`);
     log('');
     return;
   }
 
   // 6. Launch Hermes
   log(`${CYAN}Launching Hermes...${RESET}`);
-  log(`${DIM}hermes ${hermesArgs}${RESET}`);
+  log(`${DIM}hermes chat ${hermesArgs}${RESET}`);
   log('');
 
-  // Build args array for spawn (handles spaces in title)
-  const spawnArgs = [];
+  // Build args array for spawn
+  const spawnArgs = ['chat'];
   if (skillName) { spawnArgs.push('-s', skillName); }
-  spawnArgs.push('--title', sessionTitle);
   if (modelOverride) { spawnArgs.push('-m', modelOverride); }
 
   const result = spawnSync('hermes', spawnArgs, {
