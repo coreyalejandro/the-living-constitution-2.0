@@ -28,23 +28,24 @@ const __dir = dirname(fileURLToPath(import.meta.url));
 const ROOT  = join(__dir, '..', '..');
 
 // ── Theme ──────────────────────────────────────────────────────────────────────
-const T = {
-  primary:  '#FFD700',
-  accent:   '#FFBF00',
-  border:   '#CD7F32',
-  text:     '#FFF8DC',
-  muted:    '#CC9B1F',
-  label:    '#DAA520',
-  ok:       '#4caf50',
-  error:    '#ef5350',
-  warn:     '#ffa726',
-  good:     '#8FBC8F',
-  bad:      '#FF8C00',
-  critical: '#FF6B6B',
-  shell:    '#4dabf7',
-  bg:       '#0d0d1a',
-  dim:      '#666666',
-};
+const SKINS = {
+  gold: {
+    primary:  '#FFD700', accent:   '#FFBF00', border:   '#CD7F32',
+    text:     '#FFF8DC', muted:    '#CC9B1F', label:    '#DAA520',
+    ok:       '#4caf50', error:    '#ef5350', warn:     '#ffa726',
+    good:     '#8FBC8F', bad:      '#FF8C00', critical: '#FF6B6B',
+    shell:    '#4dabf7', bg:       '#0d0d1a', dim:      '#666666',
+  },
+  cyber: {
+    primary:  '#00ff9f', accent:   '#00d4ff', border:   '#0066ff',
+    text:     '#e0e0e0', muted:    '#008f6b', label:    '#00c8ff',
+    ok:       '#00ff9f', error:    '#ff2d55', warn:     '#ffcc00',
+    good:     '#00ff9f', bad:      '#ff6b00', critical: '#ff2d55',
+    shell:    '#bd00ff', bg:       '#050510', dim:      '#444466',
+  },
+} as const;
+// Default theme — overridden at runtime by /skin command via React state
+const T = SKINS.gold;
 
 // ── Tabs ───────────────────────────────────────────────────────────────────────
 const TABS = ['Modules', 'Claims', 'Evidence', 'Red-Team', 'Constitution', 'Git'] as const;
@@ -128,6 +129,11 @@ const COMMANDS = [
   { name: '/clear',             desc: 'Clear the output pane' },
   { name: '/tab <name>',        desc: 'Switch tab: modules|claims|evidence|redteam|constitution|git' },
   { name: '/exit  /quit',       desc: 'Exit TLC' },
+  { name: '/retry',             desc: 'Re-run the last command' },
+  { name: '/copy [N]',          desc: 'Copy last N output lines to clipboard (default 20)' },
+  { name: '/indicator [style]', desc: 'Busy indicator style: dots|line|dots2|star|kaomoji|bouncingBall' },
+  { name: '/skin [name]',       desc: 'Theme: gold (default) | cyber' },
+  { name: '/verbose',           desc: 'Toggle verbose (show/hide dim lines)' },
 ];
 
 // ── STATUS BAR ─────────────────────────────────────────────────────────────────
@@ -384,6 +390,10 @@ function App() {
   const [health,   setHealth]   = useState('CHECKING');
   const [session,  setSession]  = useState<string | null>(null);
   const [suggestion, setSugg]   = useState('');
+  const [lastCmd,  setLastCmd]  = useState('');
+  const [indicator, setIndicator] = useState<string>('dots');
+  const [skin, setSkin]         = useState<'gold'|'cyber'>('gold');
+  const [verbose, setVerbose]   = useState(true);
 
   // boot: get health + session
   useEffect(() => {
@@ -395,11 +405,21 @@ function App() {
     }).catch(() => setHealth('UNKNOWN'));
   }, []);
 
-  // tab cycling with Tab key
+  // key bindings
   useInput((ch, key) => {
     if (key.tab) {
-      const idx = TABS.indexOf(tab);
-      setTab(TABS[(idx + 1) % TABS.length] as Tab);
+      // Tab with no partial input → cycle tabs; Tab with a suggestion → accept it
+      if (suggestion && input.startsWith('/')) {
+        setInput(suggestion);
+        setSugg('');
+      } else {
+        const idx = TABS.indexOf(tab);
+        setTab(TABS[(idx + 1) % TABS.length] as Tab);
+      }
+    }
+    if (key.rightArrow && suggestion && input.startsWith('/')) {
+      setInput(suggestion);
+      setSugg('');
     }
     if (key.escape) { setInput(''); setSugg(''); }
   });
@@ -422,6 +442,7 @@ function App() {
     if (!raw) return;
 
     push(line(`❯ ${raw}`, 'accent'));
+    setLastCmd(raw);
 
     if (!raw.startsWith('/')) {
       push(line('TLC commands start with /  —  try /help', 'dim'));
@@ -698,12 +719,69 @@ function App() {
         break;
       }
 
+      case 'retry': {
+        const prev = lastCmd;
+        if (!prev || prev === '/retry') { push(line('Nothing to retry.', 'dim')); break; }
+        push(line(`Retrying: ${prev}`, 'muted'));
+        // re-trigger by simulating submit — use handleSubmit recursively
+        await handleSubmit(prev);
+        break;
+      }
+
+      case 'copy': {
+        const n = parseInt(args[0] ?? '20', 10) || 20;
+        const text = output.slice(-n).map(l => l.text).join('\n');
+        try {
+          execSync(`printf '%s' ${JSON.stringify(text)} | pbcopy`);
+          push(line(`Copied ${Math.min(n, output.length)} lines to clipboard.`, 'ok'));
+        } catch {
+          push(line('pbcopy failed — are you on macOS?', 'warn'));
+        }
+        break;
+      }
+
+      case 'indicator': {
+        const styles = ['dots','line','dots2','star','kaomoji','bouncingBall','shark'];
+        const want = args[0] ?? '';
+        if (!want) {
+          push(line(`Current: ${indicator}`, 'text'));
+          push(line(`Options: ${styles.join('  ')}`, 'dim'));
+        } else if (styles.includes(want)) {
+          setIndicator(want);
+          push(line(`Indicator: ${want}`, 'ok'));
+        } else {
+          push(line(`Unknown style. Options: ${styles.join('  ')}`, 'warn'));
+        }
+        break;
+      }
+
+      case 'skin': {
+        const want = args[0] as 'gold'|'cyber'|undefined;
+        if (!want) {
+          push(line(`Current skin: ${skin}`, 'text'));
+          push(line('Options: gold  cyber', 'dim'));
+        } else if (want === 'gold' || want === 'cyber') {
+          setSkin(want);
+          push(line(`Skin: ${want}`, 'ok'));
+        } else {
+          push(line('Unknown skin. Options: gold  cyber', 'warn'));
+        }
+        break;
+      }
+
+      case 'verbose': {
+        setVerbose(v => !v);
+        push(line(`Verbose: ${!verbose ? 'on' : 'off'}`, 'ok'));
+        break;
+      }
+
       default:
         push(line(`Unknown command: /${cmd}  —  type /help`, 'error'));
     }
   }, [push, exit]);
 
   // ── render ──────────────────────────────────────────────────────────────────
+  const theme = SKINS[skin];
   const cols = process.stdout.columns || 80;
 
   const mainPane = () => {
@@ -733,15 +811,15 @@ function App() {
       {hasOutput && (
         <>
           <Box flexDirection="column">
-            {output.slice(-12).map(l => <OLine key={l.id} l={l} />)}
+            {output.filter(l => verbose || l.kind !== 'dim').slice(-20).map(l => <OLine key={l.id} l={l} />)}
             {loading && (
               <Box paddingLeft={2}>
-                <Text color={T.accent}><Spinner type="dots" /></Text>
+                <Text color={theme.accent}><Spinner type={indicator as any} /></Text>
                 <Text color={T.muted}> working…</Text>
               </Box>
             )}
           </Box>
-          <Text color={T.border}>{'─'.repeat(cols)}</Text>
+          <Text color={theme.border}>{'─'.repeat(cols)}</Text>
         </>
       )}
 
@@ -751,10 +829,10 @@ function App() {
       </Box>
 
       {/* Prompt */}
-      <Text color={T.border}>{'─'.repeat(cols)}</Text>
+      <Text color={theme.border}>{'─'.repeat(cols)}</Text>
       <Box paddingLeft={1}>
-        <Text color={T.muted}>{session ? `(${session}) ` : ''}</Text>
-        <Text color={T.primary} bold>tlc ❯ </Text>
+        <Text color={theme.muted}>{session ? `(${session}) ` : ''}</Text>
+        <Text color={theme.primary} bold>tlc ❯ </Text>
         <TextInput
           value={input}
           onChange={setInput}
