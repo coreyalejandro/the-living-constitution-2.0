@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "claim-ledger.schema.json",
+  "title": "Claim Ledger",
+  "type": "object",
+  "required": ["repository", "generated_at", "ontology_version", "claims"],
+  "properties": {
+    "repository": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "ontology_version": { "type": "string", "minLength": 1 },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "claim_id",
+          "subject",
+          "claim",
+          "status",
+          "evidence",
+          "verification_method",
+          "last_verified_at"
+        ],
+        "properties": {
+          "claim_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "subject": { "type": "string", "minLength": 1 },
+          "claim": { "type": "string", "minLength": 1 },
+          "status": {
+            "type": "string",
+            "enum": ["unverified", "specified", "partial", "working", "quarantined", "deprecated"]
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "verification_method": {
+            "type": "string",
+            "enum": ["automated", "human", "mixed"]
+          },
+          "last_verified_at": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
