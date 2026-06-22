@@ -134,10 +134,13 @@ const COMMANDS = [
   { name: '/indicator [style]', desc: 'Busy indicator style: dots|line|dots2|star|kaomoji|bouncingBall' },
   { name: '/skin [name]',       desc: 'Theme: gold (default) | cyber' },
   { name: '/verbose',           desc: 'Toggle verbose (show/hide dim lines)' },
+  { name: '/agent [MODULE]',    desc: 'Launch governed Hermes agent for MODULE (default: active session)' },
+  { name: '/agent swap [model]',desc: 'Relaunch agent with a different model (e.g. claude-sonnet-4)' },
+  { name: '/agent who',         desc: 'Show which agent + model is active' },
 ];
 
 // ── STATUS BAR ─────────────────────────────────────────────────────────────────
-function StatusBar({ health, session }: { health: string; session: string | null }) {
+function StatusBar({ health, session, agentModule, agentModel }: { health: string; session: string | null; agentModule: string | null; agentModel: string }) {
   const hColor = health === 'HEALTHY' ? T.good : health === 'DEGRADED' ? T.bad : T.critical;
   return (
     <Box width="100%" backgroundColor={T.bg} paddingX={1}>
@@ -149,7 +152,12 @@ function StatusBar({ health, session }: { health: string; session: string | null
         ? <><Text color={T.muted}>session: </Text><Text color={T.accent}>{session}</Text></>
         : <Text color={T.dim}>no active session</Text>
       }
-      <Text color={T.dim}>  — /help for commands  </Text>
+      <Text color={T.border}> │ </Text>
+      {agentModule
+        ? <><Text color={T.good}>⬡ agent: </Text><Text color={T.accent}>{agentModule}</Text><Text color={T.dim}> [{agentModel}]</Text></>
+        : <Text color={T.dim}>no agent — /agent MODULE</Text>
+      }
+      <Text color={T.dim}>  /help  </Text>
       <Text color={T.primary}>⚕</Text>
     </Box>
   );
@@ -394,6 +402,8 @@ function App() {
   const [indicator, setIndicator] = useState<string>('dots');
   const [skin, setSkin]         = useState<'gold'|'cyber'>('gold');
   const [verbose, setVerbose]   = useState(true);
+  const [agentModule, setAgentModule] = useState<string | null>(null);
+  const [agentModel,  setAgentModel]  = useState<string>('default');
 
   // boot: get health + session
   useEffect(() => {
@@ -719,6 +729,78 @@ function App() {
         break;
       }
 
+      case 'agent': {
+        const sub = args[0]?.toLowerCase();
+
+        // /agent who
+        if (sub === 'who') {
+          if (!agentModule) {
+            push(line('No agent active. Run /agent MODULE-ID to launch one.', 'muted'));
+          } else {
+            push(line(`Active agent: ${agentModule}`, 'ok'));
+            push(line(`Model:        ${agentModel}`, 'text'));
+            push(line('To swap: /agent swap [model]', 'dim'));
+          }
+          break;
+        }
+
+        // /agent swap [model]
+        if (sub === 'swap') {
+          const newModel = args[1] ?? '';
+          if (!agentModule) {
+            push(line('No agent active. Run /agent MODULE-ID first.', 'warn'));
+            break;
+          }
+          const model = newModel || agentModel;
+          setAgentModel(model);
+          push(line(`Relaunching agent for ${agentModule} with model: ${model}`, 'muted'));
+          push(line('Open a new terminal and run:', 'dim'));
+          push(line(`  node scripts/tlc-hermes.mjs --module ${agentModule} --model ${model}`, 'shell'));
+          push(line('The agent will load your module contract + skill from turn one.', 'dim'));
+          break;
+        }
+
+        // /agent MODULE-ID  (or /agent with active session)
+        const targetModule = (sub && sub !== 'swap' && sub !== 'who')
+          ? args.join(' ').toUpperCase()
+          : (session ?? '');
+
+        if (!targetModule) {
+          push(line('Usage: /agent MODULE-ID   or /work MODULE-ID first', 'warn'));
+          push(line('Example: /agent CRSP-STC-RUNTIME-001', 'dim'));
+          break;
+        }
+
+        setAgentModule(targetModule);
+        push(line(`Preparing governed agent session for: ${targetModule}`, 'muted'));
+        setLoading(true);
+
+        // prep: inject context + ensure skill (no-launch)
+        const { ok: prepOk, out: prepOut } = await runCmd(
+          `node ${join(ROOT, 'scripts', 'tlc-hermes.mjs')} --module ${targetModule} --no-launch`
+        );
+        parseLines(prepOut, prepOk).forEach(l => push(l));
+
+        if (prepOk) {
+          push(line('', 'dim'));
+          push(line('Contract loaded. Context injected. Skill ready.', 'ok'));
+          push(line('', 'dim'));
+          push(line('To launch the agent — open a new terminal and run:', 'text'));
+          push(line(`  node scripts/tlc-hermes.mjs --module ${targetModule}`, 'shell'));
+          push(line('', 'dim'));
+          push(line('Or if you want a specific model:', 'dim'));
+          push(line(`  node scripts/tlc-hermes.mjs --module ${targetModule} --model claude-sonnet-4`, 'shell'));
+          push(line('', 'dim'));
+          push(line('The agent will know your governance rules from message one.', 'accent'));
+        } else {
+          push(line('Prep failed — check module ID is in registry (/modules)', 'error'));
+          setAgentModule(null);
+        }
+
+        setLoading(false);
+        break;
+      }
+
       case 'retry': {
         const prev = lastCmd;
         if (!prev || prev === '/retry') { push(line('Nothing to retry.', 'dim')); break; }
@@ -802,7 +884,7 @@ function App() {
     <Box flexDirection="column" width="100%">
 
       {/* Status bar */}
-      <StatusBar health={health} session={session} />
+      <StatusBar health={health} session={session} agentModule={agentModule} agentModel={agentModel} />
 
       {/* Nav */}
       <NavBar active={tab} onSelect={setTab} />
