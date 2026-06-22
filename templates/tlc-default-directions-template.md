@@ -1,7 +1,7 @@
 # [TITLE OF YOUR GUIDE]
 <!-- <default-directions> -->
 <!-- This file is governed by Article XVI of the TLC 2.0 SOCIOTECHNICAL_CONSTITUTION.md -->
-<!-- All R1–R16 rules must pass before this file may be committed. -->
+<!-- All R1–R17 rules must pass before this file may be committed. -->
 <!-- Run: node scripts/validate-instructions.mjs <this-file.md> -->
 
 For a [DEVICE TYPE]. One straight path. Do the steps in order, from Step 1 to the end. Do one step. Then do the next step. Do not skip a step.
@@ -47,6 +47,8 @@ What you will see: [REPLACE: Exact text or screen state the user will see after 
 
 If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
+Likely mistake: [REPLACE: The one most likely wrong action at this step. State as a concrete action, not a general warning. Example: "Pressing Return before pasting the command."] If this happens: [REPLACE: One recovery action. One sentence. One action verb. Example: "Press the up-arrow key one time, then paste the command again."]
+
 ---
 
 2
@@ -56,6 +58,8 @@ What you will see: [REPLACE: Exact success signal.]
 
 If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
+Likely mistake: [REPLACE: The most likely wrong action at this step.] If this happens: [REPLACE: One recovery action.]
+
 ---
 
 3
@@ -64,6 +68,8 @@ If it looks different: [REPLACE: Describe the known-safe difference here.] If yo
 What you will see: [REPLACE: Exact success signal.]
 
 If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
+
+Likely mistake: [REPLACE: The most likely wrong action at this step.] If this happens: [REPLACE: One recovery action.]
 
 ---
 
@@ -76,6 +82,8 @@ What you will see: [REPLACE: Exact success signal.]
 
 If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
 
+Likely mistake: [REPLACE: The most likely wrong action at this step.] If this happens: [REPLACE: One recovery action.]
+
 ---
 
 5
@@ -84,6 +92,8 @@ If it looks different: [REPLACE: Describe the known-safe difference here.] If yo
 What you will see: [REPLACE: Exact success signal.]
 
 If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
+
+Likely mistake: [REPLACE: The most likely wrong action at this step.] If this happens: [REPLACE: One recovery action.]
 
 ---
 
@@ -95,6 +105,8 @@ If it looks different: [REPLACE: Describe the known-safe difference here.] If yo
 What you will see: [REPLACE: Exact success signal.]
 
 If it looks different: [REPLACE: Describe the known-safe difference here.] If you are unsure, stop here. Do not continue. Send me the exact words you see on screen.
+
+Likely mistake: [REPLACE: The most likely wrong action at this step.] If this happens: [REPLACE: One recovery action.]
 
 ---
 

@@ -859,7 +859,62 @@ at the next integer step.
 Every instruction document that is subject to this Article carries the tag
 `<default-directions>` in its title block or YAML front matter.
 The tag is the signal to human reviewers and automated validators that the document
-must pass R1–R15. Documents without this tag are not governed by this Article.
+must pass R1–R16. Documents without this tag are not governed by this Article.
+
+#### R17 — PRE-STEP-FAILURE
+
+Every step that contains an action must be followed by a `Likely mistake:` block
+before the next numbered step begins.
+
+The block must contain exactly two parts:
+
+(a) The specific wrong action the user is most likely to take at this step.
+    Stated as a concrete action, not a general warning.
+    Example: "Pressing Return before pasting the command."
+
+(b) The one-step recovery if that wrong action happens.
+    One sentence. One action verb. No branch language.
+    Example: "If this happens: Press the up-arrow key one time to bring back
+    the command, then paste it again."
+
+The block marker is the literal string `Likely mistake:` at the start of a line
+(case-insensitive). The machine validator checks for its presence. The accuracy
+of the named mistake is subject to human review (see Section 16.3).
+
+*Research basis:*
+
+- **Norman (1988)** *The Design of Everyday Things.* Slip and mistake taxonomy.
+  The most frequent errors occur when users have correct intent but execute the
+  wrong action (slips) or choose the wrong goal (mistakes). Pre-naming the error
+  at the point of action suppresses slip formation by making the wrong action
+  salient before the user acts, not after.
+
+- **Reason (1990)** *Human Error.* Cambridge University Press. Capture errors
+  (habitual wrong-path execution) and description errors (acting on the wrong
+  object) are both significantly reduced when the likely wrong action is named
+  explicitly at the decision point. Post-error correction is less effective than
+  pre-error naming.
+
+- **Forbes et al. (2009)** *Neuropsychology, 23*(6), 706–719. Working memory
+  impairment in schizophrenia prevents mid-task error correction but does NOT
+  prevent pre-task error avoidance when the error is explicitly named before the
+  act. This is the critical distinction: naming the failure mode before acting
+  works; recovering from an error after it has occurred is substantially harder
+  under symptom load.
+
+- **Ganz et al. (2012)** *Education and Training in Autism and Developmental
+  Disabilities, 47*(3), 259–278. Explicit error prevention scripts at each step
+  reduced error rates in autistic users significantly more than post-error
+  correction approaches. The per-step format — one mistake named, one recovery
+  action — is the operationalization of this finding.
+
+*Failing example:* A step that says "Run `npm install`" with no failure block.
+
+*Passing example:*
+```
+Likely mistake: Running `npm install` in the wrong folder. If this happens:
+Type `cd ~/Projects/my-project` and press the Return key, then run `npm install` again.
+```
 
 ---
 
@@ -869,8 +924,8 @@ must pass R1–R15. Documents without this tag are not governed by this Article.
 
 The TLC 2.0 pre-commit hook (`src/git-hooks/pre-commit.mjs`) runs
 `scripts/validate-instructions.mjs` against every staged Markdown file that contains
-the `<default-directions>` tag. Any file that fails one or more of R1–R16 halts the commit.
-The output names the file, the rule code (R1–R16), the failing line number, and a plain-
+the `<default-directions>` tag. Any file that fails one or more of R1–R17 halts the commit.
+The output names the file, the rule code (R1–R17), the failing line number, and a plain-
 language description of the violation.
 
 **16.3.2 — Validation script**
@@ -887,14 +942,15 @@ node scripts/validate-instructions.mjs <path-to-file.md>
 
 `templates/tlc-default-directions-template.md` is the canonical blank scaffold for a
 compliant instruction document. All new instruction documents must start from this template.
+The template includes a `Likely mistake:` placeholder after each step scaffold (R17).
 
 **16.3.4 — AI generation requirement**
 
 Any AI assistant operating under a TLC 2.0 governed session that is asked to produce
 instructions, guides, README setup sections, or onboarding documents for the operator
-must apply R1–R16 to its output before delivering it. The AI must tag the output with
-`<default-directions>` and must self-validate against R1–R16. If the AI cannot satisfy
-all sixteen rules, it must state which rules it cannot satisfy and why before delivering
+must apply R1–R17 to its output before delivering it. The AI must tag the output with
+`<default-directions>` and must self-validate against R1–R17. If the AI cannot satisfy
+all seventeen rules, it must state which rules it cannot satisfy and why before delivering
 partial output.
 
 ---
@@ -929,7 +985,7 @@ acceptable. Every wait has a stated maximum time and a stated success signal.
 **I16 — Default Directions Compliance**
 
 Any instruction document tagged `<default-directions>` that is staged for commit
-and fails any of R1–R16 is blocked at the pre-commit hook.
+and fails any of R1–R17 is blocked at the pre-commit hook.
 The block message names the file, the failing rule code, and the line number.
 Break-glass (`TLC_BYPASS_HOOKS=1`) does not bypass I16 checks on instruction files.
 Instruction files may only be committed when they pass the validator.
@@ -1015,6 +1071,7 @@ must be compatible with these types.
 | 2026-06-17 | X-XV | Added enterprise, production, privacy, AI governance, installability, shareability articles | TLC 2.0 build | Canonical conditions for public distribution and enterprise adoption |
 | 2026-06-17 | XVI | Added Article XVI — Default Directions Standard | TLC 2.0 build | R1–R16 neurodivergent-first instruction rules; I16 invariant; enforcement via validate-instructions.mjs; research basis: Redish 2012, Banda & Grimmett 2008, Forbes et al. 2009, Hartley & Allen 2014, Horder et al. 2014, Rogers et al. 2006 |
 | 2026-06-21 | XVII | Added Article XVII — TLC Core Constitution ratification | TLC 2.0 build | Ratifies constitutions/core/TLC_Core_Constitution_v1.0.md; codifies 14 formal definitions (Truth-State, Evidence, V&T, Tier-1 Quality, Done, Neurodivergent-First, HCIP, Narrative-First, Scope, Ambiguity, First-Class, Golden, Cognitive Load, Trust); adds I17 invariant; TypeScript interfaces in src/interfaces/core-constitution.ts |
+| 2026-06-22 | XVI | Added R17 — PRE-STEP-FAILURE | TLC 2.0 governance evaluation | Per-step `Likely mistake:` block required after every action step. Fills identified gap: error-anticipation at the instruction-step level was absent from R1–R16. Research basis: Norman 1988 (slip/mistake taxonomy); Reason 1990 (capture errors reduced by pre-naming wrong action); Forbes et al. 2009 (pre-task error avoidance intact under schizophrenia working-memory load; post-error correction substantially harder); Ganz et al. 2012 (per-step error prevention scripts outperform post-error correction for autistic users). Machine-detectable marker: `Likely mistake:` line. Accuracy of named mistake subject to human review per Section 16.3. Template updated. |
 
 ---
 

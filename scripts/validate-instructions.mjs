@@ -820,6 +820,60 @@ const ACTION_VERB_RE = new RegExp(`\\b(${ACTION_VERBS.join('|')})\\b`, 'i');
 // ── R16 — ISOLATION-TAG (already confirmed above) ────────────────────────────
 // If we reached this point, R16 passes.
 
+// ── R17 — PRE-STEP-FAILURE ───────────────────────────────────────────────────
+// Every step that contains an action must be followed by a "Likely mistake:" block
+// before the next numbered step begins.
+//
+// Detection strategy:
+//   For each action step, scan lines between this step and the next step (or
+//   end of document) for a line that starts with "likely mistake:" (case-insensitive).
+//   If no such line is found, the step fails R17.
+//
+// Exempt: non-action steps (steps whose text contains no ACTION_VERB).
+//   Rationale: steps that are purely observational (e.g. "What you will see: …")
+//   do not require a mistake block because they make no request of the user.
+//
+// The "Likely mistake:" line must appear:
+//   - After the step's action line
+//   - Before the next numbered step or a section heading
+//   - Not inside a fenced code block
+//
+(function checkR17() {
+  const steps = getStepLines();
+  if (steps.length === 0) return;
+
+  for (let si = 0; si < steps.length; si++) {
+    const step = steps[si];
+    // Skip steps that contain no action verb — observational steps don't need a failure block.
+    if (!ACTION_VERB_RE.test(step.text)) continue;
+
+    // Determine the scan boundary: start of next step (or end of file).
+    const nextStepIndex = si + 1 < steps.length ? steps[si + 1].index : lines.length;
+
+    // Scan lines from after this step's line to before the next step.
+    let foundMistakeBlock = false;
+    for (let li = step.index + 1; li < nextStepIndex && li < lines.length; li++) {
+      if (FENCE[li] || COMMENT[li]) continue;
+      if (/^likely mistake:/i.test(lines[li].trim())) {
+        foundMistakeBlock = true;
+        break;
+      }
+      // Stop early if we hit a heading — missing block is still a fail.
+      if (/^#{1,6}\s/.test(lines[li].trim())) break;
+    }
+
+    if (!foundMistakeBlock) {
+      fail('R17', step.lineNum,
+        `Step has an action but no "Likely mistake:" block: "${step.text.slice(0, 60)}"`,
+        'Add a "Likely mistake:" block after this step and before the next numbered step. ' +
+        'State (a) the one most likely wrong action at this step as a concrete action, ' +
+        'and (b) one recovery sentence beginning with "If this happens:". ' +
+        'Example: "Likely mistake: Pressing Return before pasting the command. ' +
+        'If this happens: Press the up-arrow key one time, then paste the command again."');
+    }
+  }
+})();
+
 // ── Section 16.4.4 — No confidence language ──────────────────────────────────
 (function checkConfidenceLanguage() {
   const CONFIDENCE = [
@@ -875,23 +929,23 @@ const errors   = violations.filter(v => v.severity === 'error');
 const warnings = violations.filter(v => v.severity === 'warn');
 
 // ── Human review checklist ────────────────────────────────────────────────────
-// Four items require human judgment. Printed as a numbered Article XVI compliant checklist.
+// Five items require human judgment. Printed as a numbered Article XVI compliant checklist.
 const HUMAN_REVIEW_ITEMS = [
   {
     number: 1,
     what: 'R1 — Multi-action sentences',
     instruction: 'Read every numbered step out loud. Count the number of things you are asked to do. If you count more than one thing, that step has too many actions.',
-    look_for: 'Any step where you count two or more separate physical actions (for example: "Copy this command, paste it into Terminal, and press Return" — that is three actions).',
+    look_for: 'Any step where you count two or more separate physical actions (for example: \"Copy this command, paste it into Terminal, and press Return\" — that is three actions).',
     pass: 'Every step asks you to do exactly one thing.',
-    stop: 'If you are not sure whether a step has one action or two, stop. Do not continue. Add a note: "REVIEW NEEDED: Step [number] — possible multi-action."',
+    stop: 'If you are not sure whether a step has one action or two, stop. Do not continue. Add a note: \"REVIEW NEEDED: Step [number] — possible multi-action.\"',
   },
   {
     number: 2,
-    what: 'R5 — "What you will see" accuracy',
-    instruction: 'Read the "What you will see" text in each step. Then run the step on the actual system. Compare what appears on screen to what the document says you will see.',
-    look_for: 'Any mismatch between the text in "What you will see" and what actually appears on screen.',
-    pass: 'Every "What you will see" block matches what actually appears on screen when you run that step.',
-    stop: 'If the screen does not match the description, stop. Do not continue. Add a note: "REVIEW NEEDED: Step [number] — \"What you will see\" does not match actual output."',
+    what: 'R5 — \"What you will see\" accuracy',
+    instruction: 'Read the \"What you will see\" text in each step. Then run the step on the actual system. Compare what appears on screen to what the document says you will see.',
+    look_for: 'Any mismatch between the text in \"What you will see\" and what actually appears on screen.',
+    pass: 'Every \"What you will see\" block matches what actually appears on screen when you run that step.',
+    stop: 'If the screen does not match the description, stop. Do not continue. Add a note: \"REVIEW NEEDED: Step [number] — \\\"What you will see\\\" does not match actual output.\"',
   },
   {
     number: 3,
@@ -899,7 +953,15 @@ const HUMAN_REVIEW_ITEMS = [
     instruction: 'Find every step that references a button, link, tab, icon, or field. Read the label in the document. Open the actual application. Find the element on screen and read its label.',
     look_for: 'Any step where the label in the document does not exactly match the text on screen.',
     pass: 'Every UI element label in the document matches the text that appears on screen exactly, character for character.',
-    stop: 'If a label does not match, stop. Do not continue. Add a note: "REVIEW NEEDED: Step [number] — label mismatch. Document says [X], screen shows [Y]."',
+    stop: 'If a label does not match, stop. Do not continue. Add a note: \"REVIEW NEEDED: Step [number] — label mismatch. Document says [X], screen shows [Y].\"',
+  },
+  {
+    number: 4,
+    what: 'R17 — Likely mistake accuracy',
+    instruction: 'Read the \"Likely mistake:\" block after each action step. Ask: is this actually the most likely wrong thing a person could do here? Then read the recovery sentence. Ask: does this recovery action actually fix the described mistake on the real system?',
+    look_for: 'Any \"Likely mistake:\" block where (a) the described mistake is not the most probable error at that step, or (b) the recovery action does not actually resolve the described mistake.',
+    pass: 'Every \"Likely mistake:\" block names the most probable real error at that step. Every recovery sentence fixes that error on the actual system in one action.',
+    stop: 'If a mistake block is inaccurate or the recovery does not work, stop. Do not continue. Add a note: \"REVIEW NEEDED: Step [number] — Likely mistake block needs correction. Actual most likely error: [describe it].\"',
   },
 ];
 
@@ -925,7 +987,7 @@ const header = `\n${B}Article XVI Validator${X} — ${D}${absPath}${X}\n`;
 console.log(header);
 
 if (errors.length === 0 && warnings.length === 0) {
-  console.log(`${G}${B}PASS${X}  All machine-detectable rules (R1–R16) satisfied.\n`);
+  console.log(`${G}${B}PASS${X}  All machine-detectable rules (R1–R17) satisfied.\n`);
 } else {
   if (errors.length > 0) {
     console.log(`${R}${B}FAIL${X}  ${errors.length} violation(s):\n`);
@@ -952,8 +1014,8 @@ if (!noHuman) {
   const divider = `${D}${'─'.repeat(70)}${X}`;
   console.log(divider);
   console.log(`\n${C}${B}HUMAN REVIEW REQUIRED${X}\n`);
-  console.log(`${B}Three things require a human. The machine cannot check them.${X}`);
-  console.log(`${B}Do these three checks in order, one at a time.${X}\n`);
+  console.log(`${B}Four things require a human. The machine cannot check them.${X}`);
+  console.log(`${B}Do these four checks in order, one at a time.${X}\n`);
   console.log(`Read this first.`);
   console.log(`  You cannot break the document by following these steps.`);
   console.log(`  You can stop at any time. Stopping does not cause any harm.`);
@@ -969,7 +1031,7 @@ if (!noHuman) {
   }
 
   console.log(`${B}You are done with the human review checklist.${X}`);
-  console.log(`If all four steps show Pass, this document is fully compliant.`);
+  console.log(`If all five checks show Pass, this document is fully compliant.`);
   console.log(`If any step shows Stop, fix the issue before using this document.\n`);
   console.log(divider);
   console.log('');
