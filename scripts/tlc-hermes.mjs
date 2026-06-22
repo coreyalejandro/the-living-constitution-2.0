@@ -210,8 +210,23 @@ async function main() {
   const today = new Date().toISOString().split('T')[0];
   const sessionTitle = `${moduleId} — ${today}`;
 
+  // Core TLC research skills always loaded with every agent session
+  const TLC_SKILLS = [
+    skillName,                       // module-specific skill (e.g. crsp-stc-runtime-001)
+    'deep-research',                 // 13-agent literature pipeline
+    'academic-paper',                // 12-agent paper writing pipeline
+    'arxiv',                         // arXiv search from inside the session
+    'weights-and-biases',            // experiment tracking for probe runs
+    'jupyter-live-kernel',           // live Python for LDA/LLM experiments
+    'github-pr-workflow',            // full PR lifecycle without leaving the session
+    'subagent-driven-development',   // parallel module builds with review gate
+    'systematic-debugging',          // 4-phase root cause for broken tests/probes
+    'writing-plans',                 // plan before build — keeps sessions on track
+    'ai-safety-research-practice',   // AHI research workflow + whitewashing taxonomy
+  ].filter(Boolean).join(',');
+
   const hermesArgs = [
-    skillName ? `-s ${skillName}` : '',
+    `-s ${TLC_SKILLS}`,
     modelOverride ? `-m ${modelOverride}` : '',
   ].filter(Boolean).join(' ');
 
