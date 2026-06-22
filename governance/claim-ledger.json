@@ -1,0 +1,46 @@
+{
+  "$schema": "../schemas/claim-ledger.schema.json",
+  "repository": "coreyalejandro/the-living-constitution-2.0",
+  "generated_at": "1970-01-01T00:00:00.000Z",
+  "ontology_version": "1.0.0",
+  "claims": [
+    {
+      "claim_id": "runtime-policy-engine-tier1",
+      "subject": "src/core/policy-engine.js",
+      "claim": "Tier-1 runtime policy enforcement is implemented.",
+      "status": "working",
+      "evidence": [
+        "tests/unit/policy-engine.test.js",
+        "tests/integration/governance-pipeline.test.mjs",
+        ".github/workflows/governance-ci.yml"
+      ],
+      "verification_method": "automated",
+      "last_verified_at": "1970-01-01T00:00:00.000Z"
+    },
+    {
+      "claim_id": "signed-evidence-chain",
+      "subject": "src/core/evidence-chain.mjs",
+      "claim": "Signed evidence-chain logging and offline verification are implemented.",
+      "status": "working",
+      "evidence": [
+        "src/core/evidence-chain.test.mjs",
+        "tests/integration/governance-pipeline.test.mjs",
+        ".github/workflows/governance-ci.yml"
+      ],
+      "verification_method": "automated",
+      "last_verified_at": "1970-01-01T00:00:00.000Z"
+    },
+    {
+      "claim_id": "cli-governance-runtime",
+      "subject": "src/cli/tlc-cli.js",
+      "claim": "The CLI exposes governance validation, evaluation, authorization, and evidence inspection commands.",
+      "status": "partial",
+      "evidence": [
+        "src/cli/tlc-cli.js",
+        "tests/unit/cli.test.js"
+      ],
+      "verification_method": "mixed",
+      "last_verified_at": "1970-01-01T00:00:00.000Z"
+    }
+  ]
+}
