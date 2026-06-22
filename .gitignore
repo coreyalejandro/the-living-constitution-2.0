@@ -12,3 +12,7 @@ openmemory.md
 .env
 .vercel
 .env*.local
+
+# Build artifacts
+coverage/
+.nyc_output/
