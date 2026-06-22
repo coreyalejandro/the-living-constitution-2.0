@@ -26,7 +26,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
-import { execSync, spawnSync } from 'child_process';
+import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TLC_ROOT = join(__dirname, '..');
@@ -246,30 +246,24 @@ async function main() {
     return;
   }
 
-  // 6. Launch Hermes
-  log(`${CYAN}Launching Hermes...${RESET}`);
-  log(`${DIM}hermes chat ${hermesArgs}${RESET}`);
+  // 6. Print the launch command — Hermes is interactive and needs a real TTY.
+  //    spawnSync cannot hand off TTY control cleanly; print and let the user run it.
+  const launchCmd = `hermes chat ${hermesArgs}`.trim();
+
   log('');
-
-  // Build args array for spawn
-  const spawnArgs = ['chat'];
-  if (skillName) { spawnArgs.push('-s', skillName); }
-  if (modelOverride) { spawnArgs.push('-m', modelOverride); }
-
-  const result = spawnSync('hermes', spawnArgs, {
-    stdio: 'inherit',
-    cwd: module.path || TLC_ROOT,
-    env: { ...process.env, TLC_MODULE: moduleId, TLC_SESSION: session.session_id }
-  });
-
-  if (result.status !== 0) {
-    warn(`Hermes exited with code ${result.status}.`);
-    log('');
-    log(`When you are done, run: ${CYAN}tlc-done --module ${moduleId}${RESET}`);
-  } else {
-    log('');
-    log(`Session ended. Run: ${CYAN}tlc-done --module ${moduleId} --evidence ./evidence/session-${today}.md${RESET}`);
-  }
+  log(`${BOLD}${GREEN}┌─ Your agent is ready ──────────────────────────────────────────┐${RESET}`);
+  log(`${BOLD}${GREEN}│${RESET}`);
+  log(`${BOLD}${GREEN}│${RESET}  Run this command now:`);
+  log(`${BOLD}${GREEN}│${RESET}`);
+  log(`${BOLD}${GREEN}│${RESET}    ${CYAN}${BOLD}${launchCmd}${RESET}`);
+  log(`${BOLD}${GREEN}│${RESET}`);
+  log(`${BOLD}${GREEN}│${RESET}  The agent will load your contract + skill from message one.`);
+  log(`${BOLD}${GREEN}│${RESET}`);
+  log(`${BOLD}${GREEN}│${RESET}  When done, run:`);
+  log(`${BOLD}${GREEN}│${RESET}    ${DIM}node scripts/tlc-done.mjs --module ${moduleId}${RESET}`);
+  log(`${BOLD}${GREEN}│${RESET}`);
+  log(`${BOLD}${GREEN}└────────────────────────────────────────────────────────────────┘${RESET}`);
+  log('');
 }
 
 main().catch(e => {
