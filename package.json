@@ -1,7 +1,7 @@
 {
   "name": "the-living-constitution-2.0",
   "version": "1.0.0",
-  "description": "Runtime enforcement layer for the SocioTechnical Constitution. Implements the Policy Engine, Evidence Observatory, Contract Window, Role Authorizer, Break-Glass Override, and Integration Adaptors.",
+  "description": "Runtime enforcement layer for the SocioTechnical Constitution. Implements the Policy Engine, Evidence Observatory, Contract Window, Role Authorizer, Break-Glass Override, and Integrity Hooks.",
   "license": "MIT",
   "type": "module",
   "main": "src/core/contract-manager.js",
@@ -57,7 +57,11 @@
     "constitutions:check": "node constitutions/check-platform.mjs",
     "tlc": "node scripts/tlc.mjs",
     "tlc:tui": "node --import tsx/esm src/tui/app.tsx",
-    "test:evidence": "node --import tsx/esm --test src/evidence-chain/engine.test.ts"
+    "test:evidence": "node --import tsx/esm --test src/evidence-chain/engine.test.ts",
+    "governance:validate-claims": "node scripts/validate-claim-ledger.mjs",
+    "governance:validate-ontology": "node scripts/validate-ontology-drift.mjs",
+    "governance:lint-authority": "node scripts/lint-authority-metadata.mjs",
+    "governance:reconcile-truth": "node scripts/validate-truth-reconciliation.mjs"
   },
   "keywords": [
     "governance",
