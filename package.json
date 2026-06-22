@@ -86,6 +86,7 @@
     "react": "^19.2.7"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.0.0",
     "c8": "^11.0.0",
     "eslint": "^9.0.0",

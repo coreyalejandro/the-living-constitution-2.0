@@ -42,6 +42,28 @@ export type EvidenceKind =
   | "HITL"       // human-in-the-loop review (requires signature)
   | "RETRO";     // retraction rationale
 
+// ─── Evidence levels (E0-E5) — spec §Gap-1 ────────────────────────────────
+// Each level corresponds to a TruthState stage.  Evidence may only be
+// bound at the level matching the claim's current or target state.
+
+export type EvidenceLevel =
+  | "E0"   // Root claim registration (Claim node itself)
+  | "E1"   // Written specification
+  | "E2"   // Implementation artifact
+  | "E3"   // Verification (test / trace result) — author independence required
+  | "E4"   // Real execution evidence — simulation NOT allowed (ECE-I4)
+  | "E5";  // Independent replication by a second operator (ECE-I3)
+
+// ─── EvidenceLink — spec §Gap-2 (ADR-002 adjacency list) ─────────────────
+
+export interface EvidenceLink {
+  readonly id: string;
+  readonly parentEvidenceId: string;
+  readonly childEvidenceId: string;
+  readonly claimId: string;
+  readonly createdAt: string;   // ISO-8601
+}
+
 // ─── EvidenceItem ─────────────────────────────────────────────────────────
 
 export interface EvidenceItem {
@@ -57,6 +79,11 @@ export interface EvidenceItem {
   // R8: HITL items MUST carry a valid digital signature
   readonly signature?: string;             // base64 Ed25519 over canonical(item fields)
   readonly verificationMethod?: "pgp" | "git-commit" | "ed25519";
+  // ── Gap-1 additions ─────────────────────────────────────────────────────
+  readonly level?: EvidenceLevel;       // E0-E5; optional for backward compat
+  readonly author?: string;             // operator id who produced this evidence
+  readonly claimId?: string;            // explicit claim binding (for graph queries)
+  readonly supersededBy?: string;       // id of a later evidence item that replaces this
 }
 
 // ─── ConstitutionRule ──────────────────────────────────────────────────────
@@ -232,6 +259,28 @@ export interface QueryIndexEntry {
   readonly applicableRuleIds: string[];
   readonly createdAt: string;      // ISO-8601
   readonly updatedAt: string;      // ISO-8601 — last transition timestamp
+}
+
+// ─── Challenge types (spec §Gap-5 / ADR-005) ─────────────────────────────
+
+export type ChallengeType =
+  | "CLAIM"        // disputes the claim itself
+  | "EVIDENCE"     // disputes a specific evidence artifact
+  | "TRANSITION"   // disputes that a state advance was valid
+  | "REPLICATION"; // disputes an independent replication (E5)
+
+export type ChallengeStatus =
+  | "PENDING"   // freeze lock is ACTIVE
+  | "RESOLVED"; // freeze lock released
+
+export interface Challenge {
+  readonly id: string;
+  readonly claimId: string;
+  readonly type: ChallengeType;
+  readonly description: string;
+  readonly status: ChallengeStatus;
+  readonly createdAt: string;   // ISO-8601
+  readonly resolution?: string; // required on RESOLVED
 }
 
 // ─── EvidenceGraphEdge / EvidenceGraph node — spec §12 ───────────────────

@@ -1,0 +1,37 @@
+# TLC Evidence Chain Engine — Constitutional Specification
+# Version: 2.0.0
+# Loaded by ConstitutionalService at startup (spec §Gap-3 / ADR-003).
+# This file is the sole source of truth for valid state transitions and
+# minimum evidence levels. Amend here; engine enforces automatically.
+
+version: "2.0.0"
+
+transitions:
+  allowed_transitions:
+    PROPOSED:        ["SPECIFIED",    "RETRACTED"]
+    SPECIFIED:       ["IMPLEMENTED",  "RETRACTED"]
+    IMPLEMENTED:     ["VERIFIED",     "RETRACTED"]
+    VERIFIED:        ["VALIDATED",    "RETRACTED"]
+    VALIDATED:       ["DEPLOYED",     "RETRACTED"]
+    REVIEW_REQUIRED: ["SPECIFIED", "IMPLEMENTED", "VERIFIED", "RETRACTED"]
+
+  # Minimum EvidenceLevel required to enter each state.
+  # Enforced by the engine via ConstitutionalService.requiredLevel().
+  required_evidence_levels:
+    PROPOSED:    E0
+    SPECIFIED:   E1
+    IMPLEMENTED: E2
+    VERIFIED:    E3
+    VALIDATED:   E4
+    DEPLOYED:    E5
+
+invariants:
+  # ECE-I3: E3, E4, E5 evidence must NOT be authored by the claim owner.
+  no_self_verification: true
+
+  # ECE-I4: Validation evidence (E4) must come from real execution.
+  # Simulation results are insufficient.
+  simulation_not_validation: true
+
+  # ECE-I5: Evidence items are append-only. Deletion is prohibited.
+  evidence_append_only: true

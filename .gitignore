@@ -19,3 +19,6 @@ coverage/
 # IDE / local tooling
 .cursor/
 src/evidence-chain/spec/tla2tools.jar
+ECE_TTrace*.tla
+ECE_TTrace*.bin
+src/evidence-chain/spec/states/
