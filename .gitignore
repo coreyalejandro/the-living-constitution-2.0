@@ -16,3 +16,6 @@ openmemory.md
 # Build artifacts
 coverage/
 .nyc_output/
+# IDE / local tooling
+.cursor/
+src/evidence-chain/spec/tla2tools.jar

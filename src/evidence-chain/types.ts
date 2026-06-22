@@ -157,3 +157,103 @@ export interface AuditBundle {
   readonly merkleRoot: string;
   readonly missingEvidence: string[];      // evidence kinds that are absent
 }
+
+// ─── ClaimView — spec §4.1 status field ───────────────────────────────────
+// Maps TruthState to the OPEN/BLOCKED/VERIFIED/VALIDATED/RETRACTED vocabulary
+// the spec uses at the presentation layer. updatedAt is derived from the last
+// TransitionRecord timestamp in the chain (not stored on Claim directly).
+
+export type ClaimStatus =
+  | "OPEN"         // PROPOSED or SPECIFIED or IMPLEMENTED
+  | "BLOCKED"      // rule evaluation returned BLOCKED / REVIEW_REQUIRED
+  | "VERIFIED"     // TruthState === VERIFIED
+  | "VALIDATED"    // TruthState === VALIDATED or DEPLOYED
+  | "RETRACTED";   // TruthState === RETRACTED
+
+export interface ClaimView extends Claim {
+  readonly updatedAt: string;      // ISO-8601 — timestamp of last TransitionRecord
+  readonly status: ClaimStatus;    // spec §4.1 presentation-layer status
+}
+
+// ─── LockRecord — spec §10 admin API ─────────────────────────────────────
+
+export interface LockRecord {
+  readonly claimId: string;
+  readonly lockedAt: string;       // ISO-8601
+  readonly lockedBy: string;       // operator id
+  readonly reason: string;
+  readonly unlockedAt?: string;    // ISO-8601 — set on unlock
+  readonly unlockedBy?: string;    // operator id
+}
+
+// ─── RedTeamReport — spec §10 admin API ──────────────────────────────────
+
+export interface RedTeamAttack {
+  readonly id: string;             // e.g. "A1"
+  readonly name: string;
+  readonly result: "BLOCKED" | "PASSED";
+  readonly error?: string;         // set when result === BLOCKED
+}
+
+export interface RedTeamReport {
+  readonly run_at: string;         // ISO-8601
+  readonly attacks: RedTeamAttack[];
+  readonly allBlocked: boolean;
+}
+
+// ─── ConstitutionCompatibilityReport — spec §10 read API ─────────────────
+
+export interface ConstitutionCompatibilityEntry {
+  readonly ruleId: string;
+  readonly ruleVersion: string;
+  readonly claimId: string;
+  readonly claimState: TruthState;
+  readonly compatible: boolean;    // true if claim satisfies rule at current state
+  readonly missingEvidenceKinds: string[];
+  readonly notes: string;
+}
+
+export interface ConstitutionCompatibilityReport {
+  readonly generatedAt: string;    // ISO-8601
+  readonly constitutionRuleIds: string[];
+  readonly entries: ConstitutionCompatibilityEntry[];
+  readonly fullyCompatible: boolean;
+}
+
+// ─── QueryIndexEntry — spec §11.B ─────────────────────────────────────────
+
+export interface QueryIndexEntry {
+  readonly claimId: string;
+  readonly title: string;
+  readonly state: TruthState;
+  readonly status: ClaimStatus;
+  readonly domainTags: string[];
+  readonly operator: string;
+  readonly applicableRuleIds: string[];
+  readonly createdAt: string;      // ISO-8601
+  readonly updatedAt: string;      // ISO-8601 — last transition timestamp
+}
+
+// ─── EvidenceGraphEdge / EvidenceGraph node — spec §12 ───────────────────
+
+export type EdgeKind =
+  | "depends_on"      // this claim requires another to be VALIDATED first
+  | "generated_from"  // this evidence was generated from another claim's artifact
+  | "supersedes"      // this claim supersedes / replaces another
+  | "contradicts";    // this claim contradicts another (triggers review)
+
+export interface EvidenceGraphEdge {
+  readonly id: string;
+  readonly fromClaimId: string;
+  readonly toClaimId: string;
+  readonly kind: EdgeKind;
+  readonly notes: string;
+  readonly createdAt: string;      // ISO-8601
+  readonly operator: string;
+}
+
+export interface EvidenceGraphNode {
+  readonly claimId: string;
+  readonly inEdges: EvidenceGraphEdge[];
+  readonly outEdges: EvidenceGraphEdge[];
+}

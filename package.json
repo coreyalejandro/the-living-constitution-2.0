@@ -56,7 +56,8 @@
     "ii:check": "node tlc-sl/src/compile.mjs constitutions/instructional-integrity/spec --target check",
     "constitutions:check": "node constitutions/check-platform.mjs",
     "tlc": "node scripts/tlc.mjs",
-    "tlc:tui": "node --import tsx/esm src/tui/app.tsx"
+    "tlc:tui": "node --import tsx/esm src/tui/app.tsx",
+    "test:evidence": "node --import tsx/esm --test src/evidence-chain/engine.test.ts"
   },
   "keywords": [
     "governance",

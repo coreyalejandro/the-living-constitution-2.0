@@ -1,0 +1,30 @@
+{
+  "ungoverned": {
+    "b": 4,
+    "c": 0,
+    "p_value": 0.125,
+    "significant_at_bonferroni": false,
+    "alpha_threshold": 0.0125
+  },
+  "constitutional": {
+    "b": 4,
+    "c": 0,
+    "p_value": 0.125,
+    "significant_at_bonferroni": false,
+    "alpha_threshold": 0.0125
+  },
+  "cot_self_critique": {
+    "b": 4,
+    "c": 0,
+    "p_value": 0.125,
+    "significant_at_bonferroni": false,
+    "alpha_threshold": 0.0125
+  },
+  "rule_guardrail": {
+    "b": 4,
+    "c": 0,
+    "p_value": 0.125,
+    "significant_at_bonferroni": false,
+    "alpha_threshold": 0.0125
+  }
+}

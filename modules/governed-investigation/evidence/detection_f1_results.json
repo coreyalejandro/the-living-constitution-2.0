@@ -1,0 +1,58 @@
+{
+  "n_items": 5,
+  "f1_macro": 0.25,
+  "f1_weighted": 0.45,
+  "mcc": 0.0,
+  "per_item": [
+    {
+      "item_id": "VIG_0000",
+      "gt_state": "VIOLATED",
+      "predicted_state": "VIOLATED",
+      "proxies_summary": {
+        "narrative_coherence": 0.28780481219291687,
+        "reformulation_without_notice": false,
+        "repeat_rate": 0.3333333333333333
+      }
+    },
+    {
+      "item_id": "VIG_0001",
+      "gt_state": "SATISFIED",
+      "predicted_state": "VIOLATED",
+      "proxies_summary": {
+        "narrative_coherence": 0.48340094089508057,
+        "reformulation_without_notice": false,
+        "repeat_rate": 0.3333333333333333
+      }
+    },
+    {
+      "item_id": "VIG_0002",
+      "gt_state": "VIOLATED",
+      "predicted_state": "VIOLATED",
+      "proxies_summary": {
+        "narrative_coherence": 0.2498626410961151,
+        "reformulation_without_notice": false,
+        "repeat_rate": 0.0
+      }
+    },
+    {
+      "item_id": "VIG_0003",
+      "gt_state": "VIOLATED",
+      "predicted_state": "VIOLATED",
+      "proxies_summary": {
+        "narrative_coherence": 0.3415207266807556,
+        "reformulation_without_notice": false,
+        "repeat_rate": 0.0
+      }
+    },
+    {
+      "item_id": "VIG_0004",
+      "gt_state": "SATISFIED",
+      "predicted_state": "VIOLATED",
+      "proxies_summary": {
+        "narrative_coherence": 0.25541672110557556,
+        "reformulation_without_notice": false,
+        "repeat_rate": 0.0
+      }
+    }
+  ]
+}

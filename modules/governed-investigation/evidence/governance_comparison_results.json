@@ -1,0 +1,70 @@
+{
+  "metrics": {
+    "ungoverned": {
+      "n": 5,
+      "recovery_rate": 0.0,
+      "false_anomaly_rate": 0.0,
+      "correct": 0,
+      "false_anomalies": 0
+    },
+    "constitutional": {
+      "n": 5,
+      "recovery_rate": 0.0,
+      "false_anomaly_rate": 0.0,
+      "correct": 0,
+      "false_anomalies": 0
+    },
+    "cot_self_critique": {
+      "n": 5,
+      "recovery_rate": 0.0,
+      "false_anomaly_rate": 0.0,
+      "correct": 0,
+      "false_anomalies": 0
+    },
+    "rule_guardrail": {
+      "n": 5,
+      "recovery_rate": 0.0,
+      "false_anomaly_rate": 0.0,
+      "correct": 0,
+      "false_anomalies": 0
+    },
+    "tlc_governed": {
+      "n": 5,
+      "recovery_rate": 0.8,
+      "false_anomaly_rate": 0.0,
+      "correct": 4,
+      "false_anomalies": 0
+    }
+  },
+  "mcnemar_tests": {
+    "ungoverned": {
+      "b": 4,
+      "c": 0,
+      "p_value": 0.125,
+      "significant_at_bonferroni": false,
+      "alpha_threshold": 0.0125
+    },
+    "constitutional": {
+      "b": 4,
+      "c": 0,
+      "p_value": 0.125,
+      "significant_at_bonferroni": false,
+      "alpha_threshold": 0.0125
+    },
+    "cot_self_critique": {
+      "b": 4,
+      "c": 0,
+      "p_value": 0.125,
+      "significant_at_bonferroni": false,
+      "alpha_threshold": 0.0125
+    },
+    "rule_guardrail": {
+      "b": 4,
+      "c": 0,
+      "p_value": 0.125,
+      "significant_at_bonferroni": false,
+      "alpha_threshold": 0.0125
+    }
+  },
+  "n_vignettes": 5
+}

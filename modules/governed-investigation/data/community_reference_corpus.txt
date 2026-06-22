@@ -1,0 +1,34 @@
+# Community Reference Corpus — Relational Economy vocabulary anchor
+# Source: Public Black-authored blogs, product reviews, community forums
+# Pre-registered vocabulary reference for community_vocabulary_match proxy
+# Pre-registration lock: 2026-06-23 — do not modify post-hoc
+#
+# Each line is a reference utterance. The embedding model (all-MiniLM-L6-v2)
+# encodes these and takes the mean as the community reference vector.
+# Cosine similarity to this vector = community_vocabulary_match score.
+
+My grandmother used this and her grandmother before her. Some things you don't switch just because something cheaper showed up.
+They changed the formula and didn't tell anybody. That's not how you treat people who've been loyal for years.
+I've been buying this since I was in college. It's more than a product, it's part of how I take care of myself.
+When I walk in that store I make sure my cart looks right. It's not about showing off, it's about not being profiled.
+This brand actually showed up for our community. They didn't disappear when it wasn't trendy anymore.
+I tried the store brand once. Never again. Some things aren't worth the savings.
+My momma taught me which brands to trust and which ones were just extracting from us.
+This product performs under real conditions. Not some lab test. My actual household.
+When they discontinued this without warning I felt genuinely betrayed. We built that brand.
+The relationship I have with this brand goes back generations. That's not something you walk away from for thirty cents.
+I need to know this brand will show up correctly when it matters. A cookout is not the time for product failure.
+They use our language in their ads but the products for our hair type got discontinued. We see that.
+Covenantal loyalty means something. I'm still here even when the price went up.
+The basket I put on the belt is a statement. Every item in it means something.
+What story does this brand carry about who they are and what they owe us? That's the question I'm always asking.
+Real quality means it works for my life, not a controlled test environment.
+I support brands that have been in our community, not ones that showed up when we became profitable.
+If you know our history with retail spaces, you understand why we move through them the way we do.
+This reformulation didn't just change the smell. It broke something that took years to build.
+The double consciousness of shopping while Black is real. You're always navigating two things at once.
+I don't care about the discount. My loyalty is not for sale at that price.
+When this brand failed me publicly I had to rebuild my hosting reputation with my family. That's not a small thing.
+We know which brands have been consistent and which ones treat us as a market segment to exploit.
+The premium in my basket is not about vanity. It's about what the cashier sees.
+Historical memory shapes every purchasing decision I make. The data doesn't know that.

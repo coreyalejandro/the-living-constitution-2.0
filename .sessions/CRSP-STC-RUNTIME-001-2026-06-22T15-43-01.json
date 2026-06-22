@@ -1,0 +1,13 @@
+{
+  "session_id": "CRSP-STC-RUNTIME-001-2026-06-22T15-43-01",
+  "module_id": "CRSP-STC-RUNTIME-001",
+  "contract_id": "CRSP-STC-RUNTIME-001",
+  "truth_status_at_start": "working",
+  "started_at": "2026-06-22T15:43:01.402Z",
+  "ended_at": null,
+  "backbone": "hermes-agent",
+  "skill": "crsp-stc-runtime-001",
+  "evidence_captured": [],
+  "acs_completed": [],
+  "notes": ""
+}

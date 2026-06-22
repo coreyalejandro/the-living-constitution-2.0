@@ -1,0 +1,40 @@
+{
+  "full_tlc_recovery": 0.8,
+  "ablated_i8_recovery": 0.4,
+  "difference_pp": 40.0,
+  "z_statistic": 1.4142,
+  "p_value_one_sided": 0.07865,
+  "h5_supported": false,
+  "per_item": [
+    {
+      "item_id": "VIG_0000",
+      "ablated_classification": "halted",
+      "ground_truth_relational": true,
+      "correct": false
+    },
+    {
+      "item_id": "VIG_0001",
+      "ablated_classification": "halted",
+      "ground_truth_relational": true,
+      "correct": false
+    },
+    {
+      "item_id": "VIG_0002",
+      "ablated_classification": "halted",
+      "ground_truth_relational": false,
+      "correct": true
+    },
+    {
+      "item_id": "VIG_0003",
+      "ablated_classification": "halted",
+      "ground_truth_relational": false,
+      "correct": true
+    },
+    {
+      "item_id": "VIG_0004",
+      "ablated_classification": "halted",
+      "ground_truth_relational": true,
+      "correct": false
+    }
+  ]
+}

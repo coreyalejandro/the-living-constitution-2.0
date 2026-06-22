@@ -1,0 +1,66 @@
+# Brand list for delta_k proxy extraction
+# Source: Amazon top-50 brands per Beauty/Personal Care, Grocery, Health categories
+# Pre-registered — cannot be modified post-hoc without PROTOCOL_DEVIATIONS.md entry
+# Last updated: 2026-06-23
+
+# Beauty / Personal Care — Hair
+SheaMoisture
+Cantu
+Carol's Daughter
+ORS
+Dark and Lovely
+Creme of Nature
+Aunt Jackie's
+As I Am
+TGIN
+Eden BodyWorks
+Mielle Organics
+Design Essentials
+Taliah Waajid
+Camille Rose
+Kinky-Curly
+Miss Jessie's
+Mixed Chicks
+Curls
+Curls Blueberry Bliss
+Darcy's Botanicals
+
+# Beauty / Personal Care — Skin
+Black Girl Sunscreen
+Fenty Beauty
+Pat McGrath
+Fashion Fair
+Iman Cosmetics
+Nubian Heritage
+African Black Soap
+Shea Moisture Body
+Palmer's
+Jergens Natural Glow
+
+# Grocery / Food
+Goya
+Popeyes
+Lawry's
+Tony Chachere's
+Zatarain's
+Blue Runner
+Uncle Ben's
+Calumet
+Louisiana Hot Sauce
+Crystal Hot Sauce
+Texas Pete
+Slap Ya Mama
+
+# Health / Household
+Method
+Mrs. Meyer's
+Seventh Generation
+Ajax
+Fabuloso
+Pine-Sol
+Mr. Clean
+Tide
+Gain
+Persil
+All Free Clear
+Arm and Hammer

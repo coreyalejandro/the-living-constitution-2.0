@@ -1,5 +1,5 @@
 # TLC 2.0 — Active Session Context
-**Generated:** 2026-06-17T20:27:49.862Z
+**Generated:** 2026-06-22T19:07:21.911Z
 **Module:** CRSP-STC-RUNTIME-001
 **Status:** working
 **Surface:** governance_core
