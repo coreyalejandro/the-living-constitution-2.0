@@ -1,18 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [react()],
-  root: fileURLToPath(new URL('.', import.meta.url)),
-  publicDir: 'public',
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('.', import.meta.url)),
-    },
+  // Root is src/ui/ (this file's location) — run vite from src/ui/
+  // Output lands at src/ui/dist/ for production builds
+  build: {
+    outDir: 'dist',
   },
   server: {
     port: 5173,
-    open: false,
   },
 });

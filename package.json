@@ -64,7 +64,7 @@
     "tlc:tui": "node --import tsx/esm src/tui/app.tsx",
     "test:evidence": "node --import tsx/esm --test src/evidence-chain/engine.test.ts",
     "tlc:export-data": "node scripts/export-web-data.mjs",
-    "tlc:web": "npm run tlc:export-data && npx vite --root src/ui"
+    "tlc:web": "npm run tlc:export-data && cd src/ui && npx vite"
   },
   "keywords": [
     "governance",

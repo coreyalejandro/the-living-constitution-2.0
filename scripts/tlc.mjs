@@ -135,8 +135,8 @@ switch (command.toLowerCase()) {
     });
     if (exportResult.status !== 0) process.exit(exportResult.status ?? 1);
     // Launch vite from src/ui
-    const viteResult = spawnSync('npx', ['vite', '--root', join(ROOT, 'src/ui')], {
-      stdio: 'inherit', cwd: ROOT, env: { ...process.env, FORCE_COLOR: '3' },
+    const viteResult = spawnSync('npx', ['vite'], {
+      stdio: 'inherit', cwd: join(ROOT, 'src/ui'), env: { ...process.env, FORCE_COLOR: '3' },
     });
     process.exit(viteResult.status ?? 0);
     break;
