@@ -60,6 +60,16 @@ export function generateKeypair() {
   return { publicKeyPem: publicKey, privateKeyPem: privateKey };
 }
 
+/**
+ * A6 trust anchor: SHA-256 of the SPKI/DER public key — a stable, attacker-
+ * independent fingerprint. Pin this out-of-band (committed to git / a signed
+ * release) and pass it to verifyLog so a swapped key file is rejected.
+ */
+export function keyFingerprint(publicKeyPem) {
+  const der = createPublicKey(publicKeyPem).export({ type: 'spki', format: 'der' });
+  return sha256hex(der);
+}
+
 /* ---------------- append ---------------- */
 
 function lastEntryHash(filePath) {
@@ -95,10 +105,18 @@ export function appendSignedEntry(filePath, entry, privateKeyPem) {
  * Verify authenticity + integrity + chain linkage of a signed log.
  * Returns { ok:true, count } or { ok:false, brokenAt, reason }.
  */
-export function verifyLog(filePath, publicKeyPem) {
+export function verifyLog(filePath, publicKeyPem, opts = {}) {
   if (!existsSync(filePath)) return { ok: true, empty: true, count: 0 };
   const lines = readFileSync(filePath, 'utf8').trim().split('\n').filter(Boolean);
   if (lines.length === 0) return { ok: true, empty: true, count: 0 };
+
+  // A6 — out-of-band trust anchor: the public key used here must match the
+  // pinned fingerprint. Defeats "edit the log + swap the co-located key file".
+  // The pin is supplied by the caller from a trusted channel, not read from the
+  // log's directory.
+  if (opts.expectedKeyFingerprint && keyFingerprint(publicKeyPem) !== opts.expectedKeyFingerprint) {
+    return { ok: false, reason: 'untrusted signer key: fingerprint does not match pinned trust anchor (A6)' };
+  }
 
   const key = createPublicKey(publicKeyPem);
   let prev = 'GENESIS';
@@ -126,6 +144,19 @@ export function verifyLog(filePath, publicKeyPem) {
     }
     prev = record.entry_hash;
   }
+
+  // A6 — optional head pin: defeats tail truncation / rollback (a prefix of a
+  // valid chain is itself valid). Use for point-in-time / frozen-snapshot audits.
+  if (opts.expectedHead) {
+    if (lines.length !== opts.expectedHead.length) {
+      return { ok: false, reason: `chain length mismatch — expected ${opts.expectedHead.length}, found ${lines.length} (truncation/rollback) (A6)` };
+    }
+    const root = merkleRoot(lines.map((l) => JSON.parse(l).entry_hash));
+    if (root !== opts.expectedHead.merkleRoot) {
+      return { ok: false, reason: 'merkle root mismatch — chain head pin violated (A6)' };
+    }
+  }
+
   return { ok: true, count: lines.length };
 }
 
@@ -195,11 +226,38 @@ export function merkleRootOfLog(filePath) {
 function main(argv) {
   const [cmd, ...rest] = argv.slice(2);
   if (cmd === 'verify') {
-    const [log, pub] = rest;
-    if (!log || !pub) { console.error('usage: verify <log.jsonl> <public-key.pem>'); process.exit(2); }
-    const r = verifyLog(log, readFileSync(pub, 'utf8'));
-    if (r.ok) { console.log(`OK — ${r.count || 0} entries verified (signatures + chain).`); process.exit(0); }
-    console.error(`FAIL — entry ${r.brokenAt}: ${r.reason}`); process.exit(1);
+    const [log, pub, expectedFp, expLen, expRoot] = rest;
+    if (!log || !pub) {
+      console.error('usage: verify <log.jsonl> <public-key.pem> <expected-fingerprint> [expected-length] [expected-merkle-root]');
+      process.exit(2);
+    }
+    // A6 FAIL CLOSED: refuse to verify without an out-of-band pinned fingerprint.
+    // Without it, an attacker who edits the log can also swap this key file and
+    // forge a fully self-consistent chain. The pin must come from a trusted
+    // channel (committed to git / a signed release), not from the log's folder.
+    if (!expectedFp) {
+      console.error('REFUSING to verify without a pinned signer fingerprint (A6).');
+      console.error(`Compute it from a trusted copy of the key:`);
+      console.error(`  node src/core/evidence-chain.mjs fingerprint ${pub}`);
+      console.error('then pass that value as the 3rd argument (optionally followed by length + merkle-root for rollback protection).');
+      process.exit(2);
+    }
+    const opts = { expectedKeyFingerprint: expectedFp };
+    if (expLen !== undefined && expRoot !== undefined) {
+      opts.expectedHead = { length: Number(expLen), merkleRoot: expRoot };
+    }
+    const r = verifyLog(log, readFileSync(pub, 'utf8'), opts);
+    if (r.ok) { console.log(`OK — ${r.count || 0} entries verified (signatures + chain + pinned trust anchor).`); process.exit(0); }
+    console.error(`FAIL — ${r.brokenAt ? `entry ${r.brokenAt}: ` : ''}${r.reason}`); process.exit(1);
+  } else if (cmd === 'fingerprint') {
+    const [pub] = rest;
+    if (!pub) { console.error('usage: fingerprint <public-key.pem>'); process.exit(2); }
+    console.log(keyFingerprint(readFileSync(pub, 'utf8')));
+  } else if (cmd === 'head') {
+    const [log] = rest;
+    if (!log) { console.error('usage: head <log.jsonl>'); process.exit(2); }
+    const leaves = leafHashesOf(log);
+    console.log(JSON.stringify({ length: leaves.length, merkleRoot: merkleRoot(leaves) }));
   } else if (cmd === 'root') {
     const [log] = rest;
     if (!log) { console.error('usage: root <log.jsonl>'); process.exit(2); }
@@ -220,7 +278,7 @@ function main(argv) {
     console.log(`Wrote ${outDir}/public-key.pem and ${outDir}/private-key.pem`);
     console.log('Keep private-key.pem OUT of version control.');
   } else {
-    console.error('commands: verify <log> <pub> | root <log> | prove <log> <index> | keygen [dir]');
+    console.error('commands: verify <log> <pub> <expected-fingerprint> [len] [root] | fingerprint <pub> | head <log> | root <log> | prove <log> <index> | keygen [dir]');
     process.exit(2);
   }
 }

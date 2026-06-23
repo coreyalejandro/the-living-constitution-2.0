@@ -105,6 +105,17 @@ can record the anchor when a ledger is created, and `exportAuditBundle()` now
 carries `signerFingerprint` + `head` so a third party can independently pin and
 re-verify a bundle without trusting any attacker-editable key file.
 
+4. **Enforced by default — fail closed (v2.1).** Verification now *refuses to run*
+   unless the caller supplies a trust anchor (`expectedKeyFingerprint` and/or
+   `expectedHead`) or explicitly acknowledges an in-process self-check
+   (`trustProvidedKey: true`). There is no longer a silent "trust whatever key I was
+   handed" default, so the A6-unsafe check cannot be run by accident.
+5. **The `.mjs` CLI verifier is hardened too.** `src/core/evidence-chain.mjs verify`
+   now **refuses without a pinned fingerprint** (exit 2) and rejects a key whose
+   fingerprint does not match the pin (exit 1). The canonical pins are recorded
+   out-of-band in `evidence/TRUST_ANCHORS.md`; `npm run tlc:sl:verify-evidence` /
+   `npm run evidence:verify` pass them and CI enforces them.
+
 Recommended audit-grade call:
 
 ```ts
@@ -130,11 +141,12 @@ engine.verifyIntegrityHash(claimId, {
   also rewrite. Recommended carriers: a signed git tag/release, a commit-signed
   trust-anchor file, or an auditor-supplied fingerprint. Storing the fingerprint in
   the same writable directory as the ledger re-opens A10.
-- **Unpinned `verify()` remains intentionally backward-compatible** and is therefore
-  *not* sufficient against a filesystem adversary. It is suitable only when the
-  verifying key is itself trusted (e.g. held in memory by the writing process).
-  Audit-grade verification MUST pass `expectedKeyFingerprint` (and, for
-  rollback resistance, `expectedHead`).
+- **Verification fails closed (v2.1).** There is no unpinned default: a caller must
+  pin (`expectedKeyFingerprint`/`expectedHead`) or explicitly pass
+  `trustProvidedKey: true` for an in-process self-check. The `trustProvidedKey`
+  escape is intentionally available for the writing process (which already trusts
+  its in-memory key) and is *not* safe for a third party verifying a key loaded
+  from disk — third parties MUST pin. The CLI does not expose that escape at all.
 - **The append O(1) tail-hash cache** assumes the single-writer, append-only model
   the ledger already documents; concurrent external writers are out of scope.
 

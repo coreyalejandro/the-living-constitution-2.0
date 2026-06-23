@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-06-23T13:54:00.379Z",
+  "run_at": "2026-06-23T16:31:44.975Z",
   "attacks": [
     {
       "id": "A1",
@@ -59,13 +59,13 @@
       "id": "A10",
       "name": "Trust-root key substitution (file edit + re-sign + key swap)",
       "result": "BLOCKED",
-      "error": "unpinned verify ok=true (insecure by design — no out-of-band trust); pinned verify rejected: untrusted signer key: fingerprint does not match pinned trust anchor (A6)"
+      "error": "with trustProvidedKey (legacy \"trust the key I hold\") verify ok=true — the forged chain is self-consistent; out-of-band pinned verify rejected: untrusted signer key: fingerprint does not match pinned trust anchor (A6)"
     },
     {
       "id": "A11",
       "name": "Tail truncation / rollback (delete last entry)",
       "result": "BLOCKED",
-      "error": "unpinned verify ok=true (prefix of a valid chain stays valid); head pin rejected: chain length mismatch — expected 3, found 2 (truncation/rollback) (A6)"
+      "error": "with trustProvidedKey verify ok=true (a prefix of a valid chain stays valid); out-of-band head pin rejected: chain length mismatch — expected 3, found 2 (truncation/rollback) (A6)"
     }
   ],
   "allBlocked": true

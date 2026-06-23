@@ -155,7 +155,7 @@ function makeHITLEvidence(engine: EvidenceChainEngine, claimId: string, opId: st
   (rec["node"] as Record<string, unknown>)["title"] = "TAMPERED_TITLE";
   lines[0] = JSON.stringify(rec);
   writeFileSync(file, lines.join("\n") + "\n");
-  const vr = engine.verifyIntegrityHash(c.id);
+  const vr = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
   attacks.push({
     id: "A5",
     name: "Content tampering — alter node field in ledger",
@@ -174,7 +174,7 @@ function makeHITLEvidence(engine: EvidenceChainEngine, claimId: string, opId: st
   rec["sig"] = Buffer.from("a".repeat(64)).toString("base64url");
   lines[0] = JSON.stringify(rec);
   writeFileSync(file, lines.join("\n") + "\n");
-  const vr = engine.verifyIntegrityHash(c.id);
+  const vr = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
   attacks.push({
     id: "A6",
     name: "Signature forgery — replace rec.sig with forged bytes",
@@ -194,7 +194,7 @@ function makeHITLEvidence(engine: EvidenceChainEngine, claimId: string, opId: st
   const lines = readFileSync(file, "utf8").trim().split("\n");
   [lines[0], lines[1]] = [lines[1]!, lines[0]!];
   writeFileSync(file, lines.join("\n") + "\n");
-  const vr = engine.verifyIntegrityHash(c.id);
+  const vr = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
   attacks.push({
     id: "A7",
     name: "Hash chain reorder — swap entries 0 and 1",
@@ -288,13 +288,13 @@ function makeHITLEvidence(engine: EvidenceChainEngine, claimId: string, opId: st
     privateKeyPem: attacker.privateKeyPem,
     publicKeyPem: attacker.publicKeyPem,
   });
-  const unpinned = auditor.verifyIntegrityHash(c.id);
+  const unpinned = auditor.verifyIntegrityHash(c.id, { trustProvidedKey: true });
   const pinned = auditor.verifyIntegrityHash(c.id, { expectedKeyFingerprint: legitFp });
   attacks.push({
     id: "A10",
     name: "Trust-root key substitution (file edit + re-sign + key swap)",
     result: pinned.ok ? "BYPASSED" : "BLOCKED",
-    error: `unpinned verify ok=${unpinned.ok} (insecure by design — no out-of-band trust); pinned verify rejected: ${pinned.reason}`,
+    error: `with trustProvidedKey (legacy "trust the key I hold") verify ok=${unpinned.ok} — the forged chain is self-consistent; out-of-band pinned verify rejected: ${pinned.reason}`,
   });
 }
 
@@ -313,13 +313,13 @@ function makeHITLEvidence(engine: EvidenceChainEngine, claimId: string, opId: st
   const lines = readFileSync(file, "utf8").trim().split("\n");
   lines.pop();
   writeFileSync(file, lines.join("\n") + "\n");
-  const unpinned = engine.verifyIntegrityHash(c.id);
+  const unpinned = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
   const pinned = engine.verifyIntegrityHash(c.id, { expectedHead: pinnedHead });
   attacks.push({
     id: "A11",
     name: "Tail truncation / rollback (delete last entry)",
     result: pinned.ok ? "BYPASSED" : "BLOCKED",
-    error: `unpinned verify ok=${unpinned.ok} (prefix of a valid chain stays valid); head pin rejected: ${pinned.reason}`,
+    error: `with trustProvidedKey verify ok=${unpinned.ok} (a prefix of a valid chain stays valid); out-of-band head pin rejected: ${pinned.reason}`,
   });
 }
 

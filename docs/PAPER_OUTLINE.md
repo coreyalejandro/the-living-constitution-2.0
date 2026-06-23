@@ -124,10 +124,10 @@ evidence chain — together with an explicit honesty discipline (truth_status, c
 - **No Lean 4 target:** properties are model-checked, not proof-carrying.
 - **Finite-domain checker:** exhaustive only over the small declared models; not a general
   unbounded model checker (TLA+/TLC mitigates but shares the modeled abstraction).
-- **Identity binding:** *closed in the audit-package chain* (`src/evidence-chain/`, v2.1) — entries
-  bind the signer-key fingerprint and `verify()` pins it out-of-band (`docs/SECURITY-A6-DISCLOSURE.md`).
-  The `src/core/evidence-chain.mjs` CLI verifier still trusts a co-located key file (next to harden);
-  full PKI/key-rotation/sigstore remains future work.
+- **Identity binding:** *closed in both chains* (v2.1) — the audit-package chain binds the signer-key
+  fingerprint and **fails closed** without an out-of-band pin, and the `src/core/evidence-chain.mjs`
+  CLI verifier now **refuses to verify without a pinned signer fingerprint** (`evidence/TRUST_ANCHORS.md`,
+  `docs/SECURITY-A6-DISCLOSURE.md`). Full PKI/key-rotation/sigstore remains future work.
 - **Single-operator council:** constitutional council authority currently rests with the author
   (acknowledged in the constitution itself).
 
@@ -136,10 +136,10 @@ evidence chain — together with an explicit honesty discipline (truth_status, c
 - Replace synthetic governance-harness probes with trained, validated probes; an experimental
   manipulation that actually toggles the invariant; gates whose pass/fail is not predetermined;
   held-out validation. (Requires real model + data + GPU.)
-- Lean 4 target; extend the audit-package A6 trust-anchoring (signer-fingerprint pin + head pin) to
-  the `src/core/evidence-chain.mjs` CLI verifier and to full PKI/key-rotation/sigstore; generate the
-  pre-commit checks from the same TLC-SL models; an inductive invariant (TLAPS) for unbounded-N
-  assurance beyond the bounded TLC model.
+- Lean 4 target; extend the A6 trust-anchoring (now enforced fail-closed in both the audit-package
+  chain and the `.mjs` CLI verifier) to full PKI / key-rotation / sigstore; generate the pre-commit
+  checks from the same TLC-SL models; an inductive invariant (TLAPS) for unbounded-N assurance beyond
+  the bounded TLC model.
 
 ## 10. Reproducibility appendix
 

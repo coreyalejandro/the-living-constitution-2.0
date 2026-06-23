@@ -157,7 +157,7 @@ console.log("  Bound: HITL evidence (operational attestation)");
 engine.advance(claim1.id, "VALIDATED", OPERATOR_ID);
 const chain1 = engine.getChain(claim1.id);
 console.log(`  Advanced: VERIFIED → VALIDATED`);
-console.log(`  Final state: ${chain1.currentState} | Chain nodes: ${chain1.nodes.length} | Integrity: ${engine.verifyIntegrityHash(claim1.id).ok ? "OK" : "FAIL"}`);
+console.log(`  Final state: ${chain1.currentState} | Chain nodes: ${chain1.nodes.length} | Integrity: ${engine.verifyIntegrityHash(claim1.id, { trustProvidedKey: true }).ok ? "OK" : "FAIL"}`);
 
 // ─── Claim 2: AHI Measurability ────────────────────────────────────────────
 // "AHI produces measurable harm in simulated consumer recommendation pipelines"
@@ -206,7 +206,7 @@ engine.bindEvidence(claim2.id, makeHITL(
 
 engine.advance(claim2.id, "VALIDATED", OPERATOR_ID);
 const chain2 = engine.getChain(claim2.id);
-console.log(`  Advanced to VALIDATED | Chain nodes: ${chain2.nodes.length} | Integrity: ${engine.verifyIntegrityHash(claim2.id).ok ? "OK" : "FAIL"}`);
+console.log(`  Advanced to VALIDATED | Chain nodes: ${chain2.nodes.length} | Integrity: ${engine.verifyIntegrityHash(claim2.id, { trustProvidedKey: true }).ok ? "OK" : "FAIL"}`);
 
 // ─── Claim 3: AHI Runtime Mitigation ───────────────────────────────────────
 // "TLC runtime governance provides measurable mitigation of AHI"
@@ -255,7 +255,7 @@ engine.bindEvidence(claim3.id, makeHITL(
 
 engine.advance(claim3.id, "VALIDATED", OPERATOR_ID);
 const chain3 = engine.getChain(claim3.id);
-console.log(`  Advanced to VALIDATED | Chain nodes: ${chain3.nodes.length} | Integrity: ${engine.verifyIntegrityHash(claim3.id).ok ? "OK" : "FAIL"}`);
+console.log(`  Advanced to VALIDATED | Chain nodes: ${chain3.nodes.length} | Integrity: ${engine.verifyIntegrityHash(claim3.id, { trustProvidedKey: true }).ok ? "OK" : "FAIL"}`);
 
 // ─── Summary ────────────────────────────────────────────────────────────────
 
@@ -267,7 +267,7 @@ const results = {
       title: claim1.title,
       final_state: chain1.currentState,
       nodes: chain1.nodes.length,
-      integrity_ok: engine.verifyIntegrityHash(claim1.id).ok,
+      integrity_ok: engine.verifyIntegrityHash(claim1.id, { trustProvidedKey: true }).ok,
       integrity_hash: chain1.integrityHash,
     },
     {
@@ -275,7 +275,7 @@ const results = {
       title: claim2.title,
       final_state: chain2.currentState,
       nodes: chain2.nodes.length,
-      integrity_ok: engine.verifyIntegrityHash(claim2.id).ok,
+      integrity_ok: engine.verifyIntegrityHash(claim2.id, { trustProvidedKey: true }).ok,
       integrity_hash: chain2.integrityHash,
     },
     {
@@ -283,7 +283,7 @@ const results = {
       title: claim3.title,
       final_state: chain3.currentState,
       nodes: chain3.nodes.length,
-      integrity_ok: engine.verifyIntegrityHash(claim3.id).ok,
+      integrity_ok: engine.verifyIntegrityHash(claim3.id, { trustProvidedKey: true }).ok,
       integrity_hash: chain3.integrityHash,
     },
   ],
@@ -291,9 +291,9 @@ const results = {
     chain1.currentState === "VALIDATED" &&
     chain2.currentState === "VALIDATED" &&
     chain3.currentState === "VALIDATED" &&
-    engine.verifyIntegrityHash(claim1.id).ok &&
-    engine.verifyIntegrityHash(claim2.id).ok &&
-    engine.verifyIntegrityHash(claim3.id).ok,
+    engine.verifyIntegrityHash(claim1.id, { trustProvidedKey: true }).ok &&
+    engine.verifyIntegrityHash(claim2.id, { trustProvidedKey: true }).ok &&
+    engine.verifyIntegrityHash(claim3.id, { trustProvidedKey: true }).ok,
 };
 
 console.log("\n── Empirical Validation Results ──────────────────────────────");

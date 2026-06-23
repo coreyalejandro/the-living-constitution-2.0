@@ -68,7 +68,7 @@ for (const N of SIZES) {
 
   // ── Full-chain verification (O(n): every entry's hash + signature) ────────
   const v0 = performance.now();
-  const vr = ledger.verify(claimId);
+  const vr = ledger.verify(claimId, { trustProvidedKey: true });
   const v1 = performance.now();
   if (!vr.ok) throw new Error(`verify failed at N=${N}: ${vr.reason}`);
   const verifyTotal = v1 - v0;

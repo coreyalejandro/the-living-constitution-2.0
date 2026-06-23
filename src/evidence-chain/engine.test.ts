@@ -409,7 +409,7 @@ describe("Cryptographic integrity (R7)", () => {
     const h = makeHarness();
     const c = makeClaim(h.engine);
     h.engine.advance(c.id, "SPECIFIED", h.operatorId);
-    const result = h.engine.verifyIntegrityHash(c.id);
+    const result = h.engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(result.ok, true);
   });
 
@@ -623,7 +623,7 @@ describe("Red-team: tampered evidence hash (R6.2)", () => {
     // operator's responsibility (the hash field is a claim). The ledger
     // itself is tamper-evident — if the ledger record is changed, verify fails.
     h.engine.bindEvidence(c.id, makeEvidence({ hash: "deadbeef".repeat(8) }));
-    const result = h.engine.verifyIntegrityHash(c.id);
+    const result = h.engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(result.ok, true); // chain itself is intact; bad hash is a content claim
   });
 });
@@ -714,7 +714,7 @@ describe("Ledger internals", () => {
       createdAt: new Date().toISOString(), operator: "sys", applicableRuleIds: [],
     });
     writeFileSync(join(dir, "ledger", `${c.id}.jsonl`), "NOT-JSON\n");
-    const result = engine.verifyIntegrityHash(c.id);
+    const result = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(result.ok, false);
     assert.match(result.reason ?? "", /invalid JSON/);
   });
@@ -738,7 +738,7 @@ describe("Ledger internals", () => {
     const rec = JSON.parse(readFileSync(fp, "utf8").trim()) as Record<string, unknown>;
     (rec["node"] as Record<string, unknown>)["title"] = "TAMPERED";
     writeFileSync(fp, JSON.stringify(rec) + "\n");
-    const result = engine.verifyIntegrityHash(c.id);
+    const result = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(result.ok, false);
     assert.match(result.reason ?? "", /mismatch/);
   });
@@ -948,7 +948,7 @@ describe("Coverage: ledger verify — prev_hash chain break", () => {
     // Swap the two lines so prev_hash chain breaks
     const swapped = [lines[1], lines[0]].join("\n") + "\n";
     writeFileSync(fp, swapped);
-    const result = engine.verifyIntegrityHash(c.id);
+    const result = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(result.ok, false);
   });
 });
@@ -1002,7 +1002,7 @@ describe("Coverage: ledger lastHash catch (corrupt last line)", () => {
     const fp = join(dir, "ledger", `${c.id}.jsonl`);
     writeFileSync(fp, readFileSync(fp, "utf8") + "CORRUPTED-LAST-LINE\n");
     // Verify detects it
-    const result = engine.verifyIntegrityHash(c.id);
+    const result = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(result.ok, false);
   });
 });
@@ -1027,7 +1027,7 @@ describe("Coverage: ledger verify signature failure", () => {
     // Keep node and hash intact but corrupt the signature
     rec["sig"] = Buffer.from("invalidsig").toString("base64");
     writeFileSync(fp, JSON.stringify(rec) + "\n");
-    const result = engine.verifyIntegrityHash(c.id);
+    const result = engine.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(result.ok, false);
     assert.match(result.reason ?? "", /signature/);
   });
@@ -1185,6 +1185,22 @@ describe("A6: pinned-fingerprint verification", () => {
   });
 });
 
+describe("A6: fail-closed — refuses to verify without a trust anchor", () => {
+  test("no pin and no explicit in-process trust returns ok:false (refusing)", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    const r = h.engine.verifyIntegrityHash(c.id); // no anchor, no trustProvidedKey
+    assert.equal(r.ok, false);
+    assert.match(r.reason ?? "", /refusing to verify without a trust anchor/);
+  });
+
+  test("trustProvidedKey:true explicitly opts into the in-process self-check", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    assert.equal(h.engine.verifyIntegrityHash(c.id, { trustProvidedKey: true }).ok, true);
+  });
+});
+
 describe("A6: chain-head pin (rollback / truncation resistance)", () => {
   test("verify with the correct head pin passes", () => {
     const h = makeHarness();
@@ -1245,7 +1261,7 @@ describe("A6: signer binding catches verification with the wrong key", () => {
       keyringStoagePath: join(dir, "k2.json"),
       privateKeyPem: k2.privateKeyPem, publicKeyPem: k2.publicKeyPem,
     });
-    const r = e2.verifyIntegrityHash(c.id);
+    const r = e2.verifyIntegrityHash(c.id, { trustProvidedKey: true });
     assert.equal(r.ok, false);
     assert.match(r.reason ?? "", /signer fingerprint mismatch/);
   });
@@ -1289,8 +1305,8 @@ describe("A6: full trust-root swap — unpinned accepts, pinned rejects (disclos
       keyringStoagePath: join(dir, "k2.json"),
       privateKeyPem: atk.privateKeyPem, publicKeyPem: atk.publicKeyPem,
     });
-    assert.equal(auditor.verifyIntegrityHash(c.id).ok, true,
-      "unpinned MUST accept the self-consistent forgery — this is the A6 gap the pin closes");
+    assert.equal(auditor.verifyIntegrityHash(c.id, { trustProvidedKey: true }).ok, true,
+      "trusting the provided (swapped) key MUST accept the self-consistent forgery — the A6 gap the pin closes");
     const pinned = auditor.verifyIntegrityHash(c.id, { expectedKeyFingerprint: legitFp });
     assert.equal(pinned.ok, false, "pinned MUST reject the substituted key — the A6 fix");
     assert.match(pinned.reason ?? "", /pinned trust anchor/);
@@ -1335,6 +1351,6 @@ describe("Persistence: a fresh engine resumes an existing on-disk ledger (tail-h
     const e2 = new EvidenceChainEngine(cfg("rules2.json"));
     e2.advance(c.id, "IMPLEMENTED", "op");
     assert.equal(e2.getChain(c.id).currentState, "IMPLEMENTED");
-    assert.equal(e2.verifyIntegrityHash(c.id).ok, true);
+    assert.equal(e2.verifyIntegrityHash(c.id, { trustProvidedKey: true }).ok, true);
   });
 });

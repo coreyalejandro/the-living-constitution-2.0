@@ -244,7 +244,10 @@ export class EvidenceChainEngine {
 
   exportAuditBundle(claimId: string): AuditBundle {
     const chain = this.getChain(claimId);
-    const verifyResult = this.ledger.verify(claimId);
+    // In-process self-check: the engine is verifying a chain it just produced
+    // with its own key, so trusting that key is correct here. A third party
+    // re-verifying the exported bundle must pin signerFingerprint + head.
+    const verifyResult = this.ledger.verify(claimId, { trustProvidedKey: true });
     const evidenceItems = chain.nodes.filter(
       (n): n is EvidenceItem => "kind" in n && "path" in n,
     );

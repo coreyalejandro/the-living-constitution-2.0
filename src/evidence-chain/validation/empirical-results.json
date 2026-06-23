@@ -1,29 +1,29 @@
 {
-  "run_at": "2026-06-23T13:54:00.587Z",
+  "run_at": "2026-06-23T16:31:45.171Z",
   "claims": [
     {
-      "id": "49c3816c-f07f-430d-9741-efaa40ab44f2",
+      "id": "49b2f17c-36fa-470a-bedd-e1b82dd9ed5b",
       "title": "AHI Formalizability",
       "final_state": "VALIDATED",
       "nodes": 8,
       "integrity_ok": true,
-      "integrity_hash": "fcf48f6dc6bea10b19b15c60950d587e3755b03b92ec05278cb04db20bd5bf7f"
+      "integrity_hash": "59844d4883f7437fc0c93f8e7138f5e117e36cc305154c0413b123b7399d958f"
     },
     {
-      "id": "1ab1eb80-35b1-474d-9c2c-f880f0d54dca",
+      "id": "be441ba5-451d-4764-9166-ee12579bbc5d",
       "title": "AHI Measurability",
       "final_state": "VALIDATED",
       "nodes": 8,
       "integrity_ok": true,
-      "integrity_hash": "34f00147185fd7a7528f8cf7acffd8a9b1a1085d0d5e59291eadbc71181eb1b3"
+      "integrity_hash": "0a5c75e1470af48b03975cc871a0019cfb0345bbfd895e726e5ae6e178b96bcd"
     },
     {
-      "id": "b9e0a25c-d42e-4418-a095-60fa892e4efb",
+      "id": "6e5adf96-a6ac-4136-9c16-99993be0bb2d",
       "title": "AHI Runtime Mitigation",
       "final_state": "VALIDATED",
       "nodes": 8,
       "integrity_ok": true,
-      "integrity_hash": "8162600d12fca2d51bc491677c274d05f1c53a209c81243f166af7d4f28a14d8"
+      "integrity_hash": "8c80868e94c5c39a94d6d6173a6b9e551bae4eadfd509b79ecfd8ec36499029d"
     }
   ],
   "all_passed": true

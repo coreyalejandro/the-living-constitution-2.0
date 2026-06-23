@@ -37,6 +37,14 @@ export interface VerifyOptions {
   expectedKeyFingerprint?: string;
   /** Out-of-band pinned chain head (length + Merkle root) to defeat truncation/rollback. */
   expectedHead?: { length: number; merkleRoot: string };
+  /**
+   * Explicit opt-in to the legacy "trust whatever public key I was handed"
+   * behavior. ONLY safe for in-process self-checks where the verifying key was
+   * NOT loaded from an attacker-influenced location. Verification FAILS CLOSED
+   * unless either `expectedKeyFingerprint` or `trustProvidedKey` is supplied —
+   * so a third party can never *accidentally* run the A6-unsafe check.
+   */
+  trustProvidedKey?: boolean;
 }
 
 export class Ledger {
@@ -133,6 +141,21 @@ export class Ledger {
   ): { ok: boolean; brokenAt?: number; reason?: string } {
     const fp = this.filePath(claimId);
     if (!existsSync(fp)) return { ok: true };
+
+    // R11 / A6 — FAIL CLOSED: refuse to verify unless the caller either pins the
+    // signer fingerprint out-of-band (audit-grade) or explicitly acknowledges it
+    // is trusting the in-process key. This makes the A6-unsafe check impossible to
+    // run by accident — the dangerous default ("trust whatever key I hold") no
+    // longer exists.
+    if (!opts.expectedKeyFingerprint && !opts.expectedHead && !opts.trustProvidedKey) {
+      return {
+        ok: false,
+        reason:
+          "refusing to verify without a trust anchor: pass expectedKeyFingerprint " +
+          "and/or expectedHead (out-of-band pins, required for third-party audit) or " +
+          "trustProvidedKey:true (in-process self-check only) — A6",
+      };
+    }
 
     // R11 / A6 fix — trust anchor: the key this verifier uses must match the
     // out-of-band pin. Defeats "edit file + re-sign with attacker key + swap

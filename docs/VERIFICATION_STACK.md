@@ -61,8 +61,10 @@ uses the committed dev toolchain — tsx/c8/fast-check.)
   externally model-checked, not merely emitted. The in-process exhaustive checker remains the
   fast, dependency-free proof; TLC is the independent corroboration.
 - No Lean 4 target yet. Probe-Gate checks discrimination, not construct validity.
-- **Identity binding (the "whose key" step) is now done in the audit-package chain** (`src/evidence-chain/`,
-  v2.1): each entry binds its signer-key fingerprint and `verify()` rejects a substituted key against an
-  out-of-band pin — closing the A6 "forgery via file edit" path (`docs/SECURITY-A6-DISCLOSURE.md`). The
-  same hardening is the recommended next step for the `src/core/evidence-chain.mjs` CLI verifier, whose
-  `evidence:verify` currently trusts a co-located public-key file.
+- **Identity binding (the "whose key" step) is done in BOTH chains** (v2.1): the audit-package chain
+  (`src/evidence-chain/`) binds each entry's signer-key fingerprint and **fails closed** unless the
+  verifier pins the signer (or explicitly opts into an in-process self-check), and the
+  `src/core/evidence-chain.mjs` CLI verifier now **refuses to `verify` without a pinned signer
+  fingerprint** (the pins are recorded out-of-band in `evidence/TRUST_ANCHORS.md`; `tlc:sl:verify-evidence`
+  and `evidence:verify` pass them, and CI enforces them). This closes the A6 "forgery via file edit" path
+  (`docs/SECURITY-A6-DISCLOSURE.md`). Full PKI / key-rotation / sigstore remains future work.
