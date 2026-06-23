@@ -1,0 +1,50 @@
+{
+  "$schema": "../../../schemas/contracts/crsp-workbench-bundle.schema.json",
+  "schema_version": "1.0.0",
+  "bundle_id": "CRSP-TLC-WORKBENCH-BUNDLE-001",
+  "stable_id": "tlc-workbench.contract-bundle.v1",
+  "status": "Draft",
+  "issue_reference": "coreyalejandro/the-living-constitution-2.0#15",
+  "entrypoint_contract_id": "CRSP-TLC-WORKBENCH-001",
+  "bundle_goal": "Provide a single machine-readable entrypoint for validating the TLC Workbench contract family.",
+  "future_tree_creation_excludes": [
+    "TLC-WORKBENCH-CRSP-001"
+  ],
+  "external_contract_references": [
+    "CRSP-STC-RUNTIME-001"
+  ],
+  "contracts": [
+    {
+      "contract_id": "CRSP-TLC-WORKBENCH-001",
+      "path": "contracts/active/json/tlc-workbench.parent.contract.json",
+      "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-001.md"
+    },
+    {
+      "contract_id": "CRSP-TLC-WORKBENCH-SURFACES-001",
+      "path": "contracts/active/json/tlc-workbench.surfaces.contract.json",
+      "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-SURFACES-001.md"
+    },
+    {
+      "contract_id": "CRSP-TLC-WORKBENCH-ACCESSIBILITY-001",
+      "path": "contracts/active/json/tlc-workbench.accessibility.contract.json",
+      "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-ACCESSIBILITY-001.md"
+    },
+    {
+      "contract_id": "CRSP-TLC-WORKBENCH-LIFECYCLE-001",
+      "path": "contracts/active/json/tlc-workbench.lifecycle.contract.json",
+      "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-LIFECYCLE-001.md"
+    },
+    {
+      "contract_id": "CRSP-TLC-WORKBENCH-HARDENING-001",
+      "path": "contracts/active/json/tlc-workbench.hardening.contract.json",
+      "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-HARDENING-001.md"
+    }
+  ],
+  "validation_order": [
+    "CRSP-TLC-WORKBENCH-001",
+    "CRSP-TLC-WORKBENCH-SURFACES-001",
+    "CRSP-TLC-WORKBENCH-ACCESSIBILITY-001",
+    "CRSP-TLC-WORKBENCH-LIFECYCLE-001",
+    "CRSP-TLC-WORKBENCH-HARDENING-001"
+  ]
+}
