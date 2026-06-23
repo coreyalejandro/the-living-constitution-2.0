@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-06-22T19:21:25.297Z",
+  "run_at": "2026-06-23T13:54:00.379Z",
   "attacks": [
     {
       "id": "A1",
@@ -54,6 +54,18 @@
       "name": "VALIDATED without HITL attestation",
       "result": "BLOCKED",
       "error": "Transition blocked by rule 'attest-rule@1.0.0': missing required evidence kinds or operational attestation."
+    },
+    {
+      "id": "A10",
+      "name": "Trust-root key substitution (file edit + re-sign + key swap)",
+      "result": "BLOCKED",
+      "error": "unpinned verify ok=true (insecure by design — no out-of-band trust); pinned verify rejected: untrusted signer key: fingerprint does not match pinned trust anchor (A6)"
+    },
+    {
+      "id": "A11",
+      "name": "Tail truncation / rollback (delete last entry)",
+      "result": "BLOCKED",
+      "error": "unpinned verify ok=true (prefix of a valid chain stays valid); head pin rejected: chain length mismatch — expected 3, found 2 (truncation/rollback) (A6)"
     }
   ],
   "allBlocked": true

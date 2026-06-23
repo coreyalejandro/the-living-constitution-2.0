@@ -20,6 +20,8 @@ import {
   createHITLSignature,
   canonical,
   sha256hex,
+  signBytes,
+  keyFingerprint,
   merkleRoot,
   inclusionProof,
   verifyInclusion,
@@ -1137,5 +1139,202 @@ describe("Coverage: advance() R8 operator check", () => {
       () => h.engine.advance(c.id, "SPECIFIED", h.operatorId),
       /revoked/i,
     );
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SECTION 12: A6 hardening — trust-root pinning + rollback resistance (R11, v2.1)
+// Closes the "signature forgery via file edit" path: a file-system adversary who
+// re-signs forged content under a substituted key, or truncates the chain, is
+// rejected once the legitimate signer fingerprint and chain head are pinned
+// out-of-band. See docs/SECURITY-A6-DISCLOSURE.md.
+// ═══════════════════════════════════════════════════════════════════════════
+
+describe("A6: key fingerprint (out-of-band trust anchor)", () => {
+  test("keyFingerprint is deterministic per key and differs across keys", () => {
+    const a = generateKeypair();
+    const b = generateKeypair();
+    assert.equal(keyFingerprint(a.publicKeyPem), keyFingerprint(a.publicKeyPem));
+    assert.notEqual(keyFingerprint(a.publicKeyPem), keyFingerprint(b.publicKeyPem));
+    assert.match(keyFingerprint(a.publicKeyPem), /^[0-9a-f]{64}$/);
+  });
+
+  test("engine.signerFingerprint() is a stable 64-char hex fingerprint", () => {
+    const h = makeHarness();
+    assert.match(h.engine.signerFingerprint(), /^[0-9a-f]{64}$/);
+    assert.equal(h.engine.signerFingerprint(), h.engine.signerFingerprint());
+  });
+});
+
+describe("A6: pinned-fingerprint verification", () => {
+  test("verify with the correct pinned fingerprint passes", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    h.engine.advance(c.id, "SPECIFIED", h.operatorId);
+    const fp = h.engine.signerFingerprint();
+    assert.equal(h.engine.verifyIntegrityHash(c.id, { expectedKeyFingerprint: fp }).ok, true);
+  });
+
+  test("verify with a wrong pinned fingerprint is rejected (substituted key)", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    const wrong = keyFingerprint(generateKeypair().publicKeyPem);
+    const r = h.engine.verifyIntegrityHash(c.id, { expectedKeyFingerprint: wrong });
+    assert.equal(r.ok, false);
+    assert.match(r.reason ?? "", /pinned trust anchor/);
+  });
+});
+
+describe("A6: chain-head pin (rollback / truncation resistance)", () => {
+  test("verify with the correct head pin passes", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    h.engine.advance(c.id, "SPECIFIED", h.operatorId);
+    const head = h.engine.chainHead(c.id);
+    assert.equal(h.engine.verifyIntegrityHash(c.id, { expectedHead: head }).ok, true);
+  });
+
+  test("verify rejects a wrong head length (truncation)", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    h.engine.advance(c.id, "SPECIFIED", h.operatorId);
+    const head = h.engine.chainHead(c.id);
+    const r = h.engine.verifyIntegrityHash(c.id, {
+      expectedHead: { length: head.length + 1, merkleRoot: head.merkleRoot },
+    });
+    assert.equal(r.ok, false);
+    assert.match(r.reason ?? "", /length mismatch/);
+  });
+
+  test("verify rejects a wrong head Merkle root", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    const head = h.engine.chainHead(c.id);
+    const r = h.engine.verifyIntegrityHash(c.id, {
+      expectedHead: { length: head.length, merkleRoot: "deadbeef".repeat(8) },
+    });
+    assert.equal(r.ok, false);
+    assert.match(r.reason ?? "", /root mismatch/);
+  });
+
+  test("chainHead of an unknown claim is empty", () => {
+    const h = makeHarness();
+    const head = h.engine.chainHead("does-not-exist");
+    assert.equal(head.length, 0);
+    assert.equal(head.merkleRoot, "EMPTY");
+  });
+});
+
+describe("A6: signer binding catches verification with the wrong key", () => {
+  test("a second engine with a different key rejects the ledger (signer mismatch)", () => {
+    const dir = mkdtempSync(join(tmpdir(), "tlc-a6sig-"));
+    mkdirSync(join(dir, "ledger"), { recursive: true });
+    const k1 = generateKeypair();
+    const e1 = new EvidenceChainEngine({
+      ledgerDir: join(dir, "ledger"), ruleStorePath: join(dir, "r.json"),
+      keyringStoagePath: join(dir, "k.json"),
+      privateKeyPem: k1.privateKeyPem, publicKeyPem: k1.publicKeyPem,
+    });
+    const c = e1.registerClaim({
+      title: "t", description: "d", domainTags: [],
+      createdAt: new Date().toISOString(), operator: "sys", applicableRuleIds: [],
+    });
+    const k2 = generateKeypair();
+    const e2 = new EvidenceChainEngine({
+      ledgerDir: join(dir, "ledger"), ruleStorePath: join(dir, "r2.json"),
+      keyringStoagePath: join(dir, "k2.json"),
+      privateKeyPem: k2.privateKeyPem, publicKeyPem: k2.publicKeyPem,
+    });
+    const r = e2.verifyIntegrityHash(c.id);
+    assert.equal(r.ok, false);
+    assert.match(r.reason ?? "", /signer fingerprint mismatch/);
+  });
+});
+
+describe("A6: full trust-root swap — unpinned accepts, pinned rejects (disclosure-grade)", () => {
+  test("forged + re-signed + key-swapped chain: unpinned ok=true, pinned ok=false", () => {
+    const dir = mkdtempSync(join(tmpdir(), "tlc-a6swap-"));
+    mkdirSync(join(dir, "ledger"), { recursive: true });
+    const legit = generateKeypair();
+    const e = new EvidenceChainEngine({
+      ledgerDir: join(dir, "ledger"), ruleStorePath: join(dir, "r.json"),
+      keyringStoagePath: join(dir, "k.json"),
+      privateKeyPem: legit.privateKeyPem, publicKeyPem: legit.publicKeyPem,
+    });
+    const c = e.registerClaim({
+      title: "orig", description: "d", domainTags: [],
+      createdAt: new Date().toISOString(), operator: "sys", applicableRuleIds: [],
+    });
+    const legitFp = e.signerFingerprint();
+
+    // Attacker forges content and re-chains the WHOLE ledger under their own key.
+    const atk = generateKeypair();
+    const atkFp = keyFingerprint(atk.publicKeyPem);
+    const file = join(dir, "ledger", `${c.id}.jsonl`);
+    const recs = readFileSync(file, "utf8").trim().split("\n").map((l) => JSON.parse(l) as Record<string, unknown>);
+    let prev = "GENESIS";
+    for (const rec of recs) {
+      (rec["node"] as Record<string, unknown>)["title"] = "FORGED";
+      rec["prev_hash"] = prev; rec["signer"] = atkFp;
+      const bytes = Buffer.from(canonical({ node: rec["node"], prev_hash: rec["prev_hash"], signer: rec["signer"] }));
+      rec["entry_hash"] = sha256hex(bytes);
+      rec["sig"] = signBytes(bytes, atk.privateKeyPem);
+      prev = rec["entry_hash"] as string;
+    }
+    writeFileSync(file, recs.map((r) => JSON.stringify(r)).join("\n") + "\n");
+
+    // Auditor re-opens with the attacker-substituted key (worst case).
+    const auditor = new EvidenceChainEngine({
+      ledgerDir: join(dir, "ledger"), ruleStorePath: join(dir, "r2.json"),
+      keyringStoagePath: join(dir, "k2.json"),
+      privateKeyPem: atk.privateKeyPem, publicKeyPem: atk.publicKeyPem,
+    });
+    assert.equal(auditor.verifyIntegrityHash(c.id).ok, true,
+      "unpinned MUST accept the self-consistent forgery — this is the A6 gap the pin closes");
+    const pinned = auditor.verifyIntegrityHash(c.id, { expectedKeyFingerprint: legitFp });
+    assert.equal(pinned.ok, false, "pinned MUST reject the substituted key — the A6 fix");
+    assert.match(pinned.reason ?? "", /pinned trust anchor/);
+  });
+});
+
+describe("A6: audit bundle carries the trust anchor", () => {
+  test("exportAuditBundle includes signerFingerprint + head", () => {
+    const h = makeHarness();
+    const c = makeClaim(h.engine);
+    const b = h.engine.exportAuditBundle(c.id);
+    assert.match(b.signerFingerprint, /^[0-9a-f]{64}$/);
+    assert.equal(b.head.length, 1);
+    assert.match(b.head.merkleRoot, /^[0-9a-f]{64}$/);
+  });
+});
+
+describe("Persistence: a fresh engine resumes an existing on-disk ledger (tail-hash cache miss path)", () => {
+  test("re-opened ledger continues the chain and still verifies", () => {
+    const dir = mkdtempSync(join(tmpdir(), "tlc-reopen-"));
+    mkdirSync(join(dir, "ledger"), { recursive: true });
+    const k = generateKeypair();
+    const cfg = (rs: string) => ({
+      ledgerDir: join(dir, "ledger"), ruleStorePath: join(dir, rs),
+      keyringStoagePath: join(dir, "keyring.json"),
+      privateKeyPem: k.privateKeyPem, publicKeyPem: k.publicKeyPem,
+    });
+    const e1 = new EvidenceChainEngine(cfg("rules.json"));
+    const opKeys = generateKeypair();
+    e1.keyring_.register({
+      id: "op", publicKeyPem: opKeys.publicKeyPem,
+      registeredAt: new Date().toISOString(), constitutionRef: "x", revoked: false,
+    });
+    const c = e1.registerClaim({
+      title: "t", description: "d", domainTags: [],
+      createdAt: new Date().toISOString(), operator: "op", applicableRuleIds: [],
+    });
+    e1.advance(c.id, "SPECIFIED", "op");
+
+    // Fresh engine instance, SAME on-disk ledger + key — its tail-hash cache is
+    // empty, so the next append must read the existing file to find the tail hash.
+    const e2 = new EvidenceChainEngine(cfg("rules2.json"));
+    e2.advance(c.id, "IMPLEMENTED", "op");
+    assert.equal(e2.getChain(c.id).currentState, "IMPLEMENTED");
+    assert.equal(e2.verifyIntegrityHash(c.id).ok, true);
   });
 });

@@ -1,22 +1,32 @@
 # Evidence Chain Engine — Traceability Matrix (R2)
 # Spec §2. Maps every spec requirement to implementation file + test.
 # Format: requirement_id → { description, implemented_in, test_covers, status }
+#
+# Section references below use the SECTION banners and exact describe/test names
+# in src/evidence-chain/engine.test.ts. They were re-synced to the source on
+# 2026-06-23 (the v2.0 matrix cited stale section numbers and a red-team-report.md
+# that never existed). R11 (A6 trust-root fix) and R12 (performance) added in v2.1.
 
-schema_version: "2.0"
-generated: "2025-07-01"
+schema_version: "2.1"
+generated: "2026-06-23"
 
 requirements:
 
   R1:
     description: >
-      TLA+ formal specification of the six invariants and valid transition
+      TLA+ formal specification of the core invariants and valid transition
       graph. Must be model-checkable with TLC.
     implemented_in:
       - src/evidence-chain/spec/EvidenceChain.tla
       - src/evidence-chain/spec/EvidenceChain.cfg
     test_covers: []
     model_check_results: src/evidence-chain/spec/TLC_RESULTS.md
-    status: SPEC_WRITTEN_PENDING_TLC_RUN
+    # TLC ran clean (no error, no deadlock) at the committed scope (Claims=2,
+    # Operators=2 → 484 distinct states) and was re-confirmed 2026-06-23 across
+    # Claims=2..5 / Operators=2..3 up to 644,204 distinct states. The reachable
+    # state space follows the exact closed form |States| = 11^C * 2^P
+    # (see docs/PERFORMANCE.md). Invariants held at every scope.
+    status: VERIFIED_BY_TLC
 
   R2:
     description: >
@@ -32,22 +42,22 @@ requirements:
       TypeScript reference implementation with full type safety (Claim,
       TruthState, EvidenceKind, TransitionRecord, ConstitutionRule,
       EvidenceChain, EvidenceItem, OperatorKey). Property-based tests
-      using fast-check covering the six invariants.
+      using fast-check covering the six core invariants.
     implemented_in:
       - src/evidence-chain/types.ts       # all core types
       - src/evidence-chain/engine.ts      # EvidenceChainEngine
-      - src/evidence-chain/crypto.ts      # Ed25519 + Merkle
+      - src/evidence-chain/crypto.ts      # Ed25519 + Merkle + key fingerprint
       - src/evidence-chain/ledger.ts      # append-only ledger
       - src/evidence-chain/rules.ts       # ConstitutionRule store
       - src/evidence-chain/signatures.ts  # OperatorKeyring
       - src/evidence-chain/index.ts       # public API re-exports
-    test_covers:
-      - engine.test.ts §5 "Property-based: Invariant 1 — forward-only"
-      - engine.test.ts §5 "Property-based: Invariant 2 — valid steps only"
-      - engine.test.ts §5 "Property-based: Invariant 3 — terminal absorbing"
-      - engine.test.ts §5 "Property-based: Invariant 4 — signed by registered op"
-      - engine.test.ts §5 "Property-based: Invariant 5 — HITL gating"
-      - engine.test.ts §5 "Property-based: Invariant 6 — hash chain"
+    test_covers:   # engine.test.ts SECTION 7 — Property-based (fast-check)
+      - 'Property-based: Invariant 1 — no transition from terminal states'
+      - 'Property-based: Invariant 2 — only valid forward transitions allowed'
+      - 'Property-based: Invariant 3 — monotone truth-state'
+      - 'Property-based: Invariant 4 — HITL requires valid signature (R8)'
+      - 'Property-based: Invariant 5 — integrity hash changes with every mutation'
+      - 'Property-based: Invariant 6 — unknown claim always throws on access'
     status: COMPLETE
 
   R4:
@@ -57,7 +67,7 @@ requirements:
     implemented_in:
       - tsconfig.evidence.json
     test_covers:
-      - All 73 tests in src/evidence-chain/engine.test.ts
+      - All 87 tests in src/evidence-chain/engine.test.ts
     coverage_achieved:
       statements: "100%"
       branches: "100%"
@@ -69,6 +79,10 @@ requirements:
         --exclude='src/evidence-chain/*.test.ts'
         --reporter=text --reporter=json-summary
         node --import tsx/esm --test src/evidence-chain/engine.test.ts
+    note: >
+      c8 honors the /* c8 ignore */ guards on genuinely-unreachable defensive
+      branches. Node's built-in --experimental-test-coverage (which ignores those
+      guards) reports 100% on every line outside those guarded blocks.
     status: COMPLETE
 
   R5:
@@ -86,17 +100,20 @@ requirements:
     description: >
       Red-team report: all known bypass attempts documented, each attempt
       executed against the running engine with pass/fail result recorded.
-      No bypass may succeed.
+      No bypass may succeed. v2.1 adds A10 (trust-root substitution) and
+      A11 (tail truncation) — see R11 and docs/SECURITY-A6-DISCLOSURE.md.
     implemented_in:
-      - src/evidence-chain/validation/red-team-report.md
-    test_covers:
-      - engine.test.ts §6 "Red-team: replay attack"
-      - engine.test.ts §6 "Red-team: signature forgery"
-      - engine.test.ts §6 "Red-team: unregistered operator"
-      - engine.test.ts §6 "Red-team: revoked operator"
-      - engine.test.ts §6 "Red-team: content tampering"
-      - engine.test.ts §6 "Red-team: hash chain reorder"
-      - engine.test.ts §6 "Red-team: skipping states"
+      - src/evidence-chain/validation/red-team-run.ts      # A1–A11 runner
+      - src/evidence-chain/validation/red-team-report.json # latest run output (allBlocked: true)
+      - docs/SECURITY-A6-DISCLOSURE.md                     # A6 disclosure + fix
+    test_covers:   # engine.test.ts SECTION 8 — Red-team bypass attempts
+      - 'Red-team: claim without binding evidence (R6.1)'
+      - 'Red-team: tampered evidence hash (R6.2)'
+      - 'Red-team: impersonating a human reviewer (R6.3)'
+      - 'Red-team: simulated trace as validation evidence (R6.4)'
+      - 'Red-team: revoked operator cannot submit HITL (R6.5)'
+      - 'Red-team: skipping states in sequence (R6.6)'
+    runner_vectors: 11   # A1–A11, all BLOCKED
     status: COMPLETE
 
   R7:
@@ -108,14 +125,15 @@ requirements:
     implemented_in:
       - src/evidence-chain/crypto.ts
       - src/evidence-chain/ledger.ts
-    test_covers:
-      - engine.test.ts §1 "Cryptographic: Ed25519 signature on claim"
-      - engine.test.ts §1 "Cryptographic: hash chain — each entry links to prior"
-      - engine.test.ts §1 "Cryptographic: Merkle root changes after each append"
-      - engine.test.ts §1 "Cryptographic: inclusionProof + verifyInclusion"
-      - engine.test.ts §1 "Cryptographic: tamper-evidence — content change detected"
-      - engine.test.ts §1 "Cryptographic: tamper-evidence — sig change detected"
-      - engine.test.ts §1 "Cryptographic: tamper-evidence — reorder detected"
+    test_covers:   # engine.test.ts SECTION 5 (crypto) + SECTIONS 9/11 (ledger tamper)
+      - 'verifyIntegrityHash passes on an unmodified chain'
+      - 'integrityHash is a 64-char hex string (Merkle root)'
+      - 'Merkle root changes after binding evidence'
+      - 'inclusion proofs verify (R7)'
+      - 'wrong leaf fails inclusion proof'
+      - 'verify detects entry_hash mismatch (tampered content)'
+      - 'detect prev_hash mismatch (reordered entries)'
+      - 'verify fails when signature is altered on a valid entry'
     status: COMPLETE
 
   R8:
@@ -127,12 +145,15 @@ requirements:
       - src/evidence-chain/signatures.ts  # OperatorKeyring
       - src/evidence-chain/engine.ts      # bindEvidence HITL verification path
       - src/evidence-chain/crypto.ts      # verifySignature + createHITLSignature
-    test_covers:
-      - engine.test.ts §4 "R8: HITL evidence — valid signature accepted"
-      - engine.test.ts §4 "R8: HITL evidence — invalid signature rejected"
-      - engine.test.ts §4 "R8: HITL evidence — unregistered operator rejected"
-      - engine.test.ts §4 "R8: HITL evidence — revoked operator rejected"
-      - engine.test.ts §4 "R8: re-register after revocation allowed"
+    test_covers:   # engine.test.ts SECTION 3 (binding) + SECTION 9 (keyring internals)
+      - 'HITL without signature is rejected (R8)'
+      - 'HITL with invalid signature is rejected (R8)'
+      - 'HITL from unregistered operator is rejected (R8)'
+      - 'HITL from revoked operator is rejected (R8)'
+      - 'valid HITL binds successfully (R8)'
+      - 'register throws if operator already active'
+      - 're-register is allowed after revocation'
+      - 'OperatorKeyring persists and reloads keys'
     status: COMPLETE
 
   R9:
@@ -143,12 +164,13 @@ requirements:
       to ledger.
     implemented_in:
       - src/evidence-chain/rules.ts       # RuleStore + migrateClaimToNewRule
-      - src/evidence-chain/engine.ts      # updateRule() migration orchestration
-    test_covers:
-      - engine.test.ts §7 "R9: rule version bump — MAINTAINED path"
-      - engine.test.ts §7 "R9: rule version bump — REVIEW_REQUIRED path"
-      - engine.test.ts §7 "R9: getVersion retrieves specific version"
-      - engine.test.ts §7 "R9: RuleStore persists and reloads"
+      - src/evidence-chain/engine.ts      # migrateRules() orchestration
+    test_covers:   # engine.test.ts SECTION 4 (enforcement) + SECTION 9 (RuleStore internals)
+      - 'rule version migration produces MigrationRecord (R9)'
+      - 'getVersion retrieves specific version'
+      - 'RuleStore persists and reloads rules'
+      - 'migrateClaimToNewRule returns REVIEW_REQUIRED when new rule is stricter'
+      - 'migrateClaimToNewRule returns MAINTAINED when claim satisfies new rule'
     status: COMPLETE
 
   R10:
@@ -159,8 +181,50 @@ requirements:
       in the chain.
     implemented_in:
       - src/evidence-chain/engine.ts      # advance() — VALIDATED gate
+    test_covers:   # engine.test.ts SECTION 4 (enforcement) + SECTION 1 (lifecycle)
+      - 'VALIDATED blocked when operational attestation required but absent (R10)'
+      - 'VERIFIED → VALIDATED (with HITL + operational attestation)'
+      - 'VALIDATED → DEPLOYED'
+    status: COMPLETE
+
+  R11:
+    description: >
+      A6 fix — out-of-band trust anchoring. Each entry binds its signer-key
+      fingerprint (SHA-256 of SPKI/DER) inside the signed payload; verify()
+      accepts a pinned signer fingerprint and a pinned chain head (length +
+      Merkle root). This closes "signature forgery via file edit" (a file-system
+      adversary who re-signs forged content under a substituted key) and tail
+      truncation/rollback. See docs/SECURITY-A6-DISCLOSURE.md.
+    implemented_in:
+      - src/evidence-chain/crypto.ts      # keyFingerprint()
+      - src/evidence-chain/ledger.ts      # signer binding, VerifyOptions, head()
+      - src/evidence-chain/engine.ts      # signerFingerprint(), chainHead(), verify opts; audit-bundle anchor
+    test_covers:   # engine.test.ts SECTION 12 — A6 hardening
+      - 'keyFingerprint is deterministic per key and differs across keys'
+      - 'verify with the correct pinned fingerprint passes'
+      - 'verify with a wrong pinned fingerprint is rejected (substituted key)'
+      - 'verify with the correct head pin passes'
+      - 'verify rejects a wrong head length (truncation)'
+      - 'verify rejects a wrong head Merkle root'
+      - 'a second engine with a different key rejects the ledger (signer mismatch)'
+      - 'forged + re-signed + key-swapped chain: unpinned ok=true, pinned ok=false'
+      - 'exportAuditBundle includes signerFingerprint + head'
+    red_team_vectors:
+      - 'A10 — Trust-root key substitution (file edit + re-sign + key swap)'
+      - 'A11 — Tail truncation / rollback (delete last entry)'
+    status: COMPLETE
+
+  R12:
+    description: >
+      Performance & scaling characterization (answers the review's "how does it
+      scale?"). Append is O(1) per entry (v2.1 tail-hash cache; previously
+      O(n) per entry → O(n^2) bulk); full verify is O(n); Merkle root is O(n);
+      inclusion-proof VERIFICATION is O(log n) for sublinear membership audit.
+      The TLA+ reachable state space is the closed form 11^C * 2^P.
+    implemented_in:
+      - src/evidence-chain/validation/bench.ts   # append/verify/merkle/inclusion benchmark
+      - src/evidence-chain/ledger.ts             # O(1) tail-hash cache
     test_covers:
-      - engine.test.ts §3 "R10: VERIFIED→VALIDATED blocked without HITL"
-      - engine.test.ts §3 "R10: VERIFIED→VALIDATED allowed with valid HITL"
-      - engine.test.ts §1 "Claim lifecycle — VALIDATED → DEPLOYED"
+      - src/evidence-chain/validation/bench-results.json
+      - docs/PERFORMANCE.md
     status: COMPLETE

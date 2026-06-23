@@ -183,6 +183,9 @@ export interface AuditBundle {
   readonly integrityVerified: boolean;
   readonly merkleRoot: string;
   readonly missingEvidence: string[];      // evidence kinds that are absent
+  // R11/A6: out-of-band trust anchor carried with the bundle
+  readonly signerFingerprint: string;      // SHA-256(SPKI/DER) of the signing key
+  readonly head: { length: number; merkleRoot: string };  // rollback-resistant head pin
 }
 
 // ─── ClaimView — spec §4.1 status field ───────────────────────────────────

@@ -159,6 +159,47 @@ Proved deadlock-free and live under finite human response time (Coq).
 
 ---
 
+## High-Assurance Evidence Chain (the Audit Package)
+
+`src/evidence-chain/` is the high-assurance core that makes governance decisions
+**auditable**: a typed, append-only, tamper-evident ledger (Ed25519 + SHA-256
+hash-chaining + Merkle commitments) with a full engineering audit package.
+
+**Why it matters (the contribution).** AI labs publish constitutions as prose;
+the gap is that nothing mechanically ties the principle to runtime behavior or
+proves what the system did. This layer is novel as an *integration*: one invariant
+definition is simultaneously **proved** (TLA+/TLC), **enforced** (runtime
+PolicyEngine), and **recorded** (auditable evidence) — and it is deliberately *not*
+a blockchain (single accountable operator, trust pinned out-of-band, no Byzantine
+consensus). Full argument, including the blockchain/DLT contrast: **[docs/NOVELTY.md](docs/NOVELTY.md)**.
+
+**Verification rigor (every claim maps to a command):**
+
+- **Formal (R1):** TLA+ model-checked with TLC — clean (no error/deadlock). The
+  reachable state space is the exact closed form `11^C · 2^P`, re-confirmed up to
+  644,204 states. See `src/evidence-chain/spec/TLC_RESULTS.md`, [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
+- **Traceability (R2):** every requirement → file → test in
+  `src/evidence-chain/spec/traceability-matrix.yaml` (re-synced to source).
+- **Tests + coverage (R3/R4):** 87 tests (node:test + fast-check), 100% branch
+  coverage (c8).
+- **Red-team (R6):** 11/11 attack vectors BLOCKED
+  (`src/evidence-chain/validation/red-team-report.json`).
+
+**Security — A6 fixed (v2.1).** The review flagged that the v2.0 A6 test was too
+narrow and that a "signature forgery via file edit" (re-sign forged content under a
+substituted key) remained open. v2.1 closes it with out-of-band trust anchoring
+(pinned signer fingerprint + pinned chain head) and adds red-team vectors A10/A11.
+Full disclosure, root cause, fix, and residual risk: **[docs/SECURITY-A6-DISCLOSURE.md](docs/SECURITY-A6-DISCLOSURE.md)**.
+
+**Performance — scales to millions.** Append is O(1)/entry (an O(n²) bottleneck was
+found and fixed — 40× faster at 16k entries), full verify is O(n), membership audit
+is O(log n). A 1,000,000-entry chain builds in ~115 s and fully verifies in ~142 s;
+runtime enforcement runs >1.7 M governed decisions/s. See **[docs/PERFORMANCE.md](docs/PERFORMANCE.md)**.
+
+A point-by-point response to the external review is in **[docs/REVIEW_RESPONSE.md](docs/REVIEW_RESPONSE.md)**.
+
+---
+
 ## Quick Start
 
 ```bash

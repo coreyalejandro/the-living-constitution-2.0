@@ -22,7 +22,7 @@ import type {
   TransitionResult,
 } from "./types.js";
 import { TERMINAL_STATES, VALID_TRANSITIONS } from "./types.js";
-import { Ledger } from "./ledger.js";
+import { Ledger, type VerifyOptions } from "./ledger.js";
 import { RuleStore, evaluateTransition, migrateClaimToNewRule } from "./rules.js";
 import { OperatorKeyring } from "./signatures.js";
 import { merkleRoot, sha256hex } from "./crypto.js";
@@ -219,8 +219,25 @@ export class EvidenceChainEngine {
 
   // ── Integrity verification (R7) ───────────────────────────────────────────
 
-  verifyIntegrityHash(claimId: string): { ok: boolean; reason?: string } {
-    return this.ledger.verify(claimId);
+  verifyIntegrityHash(claimId: string, opts: VerifyOptions = {}): { ok: boolean; reason?: string } {
+    return this.ledger.verify(claimId, opts);
+  }
+
+  /**
+   * Fingerprint of the engine signing key — the out-of-band trust anchor (R11/A6).
+   * Record this when a ledger is created; pass it back as
+   * `verifyIntegrityHash(id, { expectedKeyFingerprint })` to reject key substitution.
+   */
+  signerFingerprint(): string {
+    return this.ledger.signerFingerprint();
+  }
+
+  /**
+   * Current chain head (length + Merkle root) for a claim. Pin it out-of-band and
+   * pass it back as `verifyIntegrityHash(id, { expectedHead })` to detect rollback.
+   */
+  chainHead(claimId: string): { length: number; merkleRoot: string } {
+    return this.ledger.head(claimId);
   }
 
   // ── Audit bundle export ───────────────────────────────────────────────────
@@ -245,6 +262,10 @@ export class EvidenceChainEngine {
       integrityVerified: verifyResult.ok,
       merkleRoot: chain.integrityHash,
       missingEvidence: missing,
+      // R11/A6: trust anchor — lets a third party pin the signer + head and
+      // re-verify this bundle without trusting any attacker-editable key file.
+      signerFingerprint: this.ledger.signerFingerprint(),
+      head: this.ledger.head(claimId),
     };
   }
 

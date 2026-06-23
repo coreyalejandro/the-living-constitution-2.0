@@ -30,6 +30,7 @@ export {
   generateKeypair,
   signBytes,
   verifySignature,
+  keyFingerprint,
   merkleRoot,
   inclusionProof,
   verifyInclusion,
@@ -44,3 +45,4 @@ export { RuleStore, evaluateTransition, migrateClaimToNewRule } from "./rules.js
 
 // Ledger
 export { Ledger } from "./ledger.js";
+export type { VerifyOptions } from "./ledger.js";

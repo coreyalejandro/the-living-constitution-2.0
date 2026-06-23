@@ -1,12 +1,17 @@
 /**
  * TLC Evidence Chain — Red-Team Validation Runner (R6)
  * Run: node --import tsx/esm src/evidence-chain/validation/red-team-run.ts
- * All 9 attack vectors must return BLOCKED. Any BYPASSED = CI failure.
+ * All 11 attack vectors must return BLOCKED. Any BYPASSED = CI failure.
+ *
+ * A1–A9 exercise the v2.0 tamper-evidence guarantees. A10–A11 (added in v2.1)
+ * exercise the A6 hardening: a file-system adversary who re-signs forged content
+ * under a substituted key (A10) or truncates the chain (A11) is rejected by the
+ * out-of-band trust anchor (pinned key fingerprint + pinned chain head).
  */
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { EvidenceChainEngine, generateKeypair, createHITLSignature, sha256hex } from "../index.js";
+import { EvidenceChainEngine, generateKeypair, createHITLSignature, sha256hex, canonical, signBytes, keyFingerprint } from "../index.js";
 import type { OperatorKey, ConstitutionRule } from "../index.js";
 
 type AttackResult = { id: string; name: string; result: "BLOCKED" | "BYPASSED"; error: string };
@@ -245,6 +250,79 @@ function makeHITLEvidence(engine: EvidenceChainEngine, claimId: string, opId: st
   }
 }
 
+// ── A10: Trust-root key substitution — the real "signature forgery via file edit" (A6) ──
+// Attacker controls the filesystem: forge node content, re-chain + re-sign the
+// WHOLE ledger under their own key, and hand the verifier that substituted key
+// (as if swapping the co-located public-key file). This is fully self-consistent,
+// so UNPINNED verification accepts it. The v2.1 fix: pin the legitimate signer's
+// fingerprint out-of-band; the substituted key is then rejected.
+{
+  const { engine, dir } = makeEngine();
+  const { id: opId } = registerOp(engine);
+  const c = makeClaim(engine, opId);
+  engine.advance(c.id, "SPECIFIED", opId);
+  const legitFp = engine.signerFingerprint();
+
+  const attacker = generateKeypair();
+  const attackerFp = keyFingerprint(attacker.publicKeyPem);
+  const file = join(dir, "ledger", `${c.id}.jsonl`);
+  const recs = readFileSync(file, "utf8").trim().split("\n").map((l) => JSON.parse(l) as Record<string, unknown>);
+  let prev = "GENESIS";
+  for (const rec of recs) {
+    (rec["node"] as Record<string, unknown>)["title"] = "FORGED_BY_ATTACKER";
+    rec["prev_hash"] = prev;
+    rec["signer"] = attackerFp;
+    const payload = { node: rec["node"], prev_hash: rec["prev_hash"], signer: rec["signer"] };
+    const bytes = Buffer.from(canonical(payload));
+    rec["entry_hash"] = sha256hex(bytes);
+    rec["sig"] = signBytes(bytes, attacker.privateKeyPem);
+    prev = rec["entry_hash"] as string;
+  }
+  writeFileSync(file, recs.map((r) => JSON.stringify(r)).join("\n") + "\n");
+
+  // Auditor re-opens with the attacker-substituted key (worst case).
+  const auditor = new EvidenceChainEngine({
+    ledgerDir: join(dir, "ledger"),
+    ruleStorePath: join(dir, "rules2.json"),
+    keyringStoagePath: join(dir, "keyring2.json"),
+    privateKeyPem: attacker.privateKeyPem,
+    publicKeyPem: attacker.publicKeyPem,
+  });
+  const unpinned = auditor.verifyIntegrityHash(c.id);
+  const pinned = auditor.verifyIntegrityHash(c.id, { expectedKeyFingerprint: legitFp });
+  attacks.push({
+    id: "A10",
+    name: "Trust-root key substitution (file edit + re-sign + key swap)",
+    result: pinned.ok ? "BYPASSED" : "BLOCKED",
+    error: `unpinned verify ok=${unpinned.ok} (insecure by design — no out-of-band trust); pinned verify rejected: ${pinned.reason}`,
+  });
+}
+
+// ── A11: Tail truncation / rollback — delete the last entry ──────────────────────
+// A prefix of a valid hash chain is itself a valid chain, so per-entry verification
+// accepts a truncated ledger. The v2.1 fix: pin the chain head (length + Merkle root)
+// out-of-band; truncation/rollback is then rejected.
+{
+  const { engine, dir } = makeEngine();
+  const { id: opId } = registerOp(engine);
+  const c = makeClaim(engine, opId);
+  engine.advance(c.id, "SPECIFIED", opId);
+  engine.advance(c.id, "IMPLEMENTED", opId);
+  const pinnedHead = engine.chainHead(c.id);
+  const file = join(dir, "ledger", `${c.id}.jsonl`);
+  const lines = readFileSync(file, "utf8").trim().split("\n");
+  lines.pop();
+  writeFileSync(file, lines.join("\n") + "\n");
+  const unpinned = engine.verifyIntegrityHash(c.id);
+  const pinned = engine.verifyIntegrityHash(c.id, { expectedHead: pinnedHead });
+  attacks.push({
+    id: "A11",
+    name: "Tail truncation / rollback (delete last entry)",
+    result: pinned.ok ? "BYPASSED" : "BLOCKED",
+    error: `unpinned verify ok=${unpinned.ok} (prefix of a valid chain stays valid); head pin rejected: ${pinned.reason}`,
+  });
+}
+
 // ── Results ────────────────────────────────────────────────────────────────────
 const allBlocked = attacks.every((a) => a.result === "BLOCKED");
 const output = { run_at: new Date().toISOString(), attacks, allBlocked };
@@ -259,4 +337,4 @@ if (!allBlocked) {
   console.error(`\nRED-TEAM FAILED — bypassed: ${bypassed.join(", ")}`);
   process.exit(1);
 }
-console.log("\nRED-TEAM PASSED — all 9 attack vectors BLOCKED");
+console.log("\nRED-TEAM PASSED — all 11 attack vectors BLOCKED");

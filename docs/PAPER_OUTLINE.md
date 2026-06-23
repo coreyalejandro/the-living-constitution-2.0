@@ -79,6 +79,12 @@ evidence chain — together with an explicit honesty discipline (truth_status, c
 - Property: a third party with only the public key can verify authenticity + integrity + linkage
   offline; content, signature, or reorder tampering all fail. The TLC-SL evidence is signed this
   way (`evidence/TLC-SL/verification.signed.jsonl`).
+- **High-assurance audit package (`src/evidence-chain/`).** A typed engine with a full requirements
+  traceability matrix (R1–R12), TLA+ model (state space `11^C·2^P`), 87 tests at 100% branch
+  coverage, an 11-vector red-team, and empirical pipeline. **A6 hardening (v2.1):** each entry binds
+  its signer-key fingerprint and `verify()` accepts an out-of-band pinned signer + chain head,
+  closing "signature forgery via file edit" (re-sign under a substituted key) and tail truncation —
+  i.e. it binds *whose* key, not merely *a* key (`docs/SECURITY-A6-DISCLOSURE.md`).
 
 ## 5. Probe-gate: refusing non-tests
 
@@ -105,6 +111,10 @@ evidence chain — together with an explicit honesty discipline (truth_status, c
 | TLA+ is model-checked | governance CI "TLA+ model-check with TLC" job | "No error" (required gate) |
 | Evidence is independently verifiable | `npm run tlc:sl:verify-evidence` | signatures + chain OK |
 | Generated artifacts are not stale | CI no-drift step | clean |
+| Audit-package engine tests + 100% branch coverage | `c8 … node --import tsx/esm --test src/evidence-chain/engine.test.ts` | 87/87, 100% |
+| Red-team (incl. A6 trust-root swap + truncation) | `node --import tsx/esm src/evidence-chain/validation/red-team-run.ts` | 11/11 BLOCKED |
+| Scales to 1M entries; append O(1), verify O(n), membership O(log n) | `node --import tsx/esm src/evidence-chain/validation/bench.ts` | build ~115 s, verify ~142 s @ 1M |
+| TLA+ state space is the closed form `11^C·2^P` | TLC sweep (`docs/PERFORMANCE.md`) | exact to 644,204 states, no error |
 
 ## 8. Limitations and threats to validity
 
@@ -114,8 +124,10 @@ evidence chain — together with an explicit honesty discipline (truth_status, c
 - **No Lean 4 target:** properties are model-checked, not proof-carrying.
 - **Finite-domain checker:** exhaustive only over the small declared models; not a general
   unbounded model checker (TLA+/TLC mitigates but shares the modeled abstraction).
-- **Identity binding:** the evidence chain proves *a* key signed it, not *whose* key; no PKI/key
-  rotation yet.
+- **Identity binding:** *closed in the audit-package chain* (`src/evidence-chain/`, v2.1) — entries
+  bind the signer-key fingerprint and `verify()` pins it out-of-band (`docs/SECURITY-A6-DISCLOSURE.md`).
+  The `src/core/evidence-chain.mjs` CLI verifier still trusts a co-located key file (next to harden);
+  full PKI/key-rotation/sigstore remains future work.
 - **Single-operator council:** constitutional council authority currently rests with the author
   (acknowledged in the constitution itself).
 
@@ -124,8 +136,10 @@ evidence chain — together with an explicit honesty discipline (truth_status, c
 - Replace synthetic governance-harness probes with trained, validated probes; an experimental
   manipulation that actually toggles the invariant; gates whose pass/fail is not predetermined;
   held-out validation. (Requires real model + data + GPU.)
-- Lean 4 target; key-identity binding (published fingerprints / sigstore); generate the pre-commit
-  checks from the same TLC-SL models.
+- Lean 4 target; extend the audit-package A6 trust-anchoring (signer-fingerprint pin + head pin) to
+  the `src/core/evidence-chain.mjs` CLI verifier and to full PKI/key-rotation/sigstore; generate the
+  pre-commit checks from the same TLC-SL models; an inductive invariant (TLAPS) for unbounded-N
+  assurance beyond the bounded TLC model.
 
 ## 10. Reproducibility appendix
 

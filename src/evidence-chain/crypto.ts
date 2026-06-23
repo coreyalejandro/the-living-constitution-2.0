@@ -64,6 +64,23 @@ export function verifySignature(
   }
 }
 
+// ─── Key fingerprint (R11 — A6 trust anchor) ──────────────────────────────
+//
+// A signature scheme is only as trustworthy as the *authenticity of the public
+// key the verifier uses*. The pre-v2.1 ledger trusted whatever public key it was
+// handed, so a file-system adversary who could edit a ledger could also swap in
+// their own key (and re-sign forged content) — the A6 "signature forgery via file
+// edit" path. The fix is to pin the legitimate signer's key fingerprint OUT OF
+// BAND and reject any key that does not match it.
+//
+// The fingerprint is the SHA-256 of the SPKI/DER encoding of the public key, so
+// it is stable across PEM whitespace and independent of any attacker-controlled
+// ledger bytes.
+export function keyFingerprint(publicKeyPem: string): string {
+  const der = createPublicKey(publicKeyPem).export({ type: "spki", format: "der" });
+  return sha256hex(der as Buffer);
+}
+
 // ─── Merkle tree (R7) ─────────────────────────────────────────────────────
 
 const LEAF_PREFIX = "00";

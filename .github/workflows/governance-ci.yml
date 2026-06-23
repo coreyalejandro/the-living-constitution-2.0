@@ -88,3 +88,48 @@ jobs:
             fi
           done
           exit $fail
+
+  evidence-chain:
+    name: Evidence-chain audit package (tests, 100% coverage, red-team, TLA+)
+    runs-on: ubuntu-latest
+    # The high-assurance TypeScript evidence chain (src/evidence-chain/) — the audit
+    # package an external review graded A+. Continuously enforces the rigor:
+    # 87 tests, 100% branch coverage, 11/11 red-team vectors, empirical pipeline,
+    # and the EvidenceChain.tla model check. Needs the committed devDependencies.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install evidence-chain dev toolchain (tsx, c8, fast-check)
+        run: npm install --no-save --no-audit --no-fund tsx c8 fast-check
+
+      - name: Engine test suite + 100% branch coverage gate (R3/R4)
+        run: |
+          node_modules/.bin/c8 \
+            --include='src/evidence-chain/*.ts' \
+            --exclude='src/evidence-chain/*.test.ts' \
+            --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 \
+            --reporter=text \
+            node --import tsx/esm --test src/evidence-chain/engine.test.ts
+
+      - name: Red-team — all 11 attack vectors must be BLOCKED (R6/R11)
+        run: node --import tsx/esm src/evidence-chain/validation/red-team-run.ts
+
+      - name: Empirical validation — 3 claims to VALIDATED (R5)
+        run: node --import tsx/esm src/evidence-chain/validation/empirical-run.ts
+
+      - name: Performance smoke (R12)
+        run: node --import tsx/esm src/evidence-chain/validation/bench.ts 1000 10000
+
+      - name: TLA+ model-check EvidenceChain.tla (R1)
+        run: |
+          curl -fsSL -o tla2tools.jar https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+          cd src/evidence-chain/spec
+          java -cp ../../../tla2tools.jar tlc2.TLC EvidenceChain -config EvidenceChain.cfg -workers auto 2>&1 | tee tlc-out.txt
+          grep -q "No error has been found" tlc-out.txt

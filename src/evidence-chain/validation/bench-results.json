@@ -1,0 +1,62 @@
+{
+  "run_at": "2026-06-23T13:39:52.045Z",
+  "node": "v24.14.1",
+  "sizes": [
+    1000,
+    10000,
+    100000
+  ],
+  "results": [
+    {
+      "entries": 1000,
+      "append_total_ms": 137.6,
+      "append_per_op_us": 137.62,
+      "append_throughput_per_s": 7266,
+      "verify_total_ms": 148.4,
+      "verify_per_entry_us": 148.45,
+      "merkle_root_ms": 6.71,
+      "inclusion_proof_siblings": 10,
+      "inclusion_proof_gen_us": 3139.49,
+      "inclusion_proof_verify_us": 70.56,
+      "ledger_bytes": 531723
+    },
+    {
+      "entries": 10000,
+      "append_total_ms": 1215.4,
+      "append_per_op_us": 121.54,
+      "append_throughput_per_s": 8228,
+      "verify_total_ms": 1459,
+      "verify_per_entry_us": 145.9,
+      "merkle_root_ms": 51.85,
+      "inclusion_proof_siblings": 14,
+      "inclusion_proof_gen_us": 22031.68,
+      "inclusion_proof_verify_us": 41.63,
+      "ledger_bytes": 5337723
+    },
+    {
+      "entries": 100000,
+      "append_total_ms": 11672.2,
+      "append_per_op_us": 116.72,
+      "append_throughput_per_s": 8567,
+      "verify_total_ms": 14120.4,
+      "verify_per_entry_us": 141.2,
+      "merkle_root_ms": 563.12,
+      "inclusion_proof_siblings": 17,
+      "inclusion_proof_gen_us": 242686.43,
+      "inclusion_proof_verify_us": 57.61,
+      "ledger_bytes": 53577723
+    }
+  ],
+  "primitives": {
+    "ed25519_sign_per_op_us": 89.8,
+    "ed25519_sign_ops_per_s": 11136,
+    "ed25519_verify_per_op_us": 125.12,
+    "ed25519_verify_ops_per_s": 7992,
+    "sha256_per_op_us": 0.76
+  },
+  "notes": [
+    "append is O(1) per entry (v2.1 tail-hash cache); pre-v2.1 it was O(n) per entry -> O(n^2) bulk.",
+    "full verify is O(n) by design (re-checks every signature); use the pinned head + O(log n) inclusion proofs for incremental/membership audit.",
+    "per-op floor is dominated by Ed25519 signing, not file I/O."
+  ]
+}
