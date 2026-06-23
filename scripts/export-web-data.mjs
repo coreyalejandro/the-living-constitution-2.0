@@ -5,15 +5,16 @@
  * Run before `vite dev` or add as a pre-dev hook.
  *
  * Outputs:
- *   src/ui/public/data/registry.json  — all 30 modules from modules.registry.json
+ *   src/ui/public/data/registry.json  — all modules from modules.registry.json
  *   src/ui/public/data/session.json   — active session (null if none open)
+ *   src/ui/public/data/events.json    — last 10 evidence events (merged from audit logs)
  *
  * Usage:
  *   node scripts/export-web-data.mjs
  *   npm run tlc:export-data
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -74,6 +75,59 @@ if (session) {
 } else {
   console.log('✓ session.json — no active session');
 }
+
+// ── 3. Evidence events (last 10, newest first) ─────────────────────────────
+const evidenceDir = resolve(ROOT, 'evidence');
+const events = [];
+
+function readJsonl(filePath) {
+  if (!existsSync(filePath)) return;
+  try {
+    const lines = readFileSync(filePath, 'utf8').trim().split('\n');
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      try {
+        const obj = JSON.parse(line);
+        // Normalise: accept both audit-log shape and lifecycle shape
+        events.push({
+          timestamp:  obj.timestamp || null,
+          event_type: obj.event_type || obj.event || 'unknown',
+          module_id:  obj.contract_id || null,
+          decision:   obj.decision || null,
+          message:    obj.message || JSON.stringify(obj).slice(0, 80),
+          source:     filePath.replace(ROOT + '/', ''),
+        });
+      } catch { /* malformed line — skip */ }
+    }
+  } catch { /* unreadable file — skip */ }
+}
+
+// Collect from audit-log + all module lifecycle logs
+readJsonl(resolve(evidenceDir, 'audit-log.jsonl'));
+
+if (existsSync(evidenceDir)) {
+  try {
+    const entries = readdirSync(evidenceDir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const dir = resolve(evidenceDir, entry.name);
+      readJsonl(resolve(dir, 'lifecycle.jsonl'));
+      readJsonl(resolve(dir, 'halt-log.jsonl'));
+      readJsonl(resolve(dir, 'vnt-audit.jsonl'));
+    }
+  } catch { /* ignore */ }
+}
+
+// Sort by timestamp descending, take last 10
+events.sort((a, b) => {
+  if (!a.timestamp) return 1;
+  if (!b.timestamp) return -1;
+  return a.timestamp < b.timestamp ? 1 : -1;
+});
+const recentEvents = events.slice(0, 10);
+
+writeFileSync(resolve(OUT_DIR, 'events.json'), JSON.stringify(recentEvents, null, 2));
+console.log(`✓ events.json — ${recentEvents.length} recent events`);
 
 console.log(`\nData exported to: ${OUT_DIR}`);
 console.log('Run: cd src/ui && npx vite  (or: npm run tlc:web)');
