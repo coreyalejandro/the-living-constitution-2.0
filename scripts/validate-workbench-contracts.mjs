@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 
@@ -33,6 +33,30 @@ function recordOccurrence(map, id, location, kind) {
   const current = map.get(id) || [];
   current.push({ location, kind });
   map.set(id, current);
+}
+
+export function findDuplicateIdErrors(contracts) {
+  const idOccurrences = new Map();
+  const errors = [];
+
+  for (const { contractRef, contract } of contracts) {
+    recordOccurrence(idOccurrences, contract.contract_id, contractRef.path, 'contract');
+    for (const acceptanceCriterion of contract.acceptance_criteria) {
+      recordOccurrence(idOccurrences, acceptanceCriterion.id, `${contractRef.path}#acceptance_criteria`, 'acceptance criterion');
+    }
+    for (const haltCondition of contract.halt_conditions) {
+      recordOccurrence(idOccurrences, haltCondition.id, `${contractRef.path}#halt_conditions`, 'halt condition');
+    }
+  }
+
+  for (const [id, occurrences] of idOccurrences.entries()) {
+    if (occurrences.length > 1) {
+      const detail = occurrences.map(({ kind, location }) => `${kind} at ${location}`).join('; ');
+      errors.push(`Duplicate ID detected for ${id}: ${detail}`);
+    }
+  }
+
+  return errors;
 }
 
 export function validateWorkbenchContracts(options = {}) {
@@ -68,8 +92,8 @@ export function validateWorkbenchContracts(options = {}) {
   const allowedRelationshipIds = new Set([...bundleContractIds, ...externalIds]);
   const seenPaths = new Set();
   const seenHumanPaths = new Set();
-  const idOccurrences = new Map();
   const contractsById = new Map();
+  const validatedContracts = [];
 
   for (const contractRef of bundle.contracts) {
     if (seenPaths.has(contractRef.path)) {
@@ -105,13 +129,7 @@ export function validateWorkbenchContracts(options = {}) {
     }
 
     contractsById.set(contract.contract_id, contract);
-    recordOccurrence(idOccurrences, contract.contract_id, contractRef.path, 'contract');
-    for (const acceptanceCriterion of contract.acceptance_criteria) {
-      recordOccurrence(idOccurrences, acceptanceCriterion.id, `${contractRef.path}#acceptance_criteria`, 'acceptance criterion');
-    }
-    for (const haltCondition of contract.halt_conditions) {
-      recordOccurrence(idOccurrences, haltCondition.id, `${contractRef.path}#halt_conditions`, 'halt condition');
-    }
+    validatedContracts.push({ contractRef, contract });
   }
 
   for (const expectedId of bundle.validation_order) {
@@ -150,12 +168,7 @@ export function validateWorkbenchContracts(options = {}) {
     }
   }
 
-  for (const [id, occurrences] of idOccurrences.entries()) {
-    if (occurrences.length > 1) {
-      const detail = occurrences.map(({ kind, location }) => `${kind} at ${location}`).join('; ');
-      errors.push(`Duplicate ID detected for ${id}: ${detail}`);
-    }
-  }
+  errors.push(...findDuplicateIdErrors(validatedContracts));
 
   return { valid: errors.length === 0, errors };
 }
@@ -177,6 +190,8 @@ function printResult(result) {
   process.exitCode = 1;
 }
 
-if (process.argv[1] === __filename) {
+const invokedScriptUrl = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : null;
+
+if (invokedScriptUrl === import.meta.url) {
   printResult(validateWorkbenchContracts({ schemaOnly }));
 }
