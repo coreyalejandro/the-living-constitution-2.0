@@ -133,7 +133,8 @@ const COMMANDS = [
   { name: '/copy [N]',          desc: 'Copy last N output lines to clipboard (default 20)' },
   { name: '/indicator [style]', desc: 'Busy indicator style: dots|line|dots2|star|kaomoji|bouncingBall' },
   { name: '/skin [name]',       desc: 'Theme: gold (default) | cyber' },
-  { name: '/verbose',           desc: 'Toggle verbose (show/hide dim lines)' },
+  { name: '/cancel',             desc: 'Cancel a pending /done confirmation' },
+  { name: '/verbose',            desc: 'Toggle verbose (show/hide dim lines)' },
   { name: '/agent [MODULE]',    desc: 'Launch governed Hermes agent for MODULE (default: active session)' },
   { name: '/agent swap [model]',desc: 'Relaunch agent with a different model (e.g. claude-sonnet-4)' },
   { name: '/agent who',         desc: 'Show which agent + model is active' },
@@ -159,6 +160,25 @@ function StatusBar({ health, session, agentModule, agentModel }: { health: strin
       }
       <Text color={T.dim}>  /help  </Text>
       <Text color={T.primary}>⚕</Text>
+    </Box>
+  );
+}
+
+// ── BOTTOM STATUS BAR (T23) ────────────────────────────────────────────────────
+function BottomBar({ session, skin }: { session: string | null; skin: 'gold' | 'cyber' }) {
+  const theme = SKINS[skin];
+  if (session) {
+    return (
+      <Box width="100%" paddingX={1}>
+        <Text color={theme.muted}>active session: </Text>
+        <Text color={theme.accent} bold>{session}</Text>
+        <Text color={theme.dim}>  — /done {session} to close</Text>
+      </Box>
+    );
+  }
+  return (
+    <Box width="100%" paddingX={1}>
+      <Text color={theme.dim}>no active session — /work MODULE-ID to start</Text>
     </Box>
   );
 }
@@ -205,15 +225,17 @@ function ModulesPane() {
       <Text color={T.border}>  {'─'.repeat(64)}</Text>
       {mods.map(m => {
         const st = m.truth_status || m.status || 'unverified';
-        const icon = st === 'working' ? '●' : st === 'partial' ? '◐' : st === 'quarantined' ? '✖' : '○';
-        const color = st === 'working' ? T.good : st === 'partial' ? T.bad : st === 'quarantined' ? T.critical : T.dim;
+        // T25: color the module ID by truth_status, not always accent
+        const icon       = st === 'working' ? '●' : st === 'partial' ? '◐' : st === 'quarantined' ? '✖' : '○';
+        const statusColor = st === 'working' ? T.good : st === 'partial' ? T.bad : st === 'quarantined' ? T.critical : T.dim;
+        const idColor     = st === 'working' ? T.good : st === 'partial' ? T.warn : st === 'quarantined' ? T.critical : T.accent;
         const id      = (m.id || m.name || '?').slice(0, 38).padEnd(38);
         const stLabel = `${icon} ${st}`.slice(0, 16).padEnd(16);
         const surface = (m.surface || '').slice(0, 16);
         return (
           <Box key={m.id || m.name}>
-            <Text color={T.accent}>{`  ${id}`}</Text>
-            <Text color={color}>{stLabel}</Text>
+            <Text color={idColor}>{`  ${id}`}</Text>
+            <Text color={statusColor}>{stLabel}</Text>
             <Text color={T.dim}>{surface}</Text>
           </Box>
         );
@@ -404,6 +426,7 @@ function App() {
   const [verbose, setVerbose]   = useState(true);
   const [agentModule, setAgentModule] = useState<string | null>(null);
   const [agentModel,  setAgentModel]  = useState<string>('default');
+  const [pendingDone, setPendingDone] = useState<string | null>(null); // T24: confirm before done
 
   // boot: get health + session
   useEffect(() => {
@@ -470,6 +493,15 @@ function App() {
         push(line('Commands', 'primary'));
         push(line('─'.repeat(60), 'muted'));
         COMMANDS.forEach(c => push(line(`${c.name.padEnd(28)} ${c.desc}`, 'text')));
+        // T26: keyboard shortcuts
+        push(line('', 'dim'));
+        push(line('Keyboard shortcuts', 'primary'));
+        push(line('─'.repeat(60), 'muted'));
+        push(line('Tab                          Cycle through tabs (Modules→Claims→Evidence→…)'.padEnd(60), 'text'));
+        push(line('Tab  (after /cmd partial)    Autocomplete the command', 'text'));
+        push(line('→    (after /cmd partial)    Autocomplete the command', 'text'));
+        push(line('Escape                       Clear current input', 'text'));
+        push(line('Enter                        Submit command', 'text'));
         break;
       }
 
@@ -503,13 +535,25 @@ function App() {
       }
 
       case 'done': {
+        // T24: Confirmation gate — N is default, requires explicit 'y' or 'yes'
         if (!arg) { push(line('Usage: /done MODULE-ID', 'warn')); break; }
-        setLoading(true);
-        push(line(`Ending session: ${arg}…`, 'muted'));
-        const { ok, out } = await runScript('tlc-done.mjs', `--module ${arg}`);
-        parseLines(out, ok).forEach(l => push(l));
-        setSession(loadSession());
-        setLoading(false);
+        if (pendingDone === arg) {
+          // User already confirmed — execute
+          setPendingDone(null);
+          setLoading(true);
+          push(line(`Ending session: ${arg}…`, 'muted'));
+          const { ok, out } = await runScript('tlc-done.mjs', `--module ${arg}`);
+          parseLines(out, ok).forEach(l => push(l));
+          setSession(loadSession());
+          setLoading(false);
+        } else {
+          // First invocation — show confirmation prompt
+          setPendingDone(arg);
+          push(line(`About to close session for ${arg}.`, 'warn'));
+          push(line('An evidence file will be required to mark working.', 'muted'));
+          push(line('Continue? Type /done ' + arg + ' again to confirm, or /cancel to abort.', 'accent'));
+          push(line('(default is NO — nothing happens unless you confirm)', 'dim'));
+        }
         break;
       }
 
@@ -801,6 +845,16 @@ function App() {
         break;
       }
 
+      case 'cancel': {
+        if (pendingDone) {
+          push(line(`Cancelled. Session for ${pendingDone} remains open.`, 'ok'));
+          setPendingDone(null);
+        } else {
+          push(line('Nothing to cancel.', 'dim'));
+        }
+        break;
+      }
+
       case 'retry': {
         const prev = lastCmd;
         if (!prev || prev === '/retry') { push(line('Nothing to retry.', 'dim')); break; }
@@ -909,6 +963,9 @@ function App() {
       <Box flexDirection="column" flexGrow={1}>
         {mainPane()}
       </Box>
+
+      {/* Bottom status bar — T23: shows active session module */}
+      <BottomBar session={session} skin={skin} />
 
       {/* Prompt */}
       <Text color={theme.border}>{'─'.repeat(cols)}</Text>
