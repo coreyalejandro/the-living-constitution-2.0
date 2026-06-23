@@ -8,11 +8,13 @@ import Dashboard   from './views/Dashboard.jsx';
 import Modules     from './views/Modules.jsx';
 import ModuleDetail from './views/ModuleDetail.jsx';
 import Work        from './views/Work.jsx';
+import Evidence    from './views/Evidence.jsx';
 
 const VIEWS = [
   { key: 'dashboard', label: 'Dashboard', shortcut: '1' },
   { key: 'modules',   label: 'Modules',   shortcut: '2' },
   { key: 'work',      label: 'Work',       shortcut: '3' },
+  { key: 'evidence',  label: 'Evidence',  shortcut: '4' },
 ];
 
 export default function App() {
@@ -26,6 +28,7 @@ export default function App() {
     if (e.key === '1') setView('dashboard');
     if (e.key === '2') setView('modules');
     if (e.key === '3') setView('work');
+    if (e.key === '4') setView('evidence');
     if (e.key === 'Escape' && selectedModule) setModule(null);
   }, [selectedModule]);
 
@@ -65,7 +68,7 @@ export default function App() {
             </button>
           ))}
         </div>
-        <span style={styles.navHint} aria-hidden="true">Press 1–3 to navigate</span>
+        <span style={styles.navHint} aria-hidden="true">Press 1–4 to navigate</span>
       </nav>
 
       {/* Main content */}
@@ -78,6 +81,7 @@ export default function App() {
           <ModuleDetail module={selectedModule} onBack={() => setModule(null)} />
         )}
         {view === 'work' && <Work />}
+        {view === 'evidence' && <Evidence />}
       </main>
 
       {/* Status bar */}
