@@ -67,12 +67,21 @@ export default function Work() {
         <div style={styles.noSession}>
           <p style={styles.noSessionMsg}>No active session.</p>
           <p style={styles.hint}>
-            To start a session, run in your terminal:
+            Select a module from the registry and start a work session.
           </p>
-          <pre style={styles.pre}>tlc work [MODULE-ID]</pre>
-          <p style={styles.hint}>
-            The module ID must exist in the registry and have a bound contract.
-          </p>
+          <div style={styles.actions}>
+            <button
+              onClick={() => alert('Run in your terminal:\n\ntlc work [MODULE-ID]\n\nReplace MODULE-ID with the exact ID from the Modules view.')}
+              style={styles.workBtn}
+              aria-label="Start a work session — shows terminal command to run"
+            >
+              Start Work
+            </button>
+            <p style={styles.hint}>
+              The module ID must exist in the registry and have a bound contract.{' '}
+              Run <code style={styles.code}>tlc work [MODULE-ID]</code> in your terminal.
+            </p>
+          </div>
         </div>
       )}
     </div>
@@ -106,4 +115,9 @@ const styles = {
   pre: { background: '#111', border: '1px solid #333', borderRadius: 4, padding: '10px 16px', color: '#90caf9', fontSize: 13, margin: '12px 0' },
   hint: { color: '#555', fontSize: 12, lineHeight: 1.6 },
   code: { background: '#222', padding: '1px 5px', borderRadius: 3, color: '#90caf9', fontSize: 11 },
+  workBtn: {
+    background: '#0e1a0e', border: '1px solid #4caf50', borderRadius: 4, color: '#4caf50',
+    padding: '10px 24px', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+    alignSelf: 'flex-start',
+  },
 };
