@@ -182,6 +182,25 @@ node scripts/tlc-health.mjs
 
 ---
 
+## AI Session Capture with Entire
+
+If you want automatic AI session capture in this repo, install the Entire CLI
+separately, then run:
+
+```bash
+npm run entire:enable
+# or pick the agent up front
+npm run entire:enable -- --agent codex
+npm run entire:status
+```
+
+Entire keeps transcripts tied to commits, gives this repo searchable agent
+history, makes it easier to recover to a known-good checkpoint, and makes it
+clearer why a change happened. This is additive to TLC: keep the existing
+governance workflow and `src/git-hooks/pre-commit.mjs` in place.
+
+---
+
 ## Verification Standard
 
 Every empirical claim in this repository must be backed by a
