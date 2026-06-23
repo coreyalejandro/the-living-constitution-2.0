@@ -1,0 +1,146 @@
+{
+  "$schema": "../../../schemas/contracts/crsp-workbench-contract.schema.json",
+  "schema_version": "1.0.0",
+  "status": "Draft",
+  "issue_reference": "coreyalejandro/the-living-constitution-2.0#15",
+  "vt_requirements": {
+    "required_fields": [
+      "EXISTS",
+      "VERIFIED AGAINST",
+      "NOT CLAIMED",
+      "FUNCTIONAL STATUS"
+    ],
+    "note": "Every acceptance criterion or truth-state-advancing claim must record these four V&T fields."
+  },
+  "contract_id": "CRSP-TLC-WORKBENCH-001",
+  "stable_id": "tlc-workbench.parent.contract.v1",
+  "contract_kind": "parent",
+  "title": "C-RSP Build Contract \u2014 TLC Workbench",
+  "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-001.md",
+  "binds_module": "TLC-WORKBENCH",
+  "goal": "Bind TLC Workbench productization as a governed dual-surface workbench for research, paper, and product flows.",
+  "objective": "Transform TLC into a neurodivergent-first operator workbench with TUI and Web UI parity, evidence-backed governance, and explicit release gates for the research-to-paper-to-product lifecycle.",
+  "relationships": {
+    "parent_contract_id": "CRSP-STC-RUNTIME-001",
+    "child_contract_ids": [
+      "CRSP-TLC-WORKBENCH-SURFACES-001",
+      "CRSP-TLC-WORKBENCH-ACCESSIBILITY-001",
+      "CRSP-TLC-WORKBENCH-LIFECYCLE-001",
+      "CRSP-TLC-WORKBENCH-HARDENING-001"
+    ],
+    "dependency_contract_ids": [
+      "CRSP-STC-RUNTIME-001"
+    ]
+  },
+  "required_files": [
+    "contracts/active/CRSP-TLC-WORKBENCH-001.md",
+    "contracts/active/CRSP-TLC-WORKBENCH-SURFACES-001.md",
+    "contracts/active/CRSP-TLC-WORKBENCH-ACCESSIBILITY-001.md",
+    "contracts/active/CRSP-TLC-WORKBENCH-LIFECYCLE-001.md",
+    "contracts/active/CRSP-TLC-WORKBENCH-HARDENING-001.md",
+    "src/app/services/",
+    "src/app/state/",
+    "src/app/models/",
+    "src/web/",
+    "src/tui/"
+  ],
+  "required_outputs": [
+    "A bound TLC-WORKBENCH module with no I1 contract gap.",
+    "A shared application architecture used by both the TUI and Web UI.",
+    "An evidence-backed lifecycle covering research, paper, and product outcomes.",
+    "Committed V&T artifacts for every truth-state-advancing Workbench claim."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-WB-PARENT-01",
+      "statement": "A parent Workbench module is added to registry and binding surfaces with no I1 gap.",
+      "verification": "Registry and module binding evidence shows TLC-WORKBENCH is governed by this contract."
+    },
+    {
+      "id": "AC-WB-PARENT-02",
+      "statement": "Child contracts for surfaces, accessibility, lifecycle, and hardening are committed.",
+      "verification": "All four child contract files exist in markdown and machine-readable JSON form."
+    },
+    {
+      "id": "AC-WB-PARENT-03",
+      "statement": "Shared app and service architecture exists and is used by both Web UI and TUI.",
+      "verification": "Code references show lifecycle mutation flows through shared services rather than surface-local mutations."
+    },
+    {
+      "id": "AC-WB-PARENT-04",
+      "statement": "The canonical lifecycle works end-to-end in both surfaces.",
+      "verification": "Automated parity or end-to-end evidence demonstrates equivalent governed outcomes in TUI and Web UI."
+    },
+    {
+      "id": "AC-WB-PARENT-05",
+      "statement": "All truth-state claims for the Workbench are backed by committed V&T.",
+      "verification": "Evidence references and V&T artifacts exist for every verified or validated claim."
+    },
+    {
+      "id": "AC-WB-PARENT-06",
+      "statement": "Any implementation that omits required accessibility or parity checks is blocked.",
+      "verification": "CI or local enforcement emits explicit halts when accessibility or parity artifacts are missing."
+    }
+  ],
+  "halt_conditions": [
+    {
+      "id": "HALT_WB_PARENT_CONTRACT_MISSING",
+      "trigger": "The parent Workbench contract is missing, superseded without replacement, or not bound to the initiative.",
+      "resolution": "Restore or replace the parent contract before continuing implementation.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_SURFACE_PARITY_BROKEN",
+      "trigger": "A core flow exists in only one Workbench surface or produces inconsistent governed results.",
+      "resolution": "Restore dual-surface parity for the affected core flow before merge or truth-state advancement.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_ACCESSIBILITY_REQUIREMENT_MISSING",
+      "trigger": "Required accessibility or neurodivergent-first controls are absent from the claimed implementation.",
+      "resolution": "Add the missing accessible controls and corresponding verification artifacts.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_LIFECYCLE_INCOMPLETE",
+      "trigger": "The governed research-to-paper-to-product lifecycle is incomplete or not executable end to end.",
+      "resolution": "Complete the required lifecycle phases and verify the canonical flow in both surfaces.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_TRUTH_STATE_ADVANCE_WITHOUT_EVIDENCE",
+      "trigger": "A Workbench truth-state advancement is claimed without the required evidence and V&T bundle.",
+      "resolution": "Attach the required evidence and V&T artifacts or revert the claim.",
+      "severity": "critical"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "EV-WB-PARENT-01",
+      "description": "Registry or binding evidence proving TLC-WORKBENCH is governed by this parent contract.",
+      "artifacts": [
+        "registry/modules.registry.json",
+        "module binding evidence",
+        "contract reference in implementation docs"
+      ]
+    },
+    {
+      "id": "EV-WB-PARENT-02",
+      "description": "Parity or end-to-end evidence covering the canonical lifecycle across both surfaces.",
+      "artifacts": [
+        "parity test logs",
+        "end-to-end flow traces",
+        "replay artifacts"
+      ]
+    },
+    {
+      "id": "EV-WB-PARENT-03",
+      "description": "Truth-state evidence showing every verified claim includes the four required V&T fields.",
+      "artifacts": [
+        "signed evidence entries",
+        "V&T audit artifacts",
+        "verification command output"
+      ]
+    }
+  ]
+}

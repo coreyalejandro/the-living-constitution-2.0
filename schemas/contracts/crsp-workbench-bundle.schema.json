@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "crsp-workbench-bundle.schema.json",
+  "title": "TLC Workbench Contract Bundle Schema",
+  "description": "Strict schema for the TLC Workbench machine-readable contract bundle entrypoint.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "bundle_id",
+    "stable_id",
+    "status",
+    "issue_reference",
+    "entrypoint_contract_id",
+    "bundle_goal",
+    "future_tree_creation_excludes",
+    "external_contract_references",
+    "contracts",
+    "validation_order"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "../../../schemas/contracts/crsp-workbench-bundle.schema.json"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "bundle_id": {
+      "type": "string",
+      "const": "CRSP-TLC-WORKBENCH-BUNDLE-001"
+    },
+    "stable_id": {
+      "type": "string",
+      "pattern": "^tlc-workbench\\.[a-z0-9.-]+$"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Active", "Frozen", "Superseded", "Archived"]
+    },
+    "issue_reference": {
+      "type": "string",
+      "const": "coreyalejandro/the-living-constitution-2.0#15"
+    },
+    "entrypoint_contract_id": {
+      "type": "string",
+      "const": "CRSP-TLC-WORKBENCH-001"
+    },
+    "bundle_goal": {
+      "type": "string",
+      "minLength": 20
+    },
+    "future_tree_creation_excludes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "external_contract_references": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^CRSP-[A-Z0-9-]+$"
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "$ref": "#/definitions/contractReference"
+      }
+    },
+    "validation_order": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^CRSP-TLC-WORKBENCH(?:-[A-Z]+)?-001$"
+      }
+    }
+  },
+  "definitions": {
+    "contractReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_id", "path", "human_contract_path"],
+      "properties": {
+        "contract_id": {
+          "type": "string",
+          "pattern": "^CRSP-TLC-WORKBENCH(?:-[A-Z]+)?-001$"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^contracts/active/json/tlc-workbench\\.[a-z]+\\.contract\\.json$"
+        },
+        "human_contract_path": {
+          "type": "string",
+          "pattern": "^contracts/active/CRSP-TLC-WORKBENCH(?:-[A-Z]+)?-001\\.md$"
+        }
+      }
+    }
+  }
+}

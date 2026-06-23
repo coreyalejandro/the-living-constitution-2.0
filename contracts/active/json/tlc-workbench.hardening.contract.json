@@ -1,0 +1,133 @@
+{
+  "$schema": "../../../schemas/contracts/crsp-workbench-contract.schema.json",
+  "schema_version": "1.0.0",
+  "status": "Draft",
+  "issue_reference": "coreyalejandro/the-living-constitution-2.0#15",
+  "vt_requirements": {
+    "required_fields": [
+      "EXISTS",
+      "VERIFIED AGAINST",
+      "NOT CLAIMED",
+      "FUNCTIONAL STATUS"
+    ],
+    "note": "Every acceptance criterion or truth-state-advancing claim must record these four V&T fields."
+  },
+  "contract_id": "CRSP-TLC-WORKBENCH-HARDENING-001",
+  "stable_id": "tlc-workbench.hardening.contract.v1",
+  "contract_kind": "child",
+  "title": "C-RSP Build Contract \u2014 TLC Workbench Hardening + Non-Bypassable CI",
+  "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-HARDENING-001.md",
+  "binds_module": "TLC-WORKBENCH-HARDENING",
+  "goal": "Require non-bypassable CI, deterministic build paths, and signed evidence for Workbench truth-state claims.",
+  "objective": "Enforce deterministic installs, pinned runtime compatibility, parity and accessibility gates, lifecycle tests, signed evidence, and explicit failure reasons before any verified or validated Workbench claim is allowed.",
+  "relationships": {
+    "parent_contract_id": "CRSP-TLC-WORKBENCH-001",
+    "child_contract_ids": [],
+    "dependency_contract_ids": [
+      "CRSP-STC-RUNTIME-001"
+    ]
+  },
+  "required_files": [
+    "contracts/active/CRSP-TLC-WORKBENCH-HARDENING-001.md",
+    "package-lock.json",
+    ".github/workflows/",
+    "evidence/",
+    "tests/"
+  ],
+  "required_outputs": [
+    "Deterministic install and test command paths.",
+    "CI checks that block missing parity, accessibility, lifecycle, or evidence artifacts.",
+    "Signed evidence entries for truth-state-advancing claims.",
+    "Explicit halt output for every required CI gate failure."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-WB-HARDENING-01",
+      "statement": "CI runs all required test classes.",
+      "verification": "Workflow configuration and run evidence show unit, integration, parity, accessibility, lifecycle, and evidence checks are executed."
+    },
+    {
+      "id": "AC-WB-HARDENING-02",
+      "statement": "CI blocks merge on missing parity, accessibility, lifecycle, or evidence artifacts.",
+      "verification": "Required checks fail when one of the gate artifacts is removed or absent."
+    },
+    {
+      "id": "AC-WB-HARDENING-03",
+      "statement": "Evidence verification is automated in CI.",
+      "verification": "CI runs the evidence verification command against signed logs and publishes the result."
+    },
+    {
+      "id": "AC-WB-HARDENING-04",
+      "statement": "Truth-state-advancing claims fail if V&T is incomplete.",
+      "verification": "Validation logic or workflow checks reject incomplete V&T bundles before merge."
+    },
+    {
+      "id": "AC-WB-HARDENING-05",
+      "statement": "A reproducible local command path exists for the gated checks.",
+      "verification": "Documented local commands reproduce the same checks required by CI."
+    },
+    {
+      "id": "AC-WB-HARDENING-06",
+      "statement": "Halt conditions emit explicit failure reasons.",
+      "verification": "Failure output names the relevant halt condition and describes the missing requirement."
+    }
+  ],
+  "halt_conditions": [
+    {
+      "id": "HALT_WB_CI_REQUIRED_CHECK_MISSING",
+      "trigger": "A required CI check or test class is absent from the hardened Workbench pipeline.",
+      "resolution": "Restore the missing CI check and verify the pipeline enforces it.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_EVIDENCE_VERIFICATION_FAILED",
+      "trigger": "Evidence signature, Merkle verification, or chain validation fails.",
+      "resolution": "Repair the evidence artifacts or signing path before claiming advancement.",
+      "severity": "critical"
+    },
+    {
+      "id": "HALT_WB_VNT_INCOMPLETE",
+      "trigger": "A verified or validated claim omits one or more required V&T fields.",
+      "resolution": "Complete the V&T bundle and re-run the hardening checks.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_REQUIRED_CONTRACT_MISSING",
+      "trigger": "A required Workbench contract file is absent from the bundle or implementation context.",
+      "resolution": "Restore the missing contract file and re-run validation.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_REQUIRED_E2E_FAILURE",
+      "trigger": "A required lifecycle or parity end-to-end test fails.",
+      "resolution": "Fix the failing workflow path and re-run the end-to-end checks.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_REQUIRED_A11Y_GATE_FAILURE",
+      "trigger": "Accessibility threshold checks fail or required audit artifacts are missing.",
+      "resolution": "Resolve the accessibility regression and restore the audit artifacts.",
+      "severity": "block"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "EV-WB-HARDENING-01",
+      "description": "Workflow evidence showing all gated test classes run in CI and locally.",
+      "artifacts": [
+        "workflow configuration",
+        "CI run logs",
+        "local command output"
+      ]
+    },
+    {
+      "id": "EV-WB-HARDENING-02",
+      "description": "Signed evidence proving truth-state-advancing claims were verified.",
+      "artifacts": [
+        "signed evidence log entries",
+        "public key reference",
+        "verification output"
+      ]
+    }
+  ]
+}

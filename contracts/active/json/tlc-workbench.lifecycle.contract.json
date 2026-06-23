@@ -1,0 +1,128 @@
+{
+  "$schema": "../../../schemas/contracts/crsp-workbench-contract.schema.json",
+  "schema_version": "1.0.0",
+  "status": "Draft",
+  "issue_reference": "coreyalejandro/the-living-constitution-2.0#15",
+  "vt_requirements": {
+    "required_fields": [
+      "EXISTS",
+      "VERIFIED AGAINST",
+      "NOT CLAIMED",
+      "FUNCTIONAL STATUS"
+    ],
+    "note": "Every acceptance criterion or truth-state-advancing claim must record these four V&T fields."
+  },
+  "contract_id": "CRSP-TLC-WORKBENCH-LIFECYCLE-001",
+  "stable_id": "tlc-workbench.lifecycle.contract.v1",
+  "contract_kind": "child",
+  "title": "C-RSP Build Contract \u2014 TLC Workbench Lifecycle",
+  "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-LIFECYCLE-001.md",
+  "binds_module": "TLC-WORKBENCH-LIFECYCLE",
+  "goal": "Define the governed research-to-paper-to-product lifecycle the Workbench must implement.",
+  "objective": "Require one coherent, resumable, evidence-backed lifecycle with persistent domain entities, explicit phase transitions, and a mandatory end-to-end operator flow in both surfaces.",
+  "relationships": {
+    "parent_contract_id": "CRSP-TLC-WORKBENCH-001",
+    "child_contract_ids": [],
+    "dependency_contract_ids": [
+      "CRSP-TLC-WORKBENCH-SURFACES-001",
+      "CRSP-TLC-WORKBENCH-HARDENING-001"
+    ]
+  },
+  "required_files": [
+    "contracts/active/CRSP-TLC-WORKBENCH-LIFECYCLE-001.md",
+    "src/app/models/",
+    "src/app/services/",
+    "src/app/state/",
+    "tests/"
+  ],
+  "required_outputs": [
+    "Lifecycle phases for project intake through publication or registration.",
+    "Persistent domain entities for projects, sessions, claims, evidence, drafts, products, and recovery snapshots.",
+    "A mandatory end-to-end flow that starts with project creation and ends with product artifact generation.",
+    "Explicit halts for invalid advancement and missing traceability."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-WB-LIFECYCLE-01",
+      "statement": "All lifecycle phases exist in code and state.",
+      "verification": "Domain state and services expose project intake through publication or registration phases."
+    },
+    {
+      "id": "AC-WB-LIFECYCLE-02",
+      "statement": "Required domain entities exist and are persisted.",
+      "verification": "Persistent models exist for project, session, claim, evidence, draft, paper packet, product artifact, publication surface, and recovery snapshot."
+    },
+    {
+      "id": "AC-WB-LIFECYCLE-03",
+      "statement": "The mandatory flow executes successfully in both surfaces.",
+      "verification": "Automated end-to-end evidence shows the required operator flow succeeds in TUI and Web UI."
+    },
+    {
+      "id": "AC-WB-LIFECYCLE-04",
+      "statement": "Invalid advancement is blocked with an explicit halt reason.",
+      "verification": "Tests or policy checks emit named halt conditions when advancement rules are violated."
+    },
+    {
+      "id": "AC-WB-LIFECYCLE-05",
+      "statement": "Paper packet generation references claims and evidence rather than free-floating text only.",
+      "verification": "Generated paper artifacts include traceable claim-to-evidence mappings."
+    },
+    {
+      "id": "AC-WB-LIFECYCLE-06",
+      "statement": "Product artifact generation is linked to validated lifecycle state.",
+      "verification": "Productization outputs are only available from a validated or explicitly allowed lifecycle state."
+    }
+  ],
+  "halt_conditions": [
+    {
+      "id": "HALT_WB_PROJECT_WITHOUT_SCOPE",
+      "trigger": "A project is created or advanced without defined scope or governing contract.",
+      "resolution": "Define project scope and contract before proceeding.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_CLAIM_WITHOUT_BINDING",
+      "trigger": "A claim exists without the required evidence or lifecycle binding.",
+      "resolution": "Bind the claim to supporting evidence and lifecycle state.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_EVIDENCELESS_ADVANCEMENT",
+      "trigger": "Lifecycle advancement is attempted without the required evidence posture.",
+      "resolution": "Attach the missing evidence and re-run validation before advancing.",
+      "severity": "critical"
+    },
+    {
+      "id": "HALT_WB_DRAFT_WITHOUT_TRACEABILITY",
+      "trigger": "Paper drafting proceeds without claim or evidence traceability.",
+      "resolution": "Restore traceability from draft sections back to claims and evidence.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_PRODUCTIZATION_WITHOUT_VALIDATION",
+      "trigger": "Product artifact generation is attempted before the required validation phase is complete.",
+      "resolution": "Complete validation and produce the required evidence before productization.",
+      "severity": "block"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "EV-WB-LIFECYCLE-01",
+      "description": "End-to-end lifecycle evidence for the canonical operator flow.",
+      "artifacts": [
+        "lifecycle test logs",
+        "generated paper packet artifacts",
+        "generated product artifact evidence"
+      ]
+    },
+    {
+      "id": "EV-WB-LIFECYCLE-02",
+      "description": "Policy evidence for invalid advancement halts and traceability enforcement.",
+      "artifacts": [
+        "halt output",
+        "traceability reports",
+        "claim-to-evidence mapping artifacts"
+      ]
+    }
+  ]
+}

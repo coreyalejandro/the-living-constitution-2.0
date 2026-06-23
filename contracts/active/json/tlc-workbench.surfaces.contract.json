@@ -1,0 +1,117 @@
+{
+  "$schema": "../../../schemas/contracts/crsp-workbench-contract.schema.json",
+  "schema_version": "1.0.0",
+  "status": "Draft",
+  "issue_reference": "coreyalejandro/the-living-constitution-2.0#15",
+  "vt_requirements": {
+    "required_fields": [
+      "EXISTS",
+      "VERIFIED AGAINST",
+      "NOT CLAIMED",
+      "FUNCTIONAL STATUS"
+    ],
+    "note": "Every acceptance criterion or truth-state-advancing claim must record these four V&T fields."
+  },
+  "contract_id": "CRSP-TLC-WORKBENCH-SURFACES-001",
+  "stable_id": "tlc-workbench.surfaces.contract.v1",
+  "contract_kind": "child",
+  "title": "C-RSP Build Contract \u2014 TLC Workbench Surfaces",
+  "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-SURFACES-001.md",
+  "binds_module": "TLC-WORKBENCH-SURFACES",
+  "goal": "Require TUI and Web UI to expose the same governed core lifecycle over one shared application layer.",
+  "objective": "Ensure the Workbench treats both surfaces as first-class operator interfaces, with shared services, identical governance checks, and automated parity proof for all core mutations.",
+  "relationships": {
+    "parent_contract_id": "CRSP-TLC-WORKBENCH-001",
+    "child_contract_ids": [],
+    "dependency_contract_ids": [
+      "CRSP-TLC-WORKBENCH-LIFECYCLE-001",
+      "CRSP-TLC-WORKBENCH-HARDENING-001"
+    ]
+  },
+  "required_files": [
+    "contracts/active/CRSP-TLC-WORKBENCH-SURFACES-001.md",
+    "src/app/services/",
+    "src/web/",
+    "src/tui/",
+    "tests/"
+  ],
+  "required_outputs": [
+    "Launchable TUI and Web UI surfaces.",
+    "Ten core lifecycle flows available in both surfaces.",
+    "Shared lifecycle mutation services used by both surfaces.",
+    "Automated parity test evidence for the dual-surface flows."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-WB-SURFACES-01",
+      "statement": "Both surfaces compile and launch.",
+      "verification": "Launch commands or tests prove the TUI and Web UI start successfully."
+    },
+    {
+      "id": "AC-WB-SURFACES-02",
+      "statement": "Both surfaces execute all ten core flows.",
+      "verification": "Automated flow coverage or equivalent tests exercise the ten required lifecycle operations."
+    },
+    {
+      "id": "AC-WB-SURFACES-03",
+      "statement": "Shared services are used by both surfaces for lifecycle mutation.",
+      "verification": "Mutation paths trace through src/app/services or equivalent shared domain services."
+    },
+    {
+      "id": "AC-WB-SURFACES-04",
+      "statement": "Automated parity tests prove equivalent outcomes for core flows.",
+      "verification": "Parity tests compare the resulting lifecycle, claim, and evidence state for both surfaces."
+    },
+    {
+      "id": "AC-WB-SURFACES-05",
+      "statement": "No core lifecycle mutation is implemented in only one surface.",
+      "verification": "Code review and test evidence show no surface-only bypass for governed mutations."
+    }
+  ],
+  "halt_conditions": [
+    {
+      "id": "HALT_WB_TUI_MISSING_CORE_FLOW",
+      "trigger": "The TUI lacks a required governed core flow.",
+      "resolution": "Implement the missing TUI flow and verify parity before merge.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_WEB_MISSING_CORE_FLOW",
+      "trigger": "The Web UI lacks a required governed core flow.",
+      "resolution": "Implement the missing Web UI flow and verify parity before merge.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_SURFACE_LOCAL_MUTATION",
+      "trigger": "A governed mutation is implemented surface-locally instead of through shared services.",
+      "resolution": "Move the mutation into shared services and re-run parity verification.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_PARITY_TEST_FAILURE",
+      "trigger": "Parity tests fail or are missing for a required core flow.",
+      "resolution": "Fix the parity regression and restore automated parity coverage.",
+      "severity": "block"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "EV-WB-SURFACES-01",
+      "description": "Launch evidence for both the TUI and Web UI.",
+      "artifacts": [
+        "TUI launch output",
+        "Web UI launch output",
+        "build or smoke test logs"
+      ]
+    },
+    {
+      "id": "EV-WB-SURFACES-02",
+      "description": "Parity evidence for the ten required core flows.",
+      "artifacts": [
+        "parity test logs",
+        "flow replay traces",
+        "state comparison artifacts"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "../../../schemas/contracts/crsp-workbench-contract.schema.json",
+  "schema_version": "1.0.0",
+  "status": "Draft",
+  "issue_reference": "coreyalejandro/the-living-constitution-2.0#15",
+  "vt_requirements": {
+    "required_fields": [
+      "EXISTS",
+      "VERIFIED AGAINST",
+      "NOT CLAIMED",
+      "FUNCTIONAL STATUS"
+    ],
+    "note": "Every acceptance criterion or truth-state-advancing claim must record these four V&T fields."
+  },
+  "contract_id": "CRSP-TLC-WORKBENCH-ACCESSIBILITY-001",
+  "stable_id": "tlc-workbench.accessibility.contract.v1",
+  "contract_kind": "child",
+  "title": "C-RSP Build Contract \u2014 TLC Workbench Accessibility + Neurodivergent-First UX",
+  "human_contract_path": "contracts/active/CRSP-TLC-WORKBENCH-ACCESSIBILITY-001.md",
+  "binds_module": "TLC-WORKBENCH-ACCESSIBILITY",
+  "goal": "Make accessibility and neurodivergent-first UX release-gating requirements for both Workbench surfaces.",
+  "objective": "Require keyboard-first, low-ambiguity, interruption-safe, adjustable, and auditable accessibility behavior in both the TUI and Web UI before verified release claims are allowed.",
+  "relationships": {
+    "parent_contract_id": "CRSP-TLC-WORKBENCH-001",
+    "child_contract_ids": [],
+    "dependency_contract_ids": [
+      "CRSP-TLC-WORKBENCH-SURFACES-001",
+      "CRSP-TLC-WORKBENCH-HARDENING-001"
+    ]
+  },
+  "required_files": [
+    "contracts/active/CRSP-TLC-WORKBENCH-ACCESSIBILITY-001.md",
+    "src/app/state/",
+    "src/web/",
+    "src/tui/",
+    "docs/operations/",
+    "tests/"
+  ],
+  "required_outputs": [
+    "Keyboard-completable core flows in both surfaces.",
+    "Reduced motion, density, typography, focus mode, and recovery preferences.",
+    "Automated accessibility audit artifacts.",
+    "Manual human accessibility and cognitive-load review artifacts."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-WB-A11Y-01",
+      "statement": "All core flows are keyboard-completable.",
+      "verification": "Interaction tests or audits show every required flow can be completed without mouse-only input."
+    },
+    {
+      "id": "AC-WB-A11Y-02",
+      "statement": "Reduced motion mode exists and is test-covered.",
+      "verification": "Tests and configuration evidence prove reduced motion can be enabled and affects both surfaces."
+    },
+    {
+      "id": "AC-WB-A11Y-03",
+      "statement": "Density and typography preferences exist and persist.",
+      "verification": "Preference state persists across sessions and includes a dyslexia-friendly typography option."
+    },
+    {
+      "id": "AC-WB-A11Y-04",
+      "statement": "Resume and recovery flow exists in both surfaces.",
+      "verification": "Recovery tests or audits show the operator can resume from the last meaningful state."
+    },
+    {
+      "id": "AC-WB-A11Y-05",
+      "statement": "Automated accessibility audit passes the required thresholds.",
+      "verification": "Committed automated audit results meet or exceed the project accessibility threshold."
+    },
+    {
+      "id": "AC-WB-A11Y-06",
+      "statement": "A manual audit artifact is committed and references real screens or flows.",
+      "verification": "A human-coded audit checklist or report exists and cites the reviewed surfaces."
+    },
+    {
+      "id": "AC-WB-A11Y-07",
+      "statement": "Focus mode and explicit next-action affordance exist in both surfaces.",
+      "verification": "User-facing state and UI artifacts show low-clutter focus mode plus explicit next-action guidance."
+    }
+  ],
+  "halt_conditions": [
+    {
+      "id": "HALT_WB_KEYBOARD_INCOMPLETE",
+      "trigger": "A required flow cannot be completed with keyboard-first interaction.",
+      "resolution": "Close the keyboard accessibility gap and re-run the accessibility checks.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_RECOVERY_FLOW_MISSING",
+      "trigger": "Recovery or resume support is absent for one of the required surfaces.",
+      "resolution": "Implement interruption-safe recovery and verify it in both surfaces.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_A11Y_AUDIT_MISSING",
+      "trigger": "Automated accessibility audit artifacts are missing for a release-gated claim.",
+      "resolution": "Generate and commit the automated accessibility audit artifacts before proceeding.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_MANUAL_A11Y_REVIEW_MISSING",
+      "trigger": "The manual accessibility or cognitive-load review artifact is missing.",
+      "resolution": "Complete and commit the manual accessibility review artifact.",
+      "severity": "block"
+    },
+    {
+      "id": "HALT_WB_NEURODIVERGENT_SUPPORT_MISSING",
+      "trigger": "Required neurodivergent-first controls or visibility patterns are missing.",
+      "resolution": "Add the missing support controls and verify them with tests or audits.",
+      "severity": "block"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "EV-WB-A11Y-01",
+      "description": "Automated accessibility evidence for both Workbench surfaces.",
+      "artifacts": [
+        "axe or equivalent audit reports",
+        "threshold summary output",
+        "remediation verification evidence"
+      ]
+    },
+    {
+      "id": "EV-WB-A11Y-02",
+      "description": "Manual accessibility and cognitive-load review evidence.",
+      "artifacts": [
+        "manual audit checklist",
+        "review screenshots or notes",
+        "sign-off artifact"
+      ]
+    }
+  ]
+}
