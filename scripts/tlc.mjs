@@ -11,6 +11,7 @@
  *   tlc health                 repo health check
  *   tlc new [NAME]             create a new module
  *   tlc test                   run all tests
+ *   tlc web                    launch Web UI (Vite dev server on :5173)
  *   tlc help                   show this message
  *
  * MODULE defaults to CRSP-STC-RUNTIME-001 if omitted.
@@ -64,8 +65,7 @@ ${BOLD}tlc${RESET} — TLC 2.0 command line
   ${CYAN}tlc done MODULE${RESET}               close a work session
   ${CYAN}tlc health${RESET}                    repo health check
   ${CYAN}tlc new NAME${RESET}                  create a new module
-  ${CYAN}tlc test${RESET}                      run all tests
-  ${CYAN}tlc help${RESET}                      show this message
+  ${CYAN}tlc test${RESET}                      run all tests\n  ${CYAN}tlc web${RESET}                       export data + launch Web UI on :5173\n  ${CYAN}tlc help${RESET}                      show this message
 
 ${DIM}Default module: CRSP-STC-RUNTIME-001${RESET}
 `);
@@ -127,6 +127,20 @@ switch (command.toLowerCase()) {
   case '-h':
     help();
     break;
+
+  case 'web': {
+    // Export governance data then launch Vite dev server
+    const exportResult = spawnSync('node', [join(ROOT, 'scripts', 'export-web-data.mjs')], {
+      stdio: 'inherit', cwd: ROOT,
+    });
+    if (exportResult.status !== 0) process.exit(exportResult.status ?? 1);
+    // Launch vite from src/ui
+    const viteResult = spawnSync('npx', ['vite', '--root', join(ROOT, 'src/ui')], {
+      stdio: 'inherit', cwd: ROOT, env: { ...process.env, FORCE_COLOR: '3' },
+    });
+    process.exit(viteResult.status ?? 0);
+    break;
+  }
 
   default:
     console.error(`Unknown command: ${command}\nRun ${CYAN}tlc help${RESET} to see available commands.`);

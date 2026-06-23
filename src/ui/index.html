@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TLC Workbench</title>
+    <style>
+      /* Reset + base */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body, #root { height: 100%; }
+      body {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Menlo', monospace;
+        background: #0d0d0d;
+        color: #e8e0c8;
+        font-size: 14px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      /* Accessibility */
+      :focus-visible { outline: 2px solid #f5c518; outline-offset: 2px; }
+      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.jsx"></script>
+  </body>
+</html>

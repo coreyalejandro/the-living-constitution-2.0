@@ -62,7 +62,9 @@
     "constitutions:check": "node constitutions/check-platform.mjs",
     "tlc": "node scripts/tlc.mjs",
     "tlc:tui": "node --import tsx/esm src/tui/app.tsx",
-    "test:evidence": "node --import tsx/esm --test src/evidence-chain/engine.test.ts"
+    "test:evidence": "node --import tsx/esm --test src/evidence-chain/engine.test.ts",
+    "tlc:export-data": "node scripts/export-web-data.mjs",
+    "tlc:web": "npm run tlc:export-data && npx vite --root src/ui"
   },
   "keywords": [
     "governance",
@@ -93,12 +95,14 @@
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.0.0",
+    "@vitejs/plugin-react": "^4.7.0",
     "c8": "^11.0.0",
     "eslint": "^9.0.0",
     "fast-check": "^4.8.0",
     "jest": "^29.7.0",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^6.4.3"
   },
   "jest": {
     "testEnvironment": "node",
