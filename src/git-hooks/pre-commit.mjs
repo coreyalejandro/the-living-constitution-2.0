@@ -428,7 +428,7 @@ if (existsSync(EVIDENCE_TEST)) {
     try {
       execSync(
         `node --import tsx/esm "${RED_TEAM_RUN}"`,
-        { cwd: TLC_ROOT, stdio: 'pipe' }
+        { cwd: TLC_ROOT, stdio: 'pipe', env: { ...process.env, TLC_HOOK_RUN: '1' } }
       );
       console.log(`${G}[tlc-hook] ✓ Evidence chain: red-team — all attack vectors BLOCKED${X}`);
     } catch (redTeamErr) {

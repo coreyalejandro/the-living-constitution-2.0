@@ -329,9 +329,12 @@ const allBlocked = attacks.every((a) => a.result === "BLOCKED");
 const output = { run_at: new Date().toISOString(), attacks, allBlocked };
 console.log(JSON.stringify(output, null, 2));
 
-const reportPath = fileURLToPath(new URL("./red-team-report.json", import.meta.url));
-writeFileSync(reportPath, JSON.stringify(output, null, 2) + "\n");
-console.log(`\nReport written: ${reportPath}`);
+// Only write the report file when run directly (not from within the pre-commit hook)
+if (!process.env.TLC_HOOK_RUN) {
+  const reportPath = fileURLToPath(new URL("./red-team-report.json", import.meta.url));
+  writeFileSync(reportPath, JSON.stringify(output, null, 2) + "\n");
+  console.log(`\nReport written: ${reportPath}`);
+}
 
 if (!allBlocked) {
   const bypassed = attacks.filter((a) => a.result === "BYPASSED").map((a) => a.id);
