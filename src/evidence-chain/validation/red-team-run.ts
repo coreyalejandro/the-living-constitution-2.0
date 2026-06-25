@@ -11,6 +11,7 @@
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { EvidenceChainEngine, generateKeypair, createHITLSignature, sha256hex, canonical, signBytes, keyFingerprint } from "../index.js";
 import type { OperatorKey, ConstitutionRule } from "../index.js";
 
@@ -328,7 +329,7 @@ const allBlocked = attacks.every((a) => a.result === "BLOCKED");
 const output = { run_at: new Date().toISOString(), attacks, allBlocked };
 console.log(JSON.stringify(output, null, 2));
 
-const reportPath = new URL("./red-team-report.json", import.meta.url).pathname;
+const reportPath = fileURLToPath(new URL("./red-team-report.json", import.meta.url));
 writeFileSync(reportPath, JSON.stringify(output, null, 2) + "\n");
 console.log(`\nReport written: ${reportPath}`);
 

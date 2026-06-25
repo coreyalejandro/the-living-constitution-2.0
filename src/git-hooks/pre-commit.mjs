@@ -413,7 +413,7 @@ if (existsSync(EVIDENCE_TEST)) {
     execSync(
       `node_modules/.bin/c8 --include='src/evidence-chain/*.ts' --exclude='src/evidence-chain/*.test.ts' ` +
       `--branches=100 --statements=100 --functions=100 --lines=100 ` +
-      `--reporter=text node --import tsx/esm --test ${EVIDENCE_TEST}`,
+      `--reporter=text node --import tsx/esm --test "${EVIDENCE_TEST}"`,
       { cwd: TLC_ROOT, stdio: 'pipe' }
     );
     console.log(`${G}[tlc-hook] ✓ Evidence chain: 100% branch coverage${X}`);
@@ -427,7 +427,7 @@ if (existsSync(EVIDENCE_TEST)) {
   if (existsSync(RED_TEAM_RUN)) {
     try {
       execSync(
-        `node --import tsx/esm ${RED_TEAM_RUN}`,
+        `node --import tsx/esm "${RED_TEAM_RUN}"`,
         { cwd: TLC_ROOT, stdio: 'pipe' }
       );
       console.log(`${G}[tlc-hook] ✓ Evidence chain: red-team — all attack vectors BLOCKED${X}`);
