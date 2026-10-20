@@ -1,0 +1,13 @@
+{
+  "description": "Research results that TLC re-runs from a fresh clone. Each target is pinned to a tag AND its commit; a moved tag fails closed.",
+  "targets": [
+    {"id": "proactive", "name": "PROACTIVE (GitLab Duo constitutional agent)", "repo": "https://github.com/coreyalejandro/28441830",
+     "tag": "v4.1.1", "commit": "197b100304f46ad79b6e7ba5480d0e1993cbdf69", "command": "make reproduce", "expect": "MR !9 verdict: BLOCKED"},
+    {"id": "eight-wonders", "name": "Eight Wonders of Black Shopping: framing probes", "repo": "https://github.com/coreyalejandro/eight-wonders-framing-probes",
+     "tag": "v0.2.2", "commit": "97e1147d6f5782b4992945473b2c5a87f3cd8eef", "command": "make reproduce", "expect": null},
+    {"id": "constitutional-evals", "name": "Constitutional runtime evals (pre-registered)", "repo": "https://github.com/coreyalejandro/constitutional-runtime-evals",
+     "tag": "v0.3.2", "commit": "ebd2ca548b3252a08bb26e0eab5d91373b525f56", "command": "make reproduce", "expect": "Done."},
+    {"id": "reb", "name": "Relational Economy Benchmark", "repo": "https://github.com/coreyalejandro/reb",
+     "tag": "v1.0.1", "commit": "280809c4ce9a5a547ac636c77a44d7a7e2ec80be", "command": "make reproduce", "expect": "reproduced byte-for-byte"}
+  ]
+}

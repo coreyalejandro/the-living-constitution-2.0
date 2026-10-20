@@ -21,6 +21,33 @@ node scripts/tlc.mjs
 
 ---
 
+## Verify it yourself
+
+| Claim | Evidence | Command |
+|---|---|---|
+| 22 governance invariants and 6 instructional-integrity invariants hold (exhaustive model check) | `tlc-sl/`, CI job "verify" | `npm run reproduce` |
+| 44 runtime tests pass; two constitutions run through one runtime with no namespace overlap | `tests/`, `tlc-sl/tests/`, `probe-gate/tests/` | `npm run reproduce` |
+| The signed evidence log verifies against a pinned key (52 entries) | `evidence/TLC-SL/` | `npm run reproduce` |
+| Evidence-chain audit package: 87 tests, 100% branch coverage, 11/11 red-team vectors blocked, TLA+ clean | `src/evidence-chain/`, CI job "evidence-chain" | see `.github/workflows/governance-ci.yml` |
+| Four published research results re-run from fresh clones | `research/REPRODUCTION_TARGETS.json`, workflow "Research reproduction" | `npm run tlc:reproduce-research` |
+
+`npm run reproduce` needs only Node 20 (no `npm install`, no network, no API key).
+
+**Research results TLC re-runs** (each pinned to a tag and commit; a moved tag fails):
+
+| Result | Repository | Pinned |
+|---|---|---|
+| PROACTIVE: constitutional agent blocks a flawed merge request (732 tests) | [28441830](https://github.com/coreyalejandro/28441830) | v4.1.1 |
+| Eight Wonders of Black Shopping: framing is readable from model activations | [eight-wonders-framing-probes](https://github.com/coreyalejandro/eight-wonders-framing-probes) | v0.2.2 |
+| Pre-registered: a written constitution cuts judged rule violations from 22% to 0% | [constitutional-runtime-evals](https://github.com/coreyalejandro/constitutional-runtime-evals) | v0.3.2 |
+| Relational Economy Benchmark reproduces byte-for-byte (159 tests) | [reb](https://github.com/coreyalejandro/reb) | v1.0.1 |
+
+**V&T.** *Verified:* everything in the first table, in CI on every push. *Not claimed:* the Validation Study
+(results are PROPOSED, not run), Coq proofs (deferred), and the governance harness's synthetic dataset as evidence
+(see `evidence/index.md`). Decisions and their dates: [`docs/Scope_and_Decision_Log.md`](docs/Scope_and_Decision_Log.md).
+
+---
+
 ## What This Is
 
 TLC is a constitutional runtime that enforces externally specified epistemic
@@ -206,6 +233,9 @@ A point-by-point response to the external review is in **[docs/REVIEW_RESPONSE.m
 # Clone
 git clone https://github.com/coreyalejandro/the-living-constitution-2.0
 cd the-living-constitution-2.0
+
+# Verify (no install needed)
+npm run reproduce
 
 # Install
 npm install

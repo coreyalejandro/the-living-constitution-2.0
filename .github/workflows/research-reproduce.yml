@@ -1,0 +1,45 @@
+name: Research reproduction
+
+# TLC re-runs each pinned research result from a fresh clone (research/REPRODUCTION_TARGETS.json).
+# A target fails if its reproduction fails, a test fails, its expected line is missing, or its tag has moved.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"   # weekly, Monday 06:17 UTC
+  push:
+    branches: [main]
+    paths:
+      - research/REPRODUCTION_TARGETS.json
+      - scripts/tlc-reproduce-research.mjs
+      - .github/workflows/research-reproduce.yml
+
+jobs:
+  reproduce:
+    name: ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [proactive, eight-wonders, constitutional-evals, reb]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Reproduce ${{ matrix.target }} from a fresh clone at its pinned tag
+        run: node scripts/tlc-reproduce-research.mjs --only ${{ matrix.target }}
+      - name: Summary
+        if: always()
+        run: |
+          f=evidence/RESEARCH-REPRO/${{ matrix.target }}.json
+          test -f "$f" && node -e "const r=require('./$f');console.log('| '+[r.status,r.id,r.tag,r.cloned_commit?.slice(0,7),r.tests_passed_total,r.seconds+'s',r.reason||''].join(' | ')+' |')" >> "$GITHUB_STEP_SUMMARY" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: repro-${{ matrix.target }}
+          path: evidence/RESEARCH-REPRO/${{ matrix.target }}.json

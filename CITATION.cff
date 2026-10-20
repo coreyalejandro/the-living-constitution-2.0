@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use The Living Constitution 2.0, please cite it as below."
+title: "The Living Constitution 2.0: a constitutional runtime for AI governance"
+version: 2.1.0
+date-released: 2026-10-20
+authors:
+  - family-names: "Alejandro"
+    given-names: "Corey"
+repository-code: "https://github.com/coreyalejandro/the-living-constitution-2.0"
+license: MIT
+type: software
+abstract: >-
+  A runtime that executes externally specified constitutions: invariants written in TLC-SL are model-checked,
+  enforced at runtime and recorded in a signed, hash-chained evidence log. It also re-runs the author's published
+  research results from fresh clones.

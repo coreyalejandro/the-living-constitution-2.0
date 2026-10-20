@@ -218,3 +218,20 @@ The following is a systematic review of the TLC Runtime paper for domain-specifi
 *VERIFIED AGAINST: All section numbers and content cross-referenced against the actual runtime paper file during this session.*
 *NOT CLAIMED: That all risks are resolved. Five open risks remain and are explicitly named.*
 *FUNCTIONAL STATUS: ACTIVE log — to be updated at each subsequent session with new scope decisions.*
+
+---
+
+## 2026-10-20 — v2.1.0: one-command verification and research reproduction (Claude, for Corey Alejandro)
+
+| Decision | Rationale |
+|---|---|
+| Added `npm run reproduce` (`scripts/reproduce.sh`): the zero-dependency verify stack from `governance-ci.yml` | A reviewer can re-verify the 22 invariants, 44 tests, two-constitution platform check, signed evidence and no-drift in one command, without `npm install`. |
+| Added research reproduction: `research/REPRODUCTION_TARGETS.json`, `npm run tlc:reproduce-research`, workflow `research-reproduce.yml` (weekly, on change, on demand) | TLC is the infrastructure layer for the research program. It now re-runs four published results from fresh clones: PROACTIVE v4.1.1, Eight Wonders probes v0.2.2, constitutional runtime evals v0.3.2, REB v1.0.1. Each is pinned to tag and commit; a moved tag fails closed. |
+| Version 2.1.0 (package.json, CITATION.cff, tag) | The README already described the v2.1 A6 fix; the version number now matches. |
+
+Verified before commit (Claude, cloud workspace): `npm run reproduce` passes; research reproduction passed for PROACTIVE
+(732 tests), constitutional evals (43) and REB (159) from fresh clones. Eight Wonders was not re-run locally (disk limit);
+its own CI passes on v0.2.2 and the workflow re-runs it.
+
+*V&T:* EXISTS: the commands, targets file and workflow above. VERIFIED AGAINST: local runs listed. NOT CLAIMED: that the
+research workflow has passed on GitHub before its first run; its run page is the evidence.

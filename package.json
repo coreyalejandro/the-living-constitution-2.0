@@ -1,6 +1,6 @@
 {
   "name": "the-living-constitution-2.0",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Runtime enforcement layer for the SocioTechnical Constitution. Implements the Policy Engine, Evidence Observatory, Contract Window, Role Authorizer, Break-Glass Override, and Integrated Verification workflow.",
   "license": "MIT",
   "type": "module",
@@ -64,7 +64,9 @@
     "tlc:tui": "node --import tsx/esm src/tui/app.tsx",
     "test:evidence": "node --import tsx/esm --test src/evidence-chain/engine.test.ts",
     "tlc:export-data": "node scripts/export-web-data.mjs",
-    "tlc:web": "npm run tlc:export-data && cd src/ui && npx vite"
+    "tlc:web": "npm run tlc:export-data && cd src/ui && npx vite",
+    "tlc:reproduce-research": "node scripts/tlc-reproduce-research.mjs",
+    "reproduce": "bash scripts/reproduce.sh"
   },
   "keywords": [
     "governance",
