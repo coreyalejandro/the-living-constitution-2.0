@@ -31,6 +31,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+      - name: Free runner disk (large preinstalled toolchains this job does not use)
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL; df -h "$RUNNER_TEMP" | tail -1
       - name: Reproduce ${{ matrix.target }} from a fresh clone at its pinned tag
         run: node scripts/tlc-reproduce-research.mjs --only ${{ matrix.target }}
       - name: Summary

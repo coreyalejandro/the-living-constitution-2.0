@@ -28,7 +28,11 @@ const outDir = join(ROOT, 'evidence/RESEARCH-REPRO');
 mkdirSync(outDir, { recursive: true });
 let failed = 0;
 for (const t of chosen) {
-  const work = mkdtempSync(join(tmpdir(), `tlc-repro-${t.id}-`));
+  // Work outside /tmp: on GitHub's newer runner images /tmp has a disk quota that a large install exceeds.
+  const base = process.env.TLC_REPRO_WORKDIR || process.env.RUNNER_TEMP || tmpdir();
+  const work = mkdtempSync(join(base, `tlc-repro-${t.id}-`));
+  const childTmp = join(work, 'tmp');
+  mkdirSync(childTmp, { recursive: true });
   const started = new Date();
   const rec = { id: t.id, name: t.name, repo: t.repo, tag: t.tag, pinned_commit: t.commit, command: t.command,
                 started_utc: started.toISOString() };
@@ -40,7 +44,8 @@ for (const t of chosen) {
       rec.status = 'FAIL'; rec.reason = `tag ${t.tag} now points at ${rec.cloned_commit}, not the pinned ${t.commit}`;
     } else {
       console.log(`\n=== ${t.id} @ ${t.tag} (${t.commit.slice(0, 7)}): ${t.command}`);
-      const r = spawnSync('bash', ['-lc', t.command], { cwd: join(work, 'src'), encoding: 'utf8', maxBuffer: 1 << 28 });
+      const env = { ...process.env, TMPDIR: childTmp, PIP_NO_CACHE_DIR: '1', ...(t.env || {}) };
+      const r = spawnSync('bash', ['-lc', t.command], { cwd: join(work, 'src'), encoding: 'utf8', maxBuffer: 1 << 28, env });
       const out = `${r.stdout || ''}${r.stderr || ''}`;
       process.stdout.write(out.split('\n').slice(-25).join('\n') + '\n');
       const passed = [...out.matchAll(/(\d+) passed/g)].map(m => Number(m[1]));

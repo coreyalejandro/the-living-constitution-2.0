@@ -1,6 +1,6 @@
 {
   "name": "the-living-constitution-2.0",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Runtime enforcement layer for the SocioTechnical Constitution. Implements the Policy Engine, Evidence Observatory, Contract Window, Role Authorizer, Break-Glass Override, and Integrated Verification workflow.",
   "license": "MIT",
   "type": "module",

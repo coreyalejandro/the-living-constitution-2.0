@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use The Living Constitution 2.0, please cite it as below."
 title: "The Living Constitution 2.0: a constitutional runtime for AI governance"
-version: 2.1.0
-date-released: 2026-10-20
+version: 2.1.1
+date-released: 2026-10-21
 authors:
   - family-names: "Alejandro"
     given-names: "Corey"

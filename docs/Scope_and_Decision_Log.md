@@ -235,3 +235,13 @@ its own CI passes on v0.2.2 and the workflow re-runs it.
 
 *V&T:* EXISTS: the commands, targets file and workflow above. VERIFIED AGAINST: local runs listed. NOT CLAIMED: that the
 research workflow has passed on GitHub before its first run; its run page is the evidence.
+
+---
+
+## 2026-10-21 — v2.1.1: research reproduction fix (Claude, for Corey Alejandro)
+
+| Decision | Rationale |
+|---|---|
+| The reproduction script now clones and installs under `RUNNER_TEMP` with `TMPDIR` inside it and no pip cache; the workflow frees unused preinstalled toolchains first | The first run (39433261708) passed 3 of 4 targets; Eight Wonders failed installing PyTorch with `[Errno 122] Disk quota exceeded` because work happened in `/tmp`. |
+
+*V&T:* EXISTS: the change above. VERIFIED AGAINST: the failure log fetched by Codex. NOT CLAIMED: that the next run passes; its run page is the evidence.
