@@ -1,6 +1,4 @@
-**Refactored Paper: Addressing All Stanford PaperReview.ai Recommendations with 100% Fidelity**
-
----
+> **Status note (2026-10-22, read first).** This is a historical draft, kept for the record. Its human-study results (N = 30 analysts, the N = 300 replication, and the statistics reported for them) were never run: the "participants" in `simulation/hitl_harness.py` are simulated with random numbers. The Coq proof it describes was not written. The validation figures (94.2% invariant recovery, 68% IAI reduction) are proposed targets, not results. Current, verified results are listed in the repository README under "Verify it yourself" and in [docs/TRUTH_STATE_AUDIT.md](../../../docs/TRUTH_STATE_AUDIT.md).
 
 # Algorithmic Hermeneutical Injustice and the Living Constitution: A Tier 1, Neurodivergent‑First Framework for Cognitive Safety
 

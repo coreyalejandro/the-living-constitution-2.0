@@ -38,8 +38,7 @@ chain to be trusted and transferred.
 
 Industry practitioners have noticed. James Forr at Olson Zaltman Associates coined
 the term *Insight Atrophy* (IA) in 2025 to describe the professional concern that AI
-tools are degrading the insight-generation capacity of analysts [citation pending
-direct verification — GreenBook, late 2025]. This is a practitioner observation, not
+tools are degrading the insight-generation capacity of analysts (a practitioner usage we have not yet traced to a citable source). This is a practitioner observation, not
 a causal finding. We treat it as a theoretically coherent hypothesis and formalize it.
 
 The theoretical mechanism is *detrimental cognitive offloading*: externalizing the

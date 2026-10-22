@@ -45,7 +45,7 @@ tlc_kernel/
 
 simulation/
   benchmark.py    N=100,000 synthetic benchmark (Table 3 from paper)
-  hitl_harness.py N=30 HITL evaluation (Table 5 from paper)
+  hitl_harness.py simulated N=30 cohort (random numbers; no human study was run)
 
 tests/
   test_semantic_drift.py    adversarial: euphemism injection → HALTED
@@ -69,7 +69,7 @@ python -m pytest tests/ -v
 
 ```bash
 python simulation/benchmark.py    # N=100,000 agents, all conditions
-python simulation/hitl_harness.py # N=30 HITL cohort
+python simulation/hitl_harness.py # simulated cohort (illustrative only)
 ```
 
 ## Its role in TLC 2.0

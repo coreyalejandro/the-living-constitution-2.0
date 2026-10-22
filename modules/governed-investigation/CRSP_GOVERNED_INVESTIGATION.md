@@ -19,7 +19,7 @@ for TLC 2.0's governance invariants.
 
 - paper_v09_tlc_aligned.md is the submission artifact (supersedes v5.1)
 - simulation/benchmark.py reproduces Table 1 and Table 2 (N=100,000 synthetic)
-- simulation/hitl_harness.py reproduces Table 3 (N=30 HITL)
+- simulation/hitl_harness.py regenerates the illustrative Table 3 from simulated (random) operators; no human study was run
 - tests/ are the adversarial red-team suite
 - tlc_kernel/ is the governance engine described in the paper
 

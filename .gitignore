@@ -29,3 +29,6 @@ src/evidence-chain/spec/states/
 src/ui/public/data/
 .cursor/rules/openmemory.mdc
 AGENTS.md
+
+__pycache__/
+*.pyc

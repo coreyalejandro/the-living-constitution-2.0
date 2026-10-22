@@ -7,6 +7,9 @@
 
 ## What This Module Is
 
+**Credit.** Adapted from Andrej Karpathy's [autoresearch](https://github.com/karpathy/autoresearch); `prepare.py`, `train.py` and `program.md` follow the upstream code. TLC adds the governance hooks and scoring described below.
+
+
 autoresearch is TLC 2.0's autonomous experiment engine. An AI agent edits
 train.py, runs a fixed 5-minute training budget, measures val_bpb (validation
 bits per byte), keeps improvements, reverts failures, and loops. Every commit

@@ -1,4 +1,6 @@
 # MODULE_STATUS.md
+> **Snapshot of 2026-05-17**, kept for the record. Current, verified results are in the [README](README.md) under "Verify it yourself" (constitutional runtime evals, framing probes, REB, PROACTIVE).
+
 **Generated:** 2026-05-17
 **Registry version:** 1.0.0
 

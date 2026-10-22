@@ -83,7 +83,7 @@ empirical results simultaneously. Each layer is a separate publication:
 |---|---|---|
 | TLC Runtime v1.0 | TLC executes arbitrary epistemic constitutions | modules/tlc-runtime/ |
 | Eight Wonders Constitution v1.0 | Eight Wonders is a constitutional ontology for relational economies | modules/eight-wonders-constitution/ |
-| Validation Study v1.0 | TLC + Eight Wonders recovers invariants at 94%, reduces IAI by 68% | modules/validation-study/ |
+| Validation Study v1.0 | Proposed (not run): whether TLC + Eight Wonders recovers the invariants and reduces IAI | modules/validation-study/ |
 
 Reviewers must engage each layer on its own terms. Attacking the Eight Wonders
 does not touch the runtime. Attacking the runtime does not disprove AHI theory.
@@ -123,8 +123,12 @@ the-living-constitution-2.0/
 │   ├── constitution-engineering/       CEM — how constitutions are built
 │   ├── instructional-integrity/        Second constitution (Quantic research)
 │   ├── governance-harness/             Probe training + gate metrics
-│   ├── governed-investigation/         Original paper (v10 preserved)
-│   └── narrative-conditioned-interfaces/
+│   ├── governed-investigation/         Original paper (v10 preserved; historical draft)
+│   ├── narrative-conditioned-interfaces/ Draft paper (proposed study)
+│   ├── ccd/                            Construct-confidence deception detection (design)
+│   ├── autoresearch/                   Adapted from karpathy/autoresearch
+│   ├── llm-council/                    Adapted from karpathy/llm-council
+│   └── nanochat/                       Installer for karpathy/nanochat
 │
 ├── src/
 │   ├── interfaces/
@@ -182,7 +186,7 @@ Five LTL properties are verified against the runtime state machine:
 4. Feedback Obligation — human acknowledgment required on state transitions
 5. Task-State Locking — scope drift triggers automatic halt
 
-Proved deadlock-free and live under finite human response time (Coq).
+Deadlock-freedom and liveness under finite human response time: a Coq proof is planned, not written.
 
 ---
 

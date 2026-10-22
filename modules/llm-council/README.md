@@ -7,6 +7,9 @@
 
 ## What This Module Is
 
+**Credit.** Adapted from Andrej Karpathy's [llm-council](https://github.com/karpathy/llm-council); the `backend/` code follows the upstream project. TLC adds the governance use described below.
+
+
 llm-council is TLC 2.0's deliberation engine. When TLC needs a governance
 decision — a constitutional amendment, an evidence claim, a truth_status
 advancement — the council convenes. Multiple models respond independently,

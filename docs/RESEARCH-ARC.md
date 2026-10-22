@@ -104,13 +104,11 @@ The governed-investigation paper provides:
 - Eight Wonders I1-I8 as Generative Epistemic Invariants
 - ContractWindow FSM with LTL safety/liveness specifications
 - TLA+ model with bounded model checking (no counterexamples to depth 20)
-- Coq proof of the type-safety theorem
+- Coq proof of the type-safety theorem (described in the draft; not written)
 - N=100,000 synthetic benchmark
-- N=30 HITL study (+119% epistemic trust, -89.7% Insight Atrophy)
-- N=300 large-scale replication confirming all main effects
+- A designed N=30 HITL study and an N=300 replication (not run; the draft's figures are simulated)
 
-No other AI safety paper has this combination of formal verification,
-empirical validation, and running code in the same submission.
+The draft combines a formal model, a synthetic benchmark and running code; its human-study results were designed, not run.
 
 ---
 

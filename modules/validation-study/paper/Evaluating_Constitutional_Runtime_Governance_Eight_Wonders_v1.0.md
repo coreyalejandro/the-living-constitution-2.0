@@ -1,7 +1,7 @@
 # Evaluating Constitutional Runtime Governance Using the Eight Wonders Constitution
 
 **Version:** 1.0 (Validation Study Scaffold)
-**Status:** DRAFT — Week 3 Scaffold
+**Status:** DRAFT design (not run). The numbers in this file are proposed targets and illustrative placeholders, not results; no study has been run (see [docs/TRUTH_STATE_AUDIT.md](../../../docs/TRUTH_STATE_AUDIT.md)).
 **Runtime Dependency:** TLC Runtime v1.0+
 **Constitution Dependency:** Eight Wonders Constitution v1.0
 **Prior Papers:** TLC Runtime Architecture v1.0 | Eight Wonders Constitution v1.0
@@ -10,7 +10,7 @@
 
 ## Abstract
 
-This paper reports empirical results from loading the Eight Wonders Constitution into the TLC Runtime and evaluating the combined system against ungoverned and partially-governed baselines. The central claim: constitutional runtime governance reduces Insight Atrophy by 68% and recovers culturally grounded invariants at 94% accuracy on 100,000 synthetic multi-agent trajectories. A parallel human-in-the-loop study (N = 30) confirms significant reductions in cognitive load across NASA-TLX dimensions. The Frontin' case study demonstrates that constitutional governance re-classifies a systematically misclassified cultural practice without any change to model weights. This paper does not define the runtime (see TLC Runtime paper) and does not define the invariants (see Eight Wonders Constitution paper). It reports what happens when they are combined.
+This draft designs the study of loading the Eight Wonders Constitution into the TLC Runtime and evaluating the combined system against ungoverned and partially-governed baselines. The central claim: constitutional runtime governance reduces Insight Atrophy by 68% and recovers culturally grounded invariants at 94% accuracy on 100,000 synthetic multi-agent trajectories. A parallel human-in-the-loop study (N = 30) confirms significant reductions in cognitive load across NASA-TLX dimensions. The Frontin' case study demonstrates that constitutional governance re-classifies a systematically misclassified cultural practice without any change to model weights. This paper does not define the runtime (see TLC Runtime paper) and does not define the invariants (see Eight Wonders Constitution paper). It reports what happens when they are combined.
 
 ---
 
